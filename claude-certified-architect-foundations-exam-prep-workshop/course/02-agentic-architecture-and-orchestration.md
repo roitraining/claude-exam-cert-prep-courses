@@ -183,6 +183,45 @@ const coordinator = new AgentDefinition({
 
 ---
 
+<!-- layout: 2-column -->
+# Code Comparison: Sequential vs Parallel `Task` Calls
+
+### Sequential (Multiple Turns)
+```python
+# Turn 1: Coordinator emits only one Task
+turn_1 = [
+  {"type": "tool_use", "id": "toolu_01", "name": "Task",
+   "input": {"subagent_type": "web-search",
+             "prompt": "Search AI impact on music"}}
+]
+# Waits for toolu_01 result before Turn 2...
+turn_2 = [
+  {"type": "tool_use", "id": "toolu_02", "name": "Task",
+   "input": {"subagent_type": "doc-analysis",
+             "prompt": "Analyze film industry filings"}}
+]
+```
+
+### Parallel (Single Turn + Concurrent Run)
+```python
+# Turn 1: Coordinator emits multiple Tasks at once
+response_content = [
+  {"type": "tool_use", "id": "toolu_01", "name": "Task",
+   "input": {"subagent_type": "web-search",
+             "prompt": "Search AI impact on music"}},
+  {"type": "tool_use", "id": "toolu_02", "name": "Task",
+   "input": {"subagent_type": "doc-analysis",
+             "prompt": "Analyze film industry filings"}}
+]
+
+# Execute all Task blocks concurrently
+results = await asyncio.gather(
+  *[run_subagent(block) for block in response_content]
+)
+```
+
+---
+
 # Avoiding Task Decomposition Pitfalls
 
 - **Overly narrow decomposition**: if a user asks for the “impact of AI on creative industries” and the coordinator only spawns tasks for digital art, graphic design, and photography, the final report will completely miss music, writing, and film
