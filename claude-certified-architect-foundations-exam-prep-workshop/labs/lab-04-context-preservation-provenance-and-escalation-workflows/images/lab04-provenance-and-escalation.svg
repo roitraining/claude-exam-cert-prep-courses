@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 4 Overview: Context Preservation, Escalation Rules, and Provenance Synthesis">
+  <!-- Panel 1: Context Preservation & Trimming -->
+  <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 1: Context Preservation</text>
+  <rect x="42" y="92" width="290" height="96" rx="10" fill="#e0edff"/>
+  <text x="187" y="118" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Persistent Case Facts Block</text>
+  <text x="187" y="142" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Pin exact IDs, amounts, and dates</text>
+  <text x="187" y="164" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">outside rolling summaries</text>
+  <rect x="42" y="204" width="290" height="106" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="187" y="232" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Trim Verbose Tool Outputs</text>
+  <text x="187" y="256" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Filter 40+ raw order fields down to</text>
+  <text x="187" y="278" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">5 return-relevant fields</text>
+
+  <!-- Panel 2: Escalation & Disambiguation -->
+  <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#d97706" stroke-width="3"/>
+  <rect x="382" y="25" width="335" height="48" rx="14" fill="#d97706"/>
+  <text x="550" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 2: Escalation Rules</text>
+  <rect x="405" y="92" width="290" height="96" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="550" y="118" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Reliable Escalation Triggers</text>
+  <text x="550" y="142" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">1. Explicit human request (now)</text>
+  <text x="550" y="164" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">2. Policy gap (competitor match)</text>
+  <rect x="405" y="204" width="290" height="106" rx="10" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="550" y="232" text-anchor="middle" fill="#92400e" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Resolve vs Clarify</text>
+  <text x="550" y="256" text-anchor="middle" fill="#78350f" font-family="Inter, system-ui, sans-serif" font-size="13">Frustrated + simple = Empathy + Fix</text>
+  <text x="550" y="278" text-anchor="middle" fill="#78350f" font-family="Inter, system-ui, sans-serif" font-size="13">Multiple matches = Ask identifier</text>
+
+  <!-- Panel 3: Error Propagation & Provenance -->
+  <rect x="745" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="745" y="25" width="335" height="48" rx="14" fill="#6a55e4"/>
+  <text x="912" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 3 and 4: Provenance</text>
+  <rect x="768" y="92" width="290" height="96" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="912" y="118" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Claim-Source Mappings</text>
+  <text x="912" y="142" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Preserve URLs, excerpts, and dates</text>
+  <text x="912" y="164" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Annotate contested statistics</text>
+  <rect x="768" y="204" width="290" height="106" rx="10" fill="#082445"/>
+  <text x="912" y="232" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Error Context + Calibration</text>
+  <text x="912" y="256" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Propagate partialResults + gaps</text>
+  <text x="912" y="278" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Stratified sampling by doc/field</text>
+</svg>

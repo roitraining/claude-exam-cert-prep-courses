@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 3 Overview: Nullable JSON Schemas, Validation-Retry Loops, and Message Batches API">
+  <!-- Panel 1: Hallucination-Proof Schema -->
+  <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 1: Schema Design</text>
+  <rect x="42" y="92" width="290" height="68" rx="10" fill="#e0edff"/>
+  <text x="187" y="118" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Nullable Optional Fields</text>
+  <text x="187" y="142" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">"type": ["string", "null"] prevents fabrication</text>
+  <rect x="42" y="174" width="290" height="68" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="187" y="200" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Extensible Enums</text>
+  <text x="187" y="224" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">"unclear" + "other" + detail string</text>
+  <rect x="42" y="256" width="290" height="58" rx="10" fill="#ecfdf5" stroke="#86efac"/>
+  <text x="187" y="282" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">stated_total vs calculated_total</text>
+  <text x="187" y="302" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="12">Flags semantic math discrepancies</text>
+
+  <!-- Panel 2: Validation-Retry Loop -->
+  <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <rect x="382" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
+  <text x="550" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 2: Validation and Retry</text>
+  <rect x="405" y="92" width="290" height="96" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="550" y="118" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Retry with Error Feedback</text>
+  <text x="550" y="142" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Send: Source Doc + Failed JSON</text>
+  <text x="550" y="164" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">+ Specific Validation Error</text>
+  <rect x="405" y="204" width="290" height="106" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="550" y="232" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">When NOT to Retry</text>
+  <text x="550" y="256" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">Data is absent from source doc</text>
+  <text x="550" y="278" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">(Retry only fixes format/math errors)</text>
+
+  <!-- Panel 3: Message Batches API & Multi-Pass Review -->
+  <rect x="745" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="745" y="25" width="335" height="48" rx="14" fill="#6a55e4"/>
+  <text x="912" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 3 and 4: Batches and Review</text>
+  <rect x="768" y="92" width="290" height="96" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="912" y="118" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Message Batches API</text>
+  <text x="912" y="142" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">50% savings | Up to 24h window</text>
+  <text x="912" y="164" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Correlate and retry via custom_id</text>
+  <rect x="768" y="204" width="290" height="106" rx="10" fill="#082445"/>
+  <text x="912" y="232" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Two-Pass PR Review</text>
+  <text x="912" y="256" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Pass 1: Per-file local analysis</text>
+  <text x="912" y="278" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Pass 2: Cross-file integration pass</text>
+</svg>
