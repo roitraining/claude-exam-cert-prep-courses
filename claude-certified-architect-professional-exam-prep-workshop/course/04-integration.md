@@ -12,10 +12,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 4: Objectives
 
-- Design enterprise RAG pipelines with structure-aware chunking, hybrid retrieval, and progressive discovery
-- Select the appropriate integration protocol (MCP, Direct API/CLI, or Agent-to-Agent) for enterprise architectures
-- Eliminate capability bloat using least-privilege principles and analyze authentication and authorization boundaries
-- Evaluate accuracy-latency trade-offs and design production observability strategies at scale
+- Design RAG pipelines with hybrid retrieval and reranking
+- Select between MCP, Direct API/CLI, and Agent-to-Agent protocols
+- Eliminate capability bloat using least-privilege principles
+- Balance accuracy-latency trade-offs and observability at scale
 
 ---
 
@@ -212,12 +212,12 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # What You Learned
 
 ### RAG and Protocols
-- Designed enterprise RAG pipelines with contextual chunking, hybrid (vector + lexical) retrieval, reranking, and progressive discovery
-- Evaluated connection protocols across MCP, Direct API/CLI, and Agent-to-Agent integration
+- Designed RAG pipelines with hybrid retrieval and reranking
+- Selected between MCP, Direct API/CLI, and Agent-to-Agent protocols
 
 ### Security and Observability
-- Enforced least privilege by removing unnecessary tools (eliminating capability bloat) and propagating caller identity
-- Balanced accuracy-latency trade-offs and designed distributed tracing and telemetry for production AI systems
+- Eliminated capability bloat using least-privilege principles
+- Balanced accuracy-latency trade-offs and observability at scale
 
 ---
 

@@ -12,10 +12,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 5: Objectives
 
-- Define multi-dimensional evaluation metrics across accuracy, latency, cost, safety, and security
-- Design evaluation datasets and mixed-methodology grading frameworks (deterministic, LLM-as-a-judge, and human review)
-- Diagnose system regressions across retrieval, prompt, model, and integration layers and conduct A/B testing
-- Optimize token usage, latency, and cost-performance trade-offs using production telemetry
+- Define accuracy, latency, cost, and safety evaluation metrics
+- Design mixed-methodology evaluation datasets and graders
+- Diagnose regressions across retrieval, prompt, and model layers
+- Optimize cost and latency using production telemetry
 
 ---
 
@@ -156,10 +156,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Defined multi-dimensional evaluation metrics across accuracy, latency, cost per task, safety, and security
-- Combined deterministic code graders, calibrated LLM-as-a-judge rubrics, and human expert review into a mixed-methodology framework
-- Diagnosed regressions systematically across retrieval, prompt, model, and integration layers
-- Optimized token usage, latency, and cost using Prompt Caching, tiered model routing, batch processing, and continuous telemetry
+- Defined accuracy, latency, cost, and safety evaluation metrics
+- Designed mixed-methodology evaluation datasets and graders
+- Diagnosed regressions across retrieval, prompt, and model layers
+- Optimized cost and latency using production telemetry
 
 ---
 

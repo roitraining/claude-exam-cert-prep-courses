@@ -12,10 +12,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 6: Objectives
 
-- Preserve critical facts across long interactions and large codebase explorations using persistent case-fact blocks, tool output trimming, scratchpads, and state manifests
-- Design calibrated escalation rules and structured multi-agent error propagation strategies
-- Implement human review routing using calibrated field-level confidence and stratified random sampling
-- Preserve claim-source provenance, publication dates, and conflict annotations across multi-agent synthesis
+- Preserve critical context across long sessions and codebases
+- Design reliable escalation rules and error propagation
+- Calibrate confidence scores for human review routing
+- Preserve source provenance across multi-agent synthesis
 
 ---
 
@@ -198,10 +198,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Preserved critical context across long conversations and codebase explorations using persistent case-fact blocks, tool output trimming, scratchpads, `/compact`, and state manifests
-- Designed reliable escalation criteria (honoring explicit human requests and policy gaps) and structured subagent-to-coordinator error propagation
-- Calibrated field-level confidence scores with labeled validation sets and applied stratified random sampling for human review
-- Preserved claim-source mappings, publication dates, and conflict annotations across multi-agent synthesis
+- Preserved critical context across long sessions and codebases
+- Designed reliable escalation rules and error propagation
+- Calibrated confidence scores for human review routing
+- Preserved source provenance across multi-agent synthesis
 
 ---
 

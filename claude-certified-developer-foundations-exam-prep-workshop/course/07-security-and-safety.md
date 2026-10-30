@@ -12,10 +12,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 7: Objectives
 
-- Mitigate prompt injection, jailbreaks, and data leakage by isolating untrusted input and protecting PII
-- Apply secure-by-design principles, least privilege, and layered guardrails for safe deployment
-- Implement deterministic Claude Hooks (`PreToolUse`, `PostToolUse`) to block destructive actions
-- Manage identity, secrets, API keys, and access monitoring across development and production environments
+- Defend against prompt injection, jailbreaks, and PII leaks
+- Apply least-privilege design and layered guardrails
+- Block destructive actions with deterministic Claude Hooks
+- Manage API keys, secrets, and caller identity securely
 
 ---
 
@@ -168,10 +168,10 @@ def pre_tool_use_safety_hook(tool_name: str, tool_input: dict) -> dict:
 
 # What You Learned
 
-- Mitigated indirect prompt injection by isolating untrusted input from trusted instructions and enforcing least-privilege tool boundaries
-- Applied secure-by-design principles and layered input, execution, and output guardrails
-- Implemented deterministic Claude Hooks (`PreToolUse`) to block destructive commands and unauthorized actions
-- Managed API keys, environment variable expansion, caller identity verification, and access audit monitoring across environments
+- Defended against prompt injection, jailbreaks, and PII leaks
+- Applied least-privilege design and layered guardrails
+- Blocked destructive actions with deterministic Claude Hooks
+- Managed API keys, secrets, and caller identity securely
 
 ---
 

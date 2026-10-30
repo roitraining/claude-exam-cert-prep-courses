@@ -26,7 +26,7 @@
 
 # Course Objectives
 
-- Prepare to pass the Claude Certified Architect - Professional (CCAR-P) exam across all seven domains
+- Prepare for the Claude Certified Architect - Professional exam
 - Design end-to-end AI architectures and multi-agent systems
 - Apply prompt engineering, context optimization, and model selection strategies
 - Integrate RAG pipelines, MCP tools, and enterprise connection protocols

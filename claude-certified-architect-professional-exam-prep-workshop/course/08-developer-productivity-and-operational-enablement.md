@@ -12,9 +12,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 8: Objectives
 
-- Standardize and govern Claude Code environments across engineering teams using `CLAUDE.md`, `.claude/rules/`, skills, and `.mcp.json`
-- Design AI-assisted software delivery workflows combining Plan Mode, automated CI/CD PR reviews, and test generation
-- Support operational issue resolution and production debugging across multi-agent and RAG systems
+- Standardize Claude Code configurations across engineering teams
+- Design AI-assisted workflows for refactoring and CI/CD reviews
+- Triage and resolve production AI incidents systematically
 
 ---
 
@@ -141,12 +141,12 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # What You Learned
 
 ### Team Enablement and CI/CD
-- Standardized team-wide Claude Code configurations using `CLAUDE.md`, `.claude/rules/` globs, `.claude/commands/`, isolated skills, and `.mcp.json`
-- Designed AI-assisted engineering workflows combining Plan Mode, independent multi-pass CI reviews (`claude -p`), and context-aware test generation
+- Standardized Claude Code configurations across engineering teams
+- Designed AI-assisted workflows for refactoring and CI/CD reviews
 
 ### Production Operations
-- Applied systematic production triage playbooks to isolate and resolve RAG, caching, hook, and tool integration incidents
-- Executed safe rollbacks using pinned model IDs and versioned prompt registries
+- Triaged and resolved production AI incidents systematically
+- Executed safe rollbacks using pinned models and prompts
 
 ---
 

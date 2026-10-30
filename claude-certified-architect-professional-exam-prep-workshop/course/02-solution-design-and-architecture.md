@@ -12,10 +12,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 2: Objectives
 
-- Translate complex enterprise business problems into end-to-end Claude architectures with closed feedback loops
-- Select the right architectural pattern (Augmented LLM, Deterministic Workflow, or Autonomous Agent) based on predictability, latency, and risk
-- Design multi-agent orchestration topologies and problem decomposition strategies
-- Align system architecture to enterprise business value pillars and measurable performance SLAs
+- Translate business problems into end-to-end Claude architectures
+- Select between Augmented LLMs, Workflows, and Agents
+- Design multi-agent orchestration and decomposition patterns
+- Align architectures to business value pillars and SLAs
 
 ---
 
@@ -229,12 +229,12 @@ class SubagentResultContract(BaseModel):
 # What You Learned
 
 ### Architecture and Patterns
-- Translated enterprise business problems into end-to-end Claude architectures with closed feedback loops
-- Selected between Augmented LLMs, Deterministic Workflows, and Autonomous Agents based on predictability and risk
+- Translated business problems into end-to-end Claude architectures
+- Selected between Augmented LLMs, Workflows, and Agents
 
 ### Orchestration and Value
-- Designed multi-agent orchestrator-worker topologies and problem decomposition patterns
-- Aligned architectural decisions to enterprise business value pillars and latency/cost/compliance SLAs
+- Designed multi-agent orchestration and decomposition patterns
+- Aligned architectures to business value pillars and SLAs
 
 ---
 

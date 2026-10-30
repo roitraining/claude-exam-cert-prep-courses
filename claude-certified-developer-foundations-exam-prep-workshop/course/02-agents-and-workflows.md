@@ -12,10 +12,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 2: Objectives
 
-- Evaluate decision criteria for choosing between a deterministic workflow and an autonomous agent
-- Design manager/supervisor hierarchies and subagent delegation patterns
-- Construct agents using custom tool-use loops, the Claude Agent SDK, and lifecycle hooks (`PreToolUse`, `PostToolUse`)
-- Compare managed vs self-hosted agent deployment models and agentic frameworks (`PydanticAI`, `LangGraph`, `Strands`)
+- Choose between deterministic workflows and autonomous agents
+- Design supervisor hierarchies and subagent delegation
+- Build agents with the Claude Agent SDK and lifecycle hooks
+- Compare deployment models and agentic frameworks
 
 ---
 
@@ -192,10 +192,10 @@ async def run_agent_loop(user_prompt: str, tools: list[dict]):
 
 # What You Learned
 
-- Evaluated decision criteria for choosing between a deterministic workflow and an autonomous agent
-- Designed manager/supervisor hierarchies with isolated subagent contexts and scoped tool sets
-- Constructed agent loops with the Claude Agent SDK, compared self-hosted vs managed deployment, and enforced deterministic hooks
-- Compared core agent patterns and frameworks across `PydanticAI`, `LangGraph`, and `Strands`
+- Chose between deterministic workflows and autonomous agents
+- Designed supervisor hierarchies and subagent delegation
+- Built agents with the Claude Agent SDK and lifecycle hooks
+- Compared deployment models and agentic frameworks
 
 ---
 

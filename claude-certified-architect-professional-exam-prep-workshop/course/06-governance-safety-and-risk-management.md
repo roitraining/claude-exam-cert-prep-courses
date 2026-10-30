@@ -12,10 +12,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 6: Objectives
 
-- Implement layered defense-in-depth guardrails across input, context, tool execution, and output stages
-- Identify LLM failure modes including indirect prompt injection, hallucinated citations, and over-privileged actions
-- Design human-in-the-loop (HITL) validation workflows and calibrated review routing
-- Architect Claude solutions that comply with GDPR, HIPAA, and FedRAMP requirements and uphold ethical AI standards
+- Implement layered defense-in-depth safety guardrails
+- Mitigate indirect prompt injection and hallucinations
+- Design human-in-the-loop validation workflows
+- Align architectures with GDPR, HIPAA, and FedRAMP compliance
 
 ---
 
@@ -156,10 +156,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Implemented defense-in-depth guardrails across input screening, context isolation, deterministic tool hooks, and output validation
-- Mitigated indirect prompt injection, hallucinated citations, and capability bloat
-- Designed synchronous pre-execution HITL approval gates and calibrated asynchronous human review queues
-- Mapped architectural controls to GDPR, HIPAA (BAA + ZDR), FedRAMP, and ethical AI fairness standards
+- Implemented layered defense-in-depth safety guardrails
+- Mitigated indirect prompt injection and hallucinations
+- Designed human-in-the-loop validation workflows
+- Aligned architectures with GDPR, HIPAA, and FedRAMP compliance
 
 ---
 

@@ -12,10 +12,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 3: Objectives
 
-- Translate functional and infrastructure requirements across the systems development life cycle (SDLC)
-- Implement the Claude Messages API across streaming, vision, thinking, caching, third-party cloud providers, and the Message Batches API
-- Apply software engineering best practices including async I/O, REST error handling, version control, and codebase refactoring
-- Design Claude applications with clear content boundaries, session hygiene, and pinned configuration management (`CLAUDE.md`, `settings.json`)
+- Map functional and infrastructure requirements across the SDLC
+- Integrate the Messages API, streaming, and Message Batches API
+- Apply async I/O, resilient retries, and refactoring patterns
+- Manage session boundaries and pinned model configurations
 
 ---
 
@@ -217,10 +217,10 @@ async with client.messages.stream(
 
 # What You Learned
 
-- Mapped functional and infrastructure requirements across the AI systems life cycle
-- Applied Claude Messages API mechanics across multi-turn history, streaming SSE, Bedrock/Vertex SDKs, and the Message Batches API
-- Built resilient async integrations with backoff, concurrency controls, and structured refactoring practices
-- Designed stateless API applications with strict content boundaries, session isolation, and pinned model/prompt configurations
+- Mapped functional and infrastructure requirements across the SDLC
+- Integrated the Messages API, streaming, and Message Batches API
+- Applied async I/O, resilient retries, and refactoring patterns
+- Managed session boundaries and pinned model configurations
 
 ---
 

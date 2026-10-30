@@ -12,9 +12,9 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 7: Objectives
 
-- Complete a timed, scenario-based practice exam simulating the Claude Certified Architect - Foundations (CCAR-F) testing environment
-- Review high-frequency architectural decision rules across all five exam domains
-- Analyze common distractor patterns and solidify your final exam-day strategy
+- Complete a timed scenario-based practice exam
+- Review core decision rules across all five exam domains
+- Solidify your final exam-day pacing strategy
 
 ---
 
@@ -102,9 +102,9 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Completed the timed Final Practice Exam across realistic CCAR-F production scenarios
-- Reviewed the core architectural decision rules across all five exam domains
-- Validated strategies for eliminating distractors and managing exam pacing
+- Completed a timed scenario-based practice exam
+- Reviewed core decision rules across all five exam domains
+- Solidified your final exam-day pacing strategy
 
 ---
 

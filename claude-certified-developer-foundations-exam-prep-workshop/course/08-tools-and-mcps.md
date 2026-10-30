@@ -12,9 +12,9 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 8: Objectives
 
-- Implement custom tools with clear descriptions, strict input schemas, structured error handling, and client-side vs server-side execution patterns
-- Develop and deploy Model Context Protocol (MCP) servers exposing Tools, Resources, and Prompts over `stdio` and HTTP/sockets
-- Evaluate trade-offs across Built-in Tools, Custom Tools, Claude Skills, and MCP Servers to select the right customization approach
+- Implement custom tools with clear schemas and error handling
+- Build MCP servers exposing Tools, Resources, and Prompts
+- Select between Built-in Tools, Custom Tools, Skills, and MCPs
 
 ---
 
@@ -182,12 +182,12 @@ def check_sku_stock(sku: str, warehouse: str) -> dict:
 # What You Learned
 
 ### Tool Implementation and MCP
-- Implemented custom tools with unambiguous descriptions, strict JSON schemas, structured `isError` responses, and client-side vs server-side execution
-- Authored MCP servers exposing Tools, Resources, and Prompts over `stdio` and HTTP/socket transports
+- Implemented custom tools with clear schemas and error handling
+- Built MCP servers exposing Tools, Resources, and Prompts
 
 ### Agentic Customization Selection
-- Selected the right customization approach across Built-in Tools, Custom Tools, Claude Skills, and MCP Servers
-- Matched multi-app reusable internal service integrations to standalone MCP servers
+- Selected between Built-in Tools, Custom Tools, Skills, and MCPs
+- Matched reusable multi-app integrations to MCP servers
 
 ---
 

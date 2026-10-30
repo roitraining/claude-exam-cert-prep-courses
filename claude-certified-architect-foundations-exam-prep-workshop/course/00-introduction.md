@@ -26,7 +26,7 @@
 
 # Course Objectives
 
-- Prepare to pass the Claude Certified Architect - Foundations (CCAR-F) exam across all five domains and six scenarios
+- Prepare for the Claude Certified Architect - Foundations exam
 - Orchestrate multi-agent workflows and agentic loops with the Claude Agent SDK
 - Design effective tool interfaces and Model Context Protocol (MCP) integrations
 - Configure Claude Code hierarchies, custom skills, and CI/CD pipelines

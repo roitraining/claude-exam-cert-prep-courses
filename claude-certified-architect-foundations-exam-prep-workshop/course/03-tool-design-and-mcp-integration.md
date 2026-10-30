@@ -12,10 +12,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 3: Objectives
 
-- Design unambiguous tool interfaces and descriptions that establish clear input formats, edge cases, and selection boundaries
-- Implement structured MCP error responses (`isError`, `errorCategory`, `isRetryable`) to enable intelligent recovery
-- Scope tool sets across specialized agents, configure `tool_choice`, and select built-in tools (`Grep`, `Glob`, `Read`, `Write`, `Edit`)
-- Configure project-scoped (`.mcp.json`) and user-scoped (`~/.claude.json`) MCP servers and expose content catalogs via MCP resources
+- Design clear tool descriptions and selection boundaries
+- Implement structured MCP error responses
+- Scope agent tool sets and configure `tool_choice`
+- Integrate MCP servers and built-in tools effectively
 
 ---
 
@@ -313,10 +313,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Designed unambiguous tool interfaces and descriptions with explicit input formats, edge cases, and boundaries
-- Implemented structured MCP error responses (`isError`, `errorCategory`, `isRetryable`) and distinguished access failures from empty results
-- Scoped tool sets to 4 to 5 tools per agent role, configured `tool_choice`, and applied built-in tools (`Grep`, `Glob`, `Edit`, `Read` + `Write`)
-- Configured project-scoped `.mcp.json` with `${ENV_VAR}` expansion, user-scoped `~/.claude.json`, and MCP resource catalogs
+- Designed clear tool descriptions and selection boundaries
+- Implemented structured MCP error responses
+- Scoped agent tool sets and configured `tool_choice`
+- Integrated MCP servers and built-in tools effectively
 
 ---
 

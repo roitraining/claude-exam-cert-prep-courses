@@ -12,9 +12,9 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 9: Objectives
 
-- Complete a timed practice exam simulating the 53-item, 120-minute Claude Certified Developer - Foundations (CCDV-F) exam
-- Review high-frequency developer decision rules across all eight CCDV-F blueprint domains
-- Solidify your final exam-day pacing and distractor-elimination strategy
+- Complete a timed CCDV-F practice exam simulation
+- Review core decision rules across all eight exam domains
+- Solidify your final exam-day pacing strategy
 
 ---
 
@@ -100,9 +100,9 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Completed the timed CCDV-F Final Practice Exam simulation
-- Reviewed core developer decision rules across all eight CCDV-F blueprint domains
-- Verified exam-day strategies for trace analysis, API selection, security guardrails, and MCP customization
+- Completed a timed CCDV-F practice exam simulation
+- Reviewed core decision rules across all eight exam domains
+- Solidified your final exam-day pacing strategy
 
 ---
 

@@ -12,10 +12,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 5: Objectives
 
-- Apply LLM fundamentals including tokenization, context window limits, sampling parameters, and thinking/effort options
-- Integrate client SDKs (`anthropic` Python / TypeScript) with REST APIs, SSE streams, and WebSockets
-- Evaluate model capabilities and trade-offs across Claude Opus, Sonnet, and Haiku and manage breaking changes across releases
-- Optimize token budgets and cost using usage tracking, Prompt Caching, and cache checkpointing
+- Apply tokenization, sampling, and extended thinking options
+- Integrate client SDKs with REST, SSE streaming, and WebSockets
+- Select between Claude Opus, Sonnet, and Haiku
+- Optimize token costs with Prompt Caching checkpoints
 
 ---
 
@@ -193,10 +193,10 @@ const message = await client.messages.create({
 
 # What You Learned
 
-- Applied LLM fundamentals across tokenization, context windows, sampling (`temperature`), extended/adaptive thinking, and effort levels
-- Integrated official client SDKs with timeouts, retries, SSE streaming, and WebSockets
-- Selected between Claude Opus, Sonnet, and Haiku and managed behavioral changes across model releases
-- Optimized token costs and latency using `response.usage` tracking, Prompt Caching prefixes, and cache checkpointing
+- Applied tokenization, sampling, and extended thinking options
+- Integrated client SDKs with REST, SSE streaming, and WebSockets
+- Selected between Claude Opus, Sonnet, and Haiku
+- Optimized token costs with Prompt Caching checkpoints
 
 ---
 

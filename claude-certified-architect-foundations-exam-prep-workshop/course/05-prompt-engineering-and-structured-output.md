@@ -12,10 +12,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 5: Objectives
 
-- Write explicit categorical review criteria and targeted few-shot examples that reduce false positives and output variance
-- Enforce schema-compliant structured outputs using `tool_use`, `tool_choice`, nullable fields, and extensible enums
-- Design validation-retry feedback loops and distinguish between retryable structural errors and absent source data
-- Architect Message Batches API pipelines and multi-pass, multi-instance code review workflows
+- Write explicit criteria and targeted few-shot examples
+- Enforce structured JSON outputs using `tool_use` schemas
+- Build validation-retry loops for extraction quality
+- Design Message Batches workflows and multi-pass reviews
 
 ---
 
@@ -238,10 +238,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Wrote explicit categorical criteria and targeted few-shot examples to reduce false positives and handle varied document formats
-- Enforced structured JSON output via `tool_use`, `tool_choice` (`"auto"`, `"any"`, forced), nullable fields, and `"other"` + detail patterns
-- Built validation-retry loops with exact error feedback and distinguished retryable format errors from absent source data
-- Applied Message Batches API rules (50% savings, 24-hour window, `custom_id`, no multi-turn tools) and multi-pass independent code reviews
+- Wrote explicit criteria and targeted few-shot examples
+- Enforced structured JSON outputs using `tool_use` schemas
+- Built validation-retry loops for extraction quality
+- Designed Message Batches workflows and multi-pass reviews
 
 ---
 

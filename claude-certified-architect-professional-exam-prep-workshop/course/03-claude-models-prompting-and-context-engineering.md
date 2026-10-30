@@ -12,10 +12,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 3: Objectives
 
-- Select appropriate Claude models (Opus, Sonnet, Haiku) and tiered routing strategies based on capability, latency, and cost trade-offs
-- Design modular system prompts, templates, and structured XML boundaries that separate trusted instructions from untrusted data
-- Apply zero-shot, few-shot, and extended thinking techniques to match task complexity
-- Optimize context windows and implement prompt reuse strategies using Prompt Caching, modular prompts, and Skills
+- Select Claude models and tiered routing strategies
+- Design modular system prompts with XML trust boundaries
+- Apply zero-shot, few-shot, and extended thinking techniques
+- Optimize context windows with Prompt Caching and Skills
 
 ---
 
@@ -198,10 +198,10 @@ response = client.messages.create(
 
 # What You Learned
 
-- Selected across Claude Opus, Sonnet, and Haiku and designed tiered model routing cascades
-- Structured system prompts with explicit criteria, modular templates, and XML trust boundaries
-- Applied zero-shot, few-shot, and extended thinking techniques to match task requirements
-- Ordered static content before dynamic content with Prompt Caching to reduce both latency and cost
+- Selected Claude models and tiered routing strategies
+- Designed modular system prompts with XML trust boundaries
+- Applied zero-shot, few-shot, and extended thinking techniques
+- Optimized context windows with Prompt Caching and Skills
 
 ---
 

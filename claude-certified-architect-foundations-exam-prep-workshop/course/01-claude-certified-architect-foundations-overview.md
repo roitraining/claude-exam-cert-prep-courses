@@ -12,10 +12,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 1: Objectives
 
-- Describe the format, scoring standard, and domain weights of the Claude Certified Architect - Foundations (CCAR-F) exam
-- Distinguish between in-scope architectural topics and out-of-scope exam distractors
-- Analyze all six official production scenarios and map them to the five exam domains
-- Apply a structured question-deconstruction strategy to identify root causes and eliminate plausible distractors
+- Review the CCAR-F exam format, scoring, and domain weights
+- Distinguish in-scope topics from out-of-scope distractors
+- Analyze all six official exam scenarios
+- Apply a structured strategy to deconstruct exam questions
 
 ---
 
@@ -235,10 +235,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Described the format, scoring standard (720/1,000), and five domain weights of the CCAR-F exam
-- Distinguished between in-scope architectural topics and out-of-scope exam distractors
-- Analyzed all six official production scenarios and mapped them to the five exam domains
-- Applied a structured question-deconstruction strategy to identify root causes and eliminate plausible distractors
+- Reviewed the CCAR-F exam format, scoring, and domain weights
+- Distinguished in-scope topics from out-of-scope distractors
+- Analyzed all six official exam scenarios
+- Applied a structured strategy to deconstruct exam questions
 
 ---
 

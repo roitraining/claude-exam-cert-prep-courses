@@ -12,10 +12,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 1: Objectives
 
-- Describe the format, scoring standard, and eight domain weights of the Claude Certified Developer - Foundations (CCDV-F) exam
-- Evaluate the Minimally Qualified Candidate (MQC) profile and developer competencies tested on the exam
-- Analyze canonical CCDV-F sample questions across API batching, prompt injection defense, and MCP server reuse
-- Apply an engineering-focused test-taking strategy for exam day
+- Review the CCDV-F exam format, scoring, and domain weights
+- Evaluate the Minimally Qualified Candidate developer profile
+- Analyze canonical CCDV-F sample question patterns
+- Apply an engineering-focused exam-day strategy
 
 ---
 
@@ -126,10 +126,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Described the CCDV-F exam format (53 items, 120 minutes, 720/1,000 passing score) and eight domain weights
-- Evaluated the Minimally Qualified Candidate profile across Python/TypeScript engineering, Claude APIs, Agent SDK, Claude Code, and MCP
-- Analyzed the official sample question patterns for batch processing, prompt injection defense, and MCP server reuse
-- Established a structured pacing and distractor-elimination strategy for exam day
+- Reviewed the CCDV-F exam format, scoring, and domain weights
+- Evaluated the Minimally Qualified Candidate developer profile
+- Analyzed canonical CCDV-F sample question patterns
+- Applied an engineering-focused exam-day strategy
 
 ---
 

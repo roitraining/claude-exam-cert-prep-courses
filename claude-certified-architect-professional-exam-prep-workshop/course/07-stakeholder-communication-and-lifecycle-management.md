@@ -12,10 +12,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 7: Objectives
 
-- Conduct structured discovery and requirement gathering to evaluate AI suitability, data readiness, and risk bounds
-- Communicate architectural decisions, trade-offs, and statistical SLAs across executive, legal/security, and engineering stakeholders
-- Manage stakeholder feedback loops and expectation alignment throughout delivery
-- Document architectures (ADRs, runbooks) and govern the full system lifecycle from discovery through iteration
+- Conduct structured AI discovery and requirement gathering
+- Communicate trade-offs and SLAs across stakeholder groups
+- Align expectations around statistical quality and guardrails
+- Govern the full system lifecycle with ADRs and runbooks
 
 ---
 
@@ -151,10 +151,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Conducted structured discovery to assess LLM suitability, data readiness, error cost, and baseline metrics
-- Tailored architectural trade-off communication across executive, legal/security, and engineering stakeholders
-- Aligned stakeholder expectations around statistical quality distributions and deterministic safety boundaries
-- Governed the end-to-end AI lifecycle using ADRs, version manifests, operational runbooks, and model upgrade playbooks
+- Conducted structured AI discovery and requirement gathering
+- Communicated trade-offs and SLAs across stakeholder groups
+- Aligned expectations around statistical quality and guardrails
+- Governed the full system lifecycle with ADRs and runbooks
 
 ---
 

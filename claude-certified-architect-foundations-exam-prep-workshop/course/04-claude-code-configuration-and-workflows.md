@@ -12,10 +12,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 4: Objectives
 
-- Configure `CLAUDE.md` hierarchies, `@import` modularity, and path-scoped `.claude/rules/` files with YAML glob patterns
-- Author project-scoped and user-scoped slash commands and isolated skills (`context: fork`, `allowed-tools`, `argument-hint`)
-- Select between Plan Mode and Direct Execution and apply iterative refinement patterns
-- Integrate Claude Code into CI/CD pipelines using `-p`, `--output-format json`, and `--json-schema`
+- Configure `CLAUDE.md` hierarchies and path-scoped `.claude/rules/`
+- Create custom slash commands and isolated skills
+- Choose between Plan Mode and Direct Execution
+- Integrate Claude Code into CI/CD pipelines
 
 ---
 
@@ -264,10 +264,10 @@ claude -p "Review the git diff for security and concurrency bugs" \
 
 # What You Learned
 
-- Configured `CLAUDE.md` hierarchies (user, project, subdirectory), `@import` links, `/memory` diagnostics, and `.claude/rules/` glob patterns
-- Created project-scoped slash commands in `.claude/commands/` and isolated skills in `.claude/skills/` (`context: fork`, `allowed-tools`, `argument-hint`)
-- Applied Plan Mode, the `Explore` subagent, concrete input/output examples, test-driven iteration, and the interview pattern
-- Integrated Claude Code into CI/CD pipelines using `claude -p`, `--output-format json`, `--json-schema`, and independent review sessions
+- Configured `CLAUDE.md` hierarchies and path-scoped `.claude/rules/`
+- Created custom slash commands and isolated skills
+- Chose between Plan Mode and Direct Execution
+- Integrated Claude Code into CI/CD pipelines
 
 ---
 

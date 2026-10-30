@@ -12,10 +12,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 1: Objectives
 
-- Describe the exam format, scoring standard, and seven domain weights of the Claude Certified Architect - Professional (CCAR-P) exam
-- Compare the enterprise architectural scope of CCAR-P with the Foundations exam
-- Evaluate Minimally Qualified Candidate (MQC) competencies across RAG, governance, observability, and stakeholder management
-- Apply a systematic trade-off framework to deconstruct CCAR-P exam items and eliminate distractors
+- Review the CCAR-P exam format, scoring, and domain weights
+- Compare CCAR-P scope with the Foundations exam
+- Evaluate Minimally Qualified Candidate competencies
+- Apply a structured framework to deconstruct exam questions
 
 ---
 
@@ -147,10 +147,10 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Described the CCAR-P format (63 items, 120 minutes, 720/1,000 passing score) and seven domain weights
-- Compared the enterprise architectural scope of CCAR-P with the Foundations exam
-- Evaluated Minimally Qualified Candidate competencies across RAG, security, observability, compliance, and stakeholder alignment
-- Applied a structured trade-off framework to deconstruct CCAR-P questions and eliminate distractors
+- Reviewed the CCAR-P exam format, scoring, and domain weights
+- Compared CCAR-P scope with the Foundations exam
+- Evaluated Minimally Qualified Candidate competencies
+- Applied a structured framework to deconstruct exam questions
 
 ---
 

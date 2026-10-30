@@ -12,9 +12,9 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 6: Objectives
 
-- Apply context engineering techniques (tool output pruning, compaction, persistent facts, and subagent isolation) to prevent context drift and bloat
-- Write clear, structured prompts with proper `system` vs `user` placement, few-shot examples, output constraints, and input sanitization
-- Implement defensive output handling using structured schemas, runtime validation, and healthy skepticism toward confident model output
+- Prevent context drift with pruning, compaction, and subagents
+- Structure prompts with XML tags, sanitization, and few-shots
+- Validate structured outputs and verify confident claims
 
 ---
 
@@ -166,12 +166,12 @@ except ValidationError as err:
 # What You Learned
 
 ### Context and Prompt Engineering
-- Prevented context drift and bloat using tool output pruning, compaction, persistent case-fact blocks, and subagent context isolation
-- Structured prompts with proper `system` vs `user` placement, XML delimiters, input sanitization, and targeted few-shot examples
+- Prevented context drift with pruning, compaction, and subagents
+- Structured prompts with XML tags, sanitization, and few-shots
 
 ### Defensive Output Handling
-- Enforced structured output via `tool_use` schemas and nullable fields
-- Implemented `stop_reason` truncation checks, Pydantic/Zod validation, and semantic cross-checks
+- Enforced structured output via `tool_use` schemas
+- Validated structured outputs and verified confident claims
 
 ---
 

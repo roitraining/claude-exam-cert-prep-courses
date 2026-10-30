@@ -12,10 +12,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 4: Objectives
 
-- Configure Claude Code core components (`CLAUDE.md`, `.claude/rules/`, Skills, Slash Commands, Subagents, and `settings.json`)
-- Operate Claude Code across session management commands and execution modes (Plan Mode, Headless `-p`, Streaming, and Auto-Mode)
-- Identify API and tool error types and implement resilient recovery strategies
-- Analyze multi-turn execution traces to isolate integration-layer bugs from model output failures
+- Configure Claude Code memory, rules, skills, and permissions
+- Operate interactive, Plan, Headless, and Streaming modes
+- Handle API and tool errors with resilient recovery strategies
+- Analyze execution traces to isolate root causes
 
 ---
 
@@ -198,12 +198,12 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 # What You Learned
 
 ### Claude Code Configuration and Modes
-- Configured Claude Code core components (`CLAUDE.md`, `.claude/rules/`, Skills, Commands, and `settings.json` permissions)
-- Operated Claude Code across interactive, Plan, Headless (`-p`), and Streaming modes and managed sessions (`--resume`, `fork_session`, `/compact`)
+- Configured Claude Code memory, rules, skills, and permissions
+- Operated interactive, Plan, Headless, and Streaming modes
 
 ### Error Recovery and Trace Isolation
-- Handled API and tool errors (`400`, `429`, `529`, `isError`) with appropriate retry and self-correction strategies
-- Analyzed execution traces to isolate integration-layer bugs from model output failures
+- Handled API and tool errors with resilient recovery strategies
+- Analyzed execution traces to isolate root causes
 
 ---
 

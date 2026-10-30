@@ -26,7 +26,7 @@
 
 # Course Objectives
 
-- Prepare to pass the Claude Certified Developer - Foundations (CCDV-F) exam across all eight domains
+- Prepare for the Claude Certified Developer - Foundations exam
 - Construct agents and workflows using the Claude Agent SDK
 - Integrate the Claude API into production applications
 - Operate Claude Code and debug applications through trace analysis

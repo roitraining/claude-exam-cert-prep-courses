@@ -12,9 +12,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 9: Objectives
 
-- Complete a timed practice exam simulating the 63-item, 120-minute Claude Certified Architect - Professional (CCAR-P) exam
-- Review high-frequency architectural trade-offs and decision rules across all seven exam domains
-- Solidify your final exam-day pacing and distractor-elimination strategy
+- Complete a timed CCAR-P practice exam simulation
+- Review core decision rules across all seven exam domains
+- Solidify your final exam-day pacing strategy
 
 ---
 
@@ -100,9 +100,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # What You Learned
 
-- Completed the timed CCAR-P Final Practice Exam simulation
-- Reviewed core architectural decision rules across all seven CCAR-P blueprint domains
-- Verified exam-day strategies for trade-off analysis, root-cause isolation, and distractor elimination
+- Completed a timed CCAR-P practice exam simulation
+- Reviewed core decision rules across all seven exam domains
+- Solidified your final exam-day pacing strategy
 
 ---
 

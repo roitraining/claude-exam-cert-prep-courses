@@ -12,10 +12,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 2: Objectives
 
-- Implement reliable agentic loops controlled by `stop_reason` (`"tool_use"` vs `"end_turn"`) while avoiding termination anti-patterns
-- Orchestrate hub-and-spoke multi-agent systems with explicit context passing, `Task` spawning, and parallel subagent execution
-- Enforce deterministic business rules and data normalization using programmatic prerequisites, SDK hooks (`PostToolUse`), and structured human handoffs
-- Select appropriate task decomposition and session management strategies (`--resume` vs `fork_session` vs fresh summaries)
+- Implement agentic loops using `stop_reason` control flow
+- Orchestrate coordinator and subagent workflows
+- Enforce compliance rules with Agent SDK hooks
+- Manage session state, resumption, and forking
 
 ---
 
@@ -337,10 +337,10 @@ const hooks = {
 
 # What You Learned
 
-- Implemented reliable agentic loops controlled by `stop_reason` (`"tool_use"` vs `"end_turn"`) while avoiding termination anti-patterns
-- Orchestrated hub-and-spoke multi-agent systems with explicit context passing, `Task` spawning, and parallel subagent execution
-- Enforced deterministic business rules and data normalization using programmatic prerequisites, SDK hooks (`PostToolUse`), and structured human handoffs
-- Selected appropriate task decomposition and session management strategies (`--resume` vs `fork_session` vs fresh summaries)
+- Implemented agentic loops using `stop_reason` control flow
+- Orchestrated coordinator and subagent workflows
+- Enforced compliance rules with Agent SDK hooks
+- Managed session state, resumption, and forking
 
 ---
 
