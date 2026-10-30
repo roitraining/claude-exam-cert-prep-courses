@@ -168,12 +168,12 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 | Scenario | Domain 1: Agentic (27%) | Domain 2: Tools/MCP (18%) | Domain 3: Claude Code (20%) | Domain 4: Prompt/JSON (20%) | Domain 5: Context (15%) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **1. Customer Support Agent** | ✓ | ✓ | | | ✓ |
-| **2. Code Gen with Claude Code** | | | ✓ | | ✓ |
-| **3. Multi-Agent Research** | ✓ | ✓ | | | ✓ |
-| **4. Developer Productivity** | ✓ | ✓ | ✓ | | |
-| **5. Claude Code for CI/CD** | | | ✓ | ✓ | |
-| **6. Structured Extraction** | | | | ✓ | ✓ |
+| **1. Customer Support Agent** | ✅ | ✅ | | | ✅ |
+| **2. Code Gen with Claude Code** | | | ✅ | | ✅ |
+| **3. Multi-Agent Research** | ✅ | ✅ | | | ✅ |
+| **4. Developer Productivity** | ✅ | ✅ | ✅ | | |
+| **5. Claude Code for CI/CD** | | | ✅ | ✅ | |
+| **6. Structured Extraction** | | | | ✅ | ✅ |
 
 ---
 
