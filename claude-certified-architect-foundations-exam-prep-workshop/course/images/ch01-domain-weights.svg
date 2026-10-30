@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" width="1200" height="480" role="img" aria-label="CCAR-F Exam Domain Weights">
+  <defs>
+    <linearGradient id="d1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1e71d6"/>
+      <stop offset="1" stop-color="#3d62e4"/>
+    </linearGradient>
+    <linearGradient id="d2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2b67db"/>
+      <stop offset="1" stop-color="#555be4"/>
+    </linearGradient>
+    <linearGradient id="d3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4e5ce4"/>
+      <stop offset="1" stop-color="#754fe0"/>
+    </linearGradient>
+    <linearGradient id="d4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6a55e4"/>
+      <stop offset="1" stop-color="#9642d1"/>
+    </linearGradient>
+    <linearGradient id="d5" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8d45d4"/>
+      <stop offset="1" stop-color="#bd35c2"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="480" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
+  <text x="48" y="54" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="700">CCAR-F Exam Blueprint Weights (60 Scored Items)</text>
+
+  <!-- Domain 1 -->
+  <text x="48" y="118" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600">Domain 1: Agentic Architecture and Orchestration</text>
+  <rect x="540" y="94" width="520" height="34" rx="8" fill="#e2ecf7"/>
+  <rect x="540" y="94" width="468" height="34" rx="8" fill="url(#d1)"/>
+  <text x="1080" y="118" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700">27%</text>
+
+  <!-- Domain 2 -->
+  <text x="48" y="190" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600">Domain 2: Tool Design and MCP Integration</text>
+  <rect x="540" y="166" width="520" height="34" rx="8" fill="#e2ecf7"/>
+  <rect x="540" y="166" width="312" height="34" rx="8" fill="url(#d2)"/>
+  <text x="1080" y="190" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700">18%</text>
+
+  <!-- Domain 3 -->
+  <text x="48" y="262" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600">Domain 3: Claude Code Configuration and Workflows</text>
+  <rect x="540" y="238" width="520" height="34" rx="8" fill="#e2ecf7"/>
+  <rect x="540" y="238" width="347" height="34" rx="8" fill="url(#d3)"/>
+  <text x="1080" y="262" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700">20%</text>
+
+  <!-- Domain 4 -->
+  <text x="48" y="334" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600">Domain 4: Prompt Engineering and Structured Output</text>
+  <rect x="540" y="310" width="520" height="34" rx="8" fill="#e2ecf7"/>
+  <rect x="540" y="310" width="347" height="34" rx="8" fill="url(#d4)"/>
+  <text x="1080" y="334" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700">20%</text>
+
+  <!-- Domain 5 -->
+  <text x="48" y="406" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600">Domain 5: Context Management and Reliability</text>
+  <rect x="540" y="382" width="520" height="34" rx="8" fill="#e2ecf7"/>
+  <rect x="540" y="382" width="260" height="34" rx="8" fill="url(#d5)"/>
+  <text x="1080" y="406" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700">15%</text>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Prompt Caching Prefix Ordering Architecture">
+  <rect width="1200" height="420" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
+  <text x="600" y="46" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Prompt Caching Prefix Layout: Static Content First, Dynamic Content Last</text>
+
+  <!-- Cached Region Container -->
+  <rect x="35" y="75" width="840" height="245" rx="16" fill="#ecfdf5" stroke="#16a34a" stroke-width="3" stroke-dasharray="10 5"/>
+  <text x="455" y="108" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">CACHED PREFIX (Reused Across Requests -> Cuts TTFT Latency and Input Cost)</text>
+
+  <!-- Block 1: Tools -->
+  <rect x="55" y="128" width="245" height="165" rx="12" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
+  <text x="177" y="164" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">1. Tool Definitions</text>
+  <text x="177" y="195" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">MCP and function schemas</text>
+  <text x="177" y="218" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">(Keep tool order deterministic)</text>
+  <rect x="75" y="242" width="205" height="32" rx="6" fill="#dcfce7"/>
+  <text x="177" y="263" text-anchor="middle" fill="#166534" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">cache_control: ephemeral</text>
+
+  <!-- Block 2: System Prompt + Policy -->
+  <rect x="320" y="128" width="275" height="165" rx="12" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
+  <text x="457" y="164" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">2. System + Static Policy</text>
+  <text x="457" y="195" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">8,000-token enterprise policy</text>
+  <text x="457" y="218" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">and role instructions</text>
+  <rect x="355" y="242" width="205" height="32" rx="6" fill="#dcfce7"/>
+  <text x="457" y="263" text-anchor="middle" fill="#166534" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">cache_control: ephemeral</text>
+
+  <!-- Block 3: Few-Shot Examples -->
+  <rect x="615" y="128" width="240" height="165" rx="12" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
+  <text x="735" y="164" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">3. Static Few-Shots</text>
+  <text x="735" y="195" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">Canonical input/output</text>
+  <text x="735" y="218" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">demonstration examples</text>
+  <rect x="632" y="242" width="205" height="32" rx="6" fill="#dcfce7"/>
+  <text x="735" y="263" text-anchor="middle" fill="#166534" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">cache_control: ephemeral</text>
+
+  <!-- Dynamic Region -->
+  <rect x="895" y="75" width="270" height="245" rx="16" fill="#e0edff" stroke="#1e71d6" stroke-width="3"/>
+  <text x="1030" y="108" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">DYNAMIC SUFFIX</text>
+  <rect x="915" y="128" width="230" height="165" rx="12" fill="#ffffff" stroke="#1e71d6" stroke-width="2"/>
+  <text x="1030" y="164" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">4. Varying User Turn</text>
+  <text x="1030" y="195" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">Per-request user query</text>
+  <text x="1030" y="218" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">and live tool results</text>
+  <text x="1030" y="260" text-anchor="middle" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Processed Incremental Only</text>
+
+  <!-- Warning Footer -->
+  <rect x="35" y="340" width="1130" height="52" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="600" y="372" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Exam Rule: Injecting a changing timestamp or user ID at the start of the system prompt invalidates the entire downstream cache!</text>
+</svg>

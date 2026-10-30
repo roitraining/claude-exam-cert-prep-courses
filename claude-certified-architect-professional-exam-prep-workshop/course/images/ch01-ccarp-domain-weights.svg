@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-label="CCAR-P Exam Domain Weights">
+  <defs>
+    <linearGradient id="p1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1e71d6"/>
+      <stop offset="1" stop-color="#3d62e4"/>
+    </linearGradient>
+    <linearGradient id="p2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4e5ce4"/>
+      <stop offset="1" stop-color="#754fe0"/>
+    </linearGradient>
+    <linearGradient id="p3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c47d9"/>
+      <stop offset="1" stop-color="#bd35c2"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="520" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
+  <text x="48" y="50" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="700">CCAR-P Exam Blueprint Weights (63 Scored Items Across 7 Domains)</text>
+
+  <!-- D1: 17% -->
+  <text x="48" y="106" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="600">Domain 1: Solution Design and Architecture</text>
+  <rect x="610" y="84" width="460" height="30" rx="7" fill="#e2ecf7"/>
+  <rect x="610" y="84" width="391" height="30" rx="7" fill="url(#p1)"/>
+  <text x="1085" y="106" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">17%</text>
+
+  <!-- D2: 13% -->
+  <text x="48" y="164" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="600">Domain 2: Claude Models, Prompting, and Context</text>
+  <rect x="610" y="142" width="460" height="30" rx="7" fill="#e2ecf7"/>
+  <rect x="610" y="142" width="299" height="30" rx="7" fill="url(#p1)"/>
+  <text x="1085" y="164" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">13%</text>
+
+  <!-- D3: 19% -->
+  <text x="48" y="222" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="600">Domain 3: Integration (RAG, MCP, Security, Latency)</text>
+  <rect x="610" y="200" width="460" height="30" rx="7" fill="#e2ecf7"/>
+  <rect x="610" y="200" width="437" height="30" rx="7" fill="url(#p2)"/>
+  <text x="1085" y="222" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">19%</text>
+
+  <!-- D4: 16% -->
+  <text x="48" y="280" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="600">Domain 4: Evaluation, Testing, and Optimization</text>
+  <rect x="610" y="258" width="460" height="30" rx="7" fill="#e2ecf7"/>
+  <rect x="610" y="258" width="368" height="30" rx="7" fill="url(#p2)"/>
+  <text x="1085" y="280" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">16%</text>
+
+  <!-- D5: 14% -->
+  <text x="48" y="338" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="600">Domain 5: Governance, Safety, and Risk Management</text>
+  <rect x="610" y="316" width="460" height="30" rx="7" fill="#e2ecf7"/>
+  <rect x="610" y="316" width="322" height="30" rx="7" fill="url(#p3)"/>
+  <text x="1085" y="338" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">14%</text>
+
+  <!-- D6: 14% -->
+  <text x="48" y="396" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="600">Domain 6: Stakeholder Communication and Lifecycle</text>
+  <rect x="610" y="374" width="460" height="30" rx="7" fill="#e2ecf7"/>
+  <rect x="610" y="374" width="322" height="30" rx="7" fill="url(#p3)"/>
+  <text x="1085" y="396" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">14%</text>
+
+  <!-- D7: 7% -->
+  <text x="48" y="454" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="600">Domain 7: Developer Productivity and Enablement</text>
+  <rect x="610" y="432" width="460" height="30" rx="7" fill="#e2ecf7"/>
+  <rect x="610" y="432" width="161" height="30" rx="7" fill="url(#p3)"/>
+  <text x="1085" y="454" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">7%</text>
+</svg>

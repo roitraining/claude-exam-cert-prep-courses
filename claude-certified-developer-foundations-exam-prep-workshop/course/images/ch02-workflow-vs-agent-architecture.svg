@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Deterministic Workflow versus Autonomous Agent Architecture">
+  <defs>
+    <marker id="arr-w1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1e71d6"/>
+    </marker>
+    <marker id="arr-w2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6a55e4"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="420" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
+
+  <!-- Left: Deterministic Workflow -->
+  <rect x="35" y="40" width="540" height="340" rx="16" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="35" y="40" width="540" height="48" rx="16" fill="#1e71d6"/>
+  <text x="305" y="70" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Deterministic Workflow (Code-Driven Control Flow)</text>
+
+  <rect x="65" y="120" width="135" height="80" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
+  <text x="132" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Step 1: Extract</text>
+  <text x="132" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">Fixed LLM Call</text>
+
+  <line x1="200" y1="160" x2="230" y2="160" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-w1)"/>
+
+  <rect x="238" y="120" width="135" height="80" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
+  <text x="305" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Step 2: Validate</text>
+  <text x="305" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">Code Gate</text>
+
+  <line x1="373" y1="160" x2="403" y2="160" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-w1)"/>
+
+  <rect x="411" y="120" width="135" height="80" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
+  <text x="478" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Step 3: Format</text>
+  <text x="478" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">Fixed LLM Call</text>
+
+  <rect x="65" y="235" width="481" height="115" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="305" y="268" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">When to Choose a Workflow:</text>
+  <text x="305" y="295" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">" Sequence of steps is known upfront and repeatable</text>
+  <text x="305" y="318" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">" Predictable latency, bounded token cost, strict compliance</text>
+
+  <!-- Right: Autonomous Agent -->
+  <rect x="625" y="40" width="540" height="340" rx="16" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="625" y="40" width="540" height="48" rx="16" fill="#6a55e4"/>
+  <text x="895" y="70" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Autonomous Agent (Model-Driven Control Flow)</text>
+
+  <rect x="665" y="120" width="200" height="80" rx="10" fill="#f3e8ff" stroke="#6a55e4" stroke-width="2"/>
+  <text x="765" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Claude Reasoning</text>
+  <text x="765" y="178" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="13">Picks next tool dynamically</text>
+
+  <path d="M 865 145 H 925" stroke="#6a55e4" stroke-width="3" marker-end="url(#arr-w2)"/>
+  <path d="M 925 175 H 865" stroke="#6a55e4" stroke-width="3" marker-end="url(#arr-w2)"/>
+
+  <rect x="935" y="120" width="195" height="80" rx="10" fill="#f3e8ff" stroke="#6a55e4" stroke-width="2"/>
+  <text x="1032" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Tool Harness + Hooks</text>
+  <text x="1032" y="178" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="13">Loops until end_turn</text>
+
+  <rect x="655" y="235" width="481" height="115" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="895" y="268" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">When to Choose an Agent:</text>
+  <text x="895" y="295" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">" Open-ended tasks where required steps depend on live findings</text>
+  <text x="895" y="318" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">" Codebase debugging, multi-source research, complex support</text>
+</svg>

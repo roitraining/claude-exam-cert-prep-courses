@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Prompt Injection Defense Architecture">
+  <rect width="1200" height="420" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
+  <text x="600" y="46" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Defending Against Indirect Prompt Injection on Untrusted Web / Document Content</text>
+
+  <!-- Left: Ineffective Traps -->
+  <rect x="35" y="80" width="490" height="305" rx="16" fill="#fef2f2" stroke="#dc2626" stroke-width="3"/>
+  <rect x="35" y="80" width="490" height="48" rx="16" fill="#dc2626"/>
+  <text x="280" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Ineffective Mitigations (Exam Traps)</text>
+
+  <text x="65" y="166" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" Raising model temperature:</text>
+  <text x="85" y="188" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">Randomness does not stop instruction hijacking.</text>
+
+  <text x="65" y="226" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" Polite system prompt warning:</text>
+  <text x="85" y="248" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">Please do not include malicious instructions is not enforceable.</text>
+
+  <text x="65" y="286" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" Switching to a larger model alone:</text>
+  <text x="85" y="308" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">Stronger instruction-following can follow injected text too</text>
+  <text x="85" y="328" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">if trust boundaries and tool hooks are missing.</text>
+
+  <!-- Right: Effective Defense Architecture -->
+  <rect x="555" y="80" width="610" height="305" rx="16" fill="#ecfdf5" stroke="#16a34a" stroke-width="3"/>
+  <rect x="555" y="80" width="610" height="48" rx="16" fill="#16a34a"/>
+  <text x="860" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Effective Defense-in-Depth Mitigation (Exam Standard)</text>
+
+  <rect x="585" y="148" width="550" height="62" rx="10" fill="#ffffff" stroke="#86efac" stroke-width="2"/>
+  <text x="860" y="174" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">1. Isolate Untrusted Input from Trusted Instructions</text>
+  <text x="860" y="196" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14">Wrap external web/doc text in &lt;untrusted_content&gt; XML tags</text>
+
+  <rect x="585" y="222" width="550" height="62" rx="10" fill="#ffffff" stroke="#86efac" stroke-width="2"/>
+  <text x="860" y="248" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">2. Enforce Least-Privilege Tool Scoping</text>
+  <text x="860" y="270" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14">A page summarizer should have zero sensitive write/delete tools</text>
+
+  <rect x="585" y="296" width="550" height="68" rx="10" fill="#ffffff" stroke="#86efac" stroke-width="2"/>
+  <text x="860" y="322" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">3. Deterministic Guardrails and PreToolUse Hooks</text>
+  <text x="860" y="344" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14">Block sensitive tool invocations and scan outputs for system-prompt leaks</text>
+</svg>

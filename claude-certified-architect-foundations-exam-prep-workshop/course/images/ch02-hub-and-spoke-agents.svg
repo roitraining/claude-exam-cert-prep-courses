@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Hub-and-Spoke Coordinator and Subagent Architecture">
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1e71d6"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6a55e4"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#f4f8fc"/>
+  <text x="800" y="68" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="700">Hub-and-Spoke Multi-Agent Orchestration</text>
+  <text x="800" y="108" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="22">All communication, explicit context passing, and error recovery route through the Coordinator</text>
+
+  <!-- Central Hub: Coordinator Agent -->
+  <rect x="520" y="150" width="560" height="210" rx="22" fill="#082445"/>
+  <text x="800" y="205" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700" letter-spacing="2">HUB: COORDINATOR AGENT</text>
+  <text x="800" y="248" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="700">Task Decomposition and Routing</text>
+  <text x="800" y="288" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="19">allowedTools: ["Task"] | Spawns parallel subagents</text>
+  <text x="800" y="324" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="18">Evaluates synthesis gaps and manages error recovery</text>
+
+  <!-- Arrows from Coordinator to Subagents -->
+  <path d="M 600 360 L 230 520" stroke="#1e71d6" stroke-width="4" marker-end="url(#arrow-blue)" marker-start="url(#arrow-blue)"/>
+  <path d="M 730 360 L 610 520" stroke="#1e71d6" stroke-width="4" marker-end="url(#arrow-blue)" marker-start="url(#arrow-blue)"/>
+  <path d="M 870 360 L 990 520" stroke="#6a55e4" stroke-width="4" marker-end="url(#arrow-purple)" marker-start="url(#arrow-purple)"/>
+  <path d="M 1000 360 L 1370 520" stroke="#6a55e4" stroke-width="4" marker-end="url(#arrow-purple)" marker-start="url(#arrow-purple)"/>
+
+  <!-- Explicit Context Banner -->
+  <rect x="310" y="415" width="980" height="46" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
+  <text x="800" y="445" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Explicit Context Boundary: Subagents Have Isolated Context (No Automatic History Inheritance)</text>
+
+  <!-- Spoke 1: Web Search Subagent -->
+  <rect x="60" y="535" width="340" height="250" rx="18" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <text x="230" y="580" text-anchor="middle" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">SPOKE 1 (PARALLEL TASK)</text>
+  <text x="230" y="618" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Web Search Agent</text>
+  <text x="230" y="662" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="17">Tools: web_search, fetch_url</text>
+  <text x="230" y="700" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="16">Returns structured claims,</text>
+  <text x="230" y="726" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="16">URLs, excerpts, and dates</text>
+
+  <!-- Spoke 2: Document Analysis Subagent -->
+  <rect x="440" y="535" width="340" height="250" rx="18" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <text x="610" y="580" text-anchor="middle" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">SPOKE 2 (PARALLEL TASK)</text>
+  <text x="610" y="618" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Doc Analysis Agent</text>
+  <text x="610" y="662" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="17">Tools: load_document, extract</text>
+  <text x="610" y="700" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="16">Returns structured findings,</text>
+  <text x="610" y="726" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="16">doc names, and page numbers</text>
+
+  <!-- Spoke 3: Synthesis Subagent -->
+  <rect x="820" y="535" width="340" height="250" rx="18" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <text x="990" y="580" text-anchor="middle" fill="#6a55e4" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">SPOKE 3 (RECEIVES FINDINGS)</text>
+  <text x="990" y="618" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Synthesis Agent</text>
+  <text x="990" y="662" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="17">Tools: verify_fact (scoped)</text>
+  <text x="990" y="700" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="16">Merges claim-source mappings</text>
+  <text x="990" y="726" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="16">and flags contested statistics</text>
+
+  <!-- Spoke 4: Report Subagent -->
+  <rect x="1200" y="535" width="340" height="250" rx="18" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <text x="1370" y="580" text-anchor="middle" fill="#6a55e4" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">SPOKE 4 (FINAL FORMATTING)</text>
+  <text x="1370" y="618" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Report Generator</text>
+  <text x="1370" y="662" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="17">Tools: format_report</text>
+  <text x="1370" y="700" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="16">Renders tables, prose, and</text>
+  <text x="1370" y="726" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="16">coverage gap annotations</text>
+
+  <!-- Bottom rule bar -->
+  <rect x="60" y="815" width="1480" height="50" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="800" y="847" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">No Direct Peer-to-Peer Subagent Communication: All Handoffs Route Through the Coordinator</text>
+</svg>

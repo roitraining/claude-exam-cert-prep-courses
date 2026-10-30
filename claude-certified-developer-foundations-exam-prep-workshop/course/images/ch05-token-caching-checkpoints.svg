@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Prompt Caching Checkpoints and Token Accounting">
+  <rect width="1200" height="420" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
+  <text x="600" y="46" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Prompt Caching Checkpoints (Up to 4 Breakpoints Across Prefix Layers)</text>
+
+  <!-- Checkpoint 1: Tools -->
+  <rect x="35" y="85" width="250" height="190" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <text x="160" y="122" text-anchor="middle" fill="#166534" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">CHECKPOINT 1</text>
+  <text x="160" y="154" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Tool Definitions</text>
+  <text x="160" y="185" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">Static MCP and custom</text>
+  <text x="160" y="207" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">function JSON schemas</text>
+  <rect x="55" y="226" width="210" height="32" rx="6" fill="#dcfce7"/>
+  <text x="160" y="247" text-anchor="middle" fill="#166534" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">cache_control: ephemeral</text>
+
+  <!-- Checkpoint 2: System Prompt -->
+  <rect x="305" y="85" width="250" height="190" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <text x="430" y="122" text-anchor="middle" fill="#166534" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">CHECKPOINT 2</text>
+  <text x="430" y="154" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">System Instructions</text>
+  <text x="430" y="185" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">Role, rules, and static</text>
+  <text x="430" y="207" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">reference documentation</text>
+  <rect x="325" y="226" width="210" height="32" rx="6" fill="#dcfce7"/>
+  <text x="430" y="247" text-anchor="middle" fill="#166534" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">cache_control: ephemeral</text>
+
+  <!-- Checkpoint 3: Multi-turn History Prefix -->
+  <rect x="575" y="85" width="265" height="190" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <text x="707" y="122" text-anchor="middle" fill="#166534" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">CHECKPOINT 3</text>
+  <text x="707" y="154" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Prior Turn History</text>
+  <text x="707" y="185" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">Completed multi-turn messages</text>
+  <text x="707" y="207" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">and large uploaded documents</text>
+  <rect x="602" y="226" width="210" height="32" rx="6" fill="#dcfce7"/>
+  <text x="707" y="247" text-anchor="middle" fill="#166534" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">cache_control: ephemeral</text>
+
+  <!-- Uncached Delta -->
+  <rect x="860" y="85" width="305" height="190" rx="14" fill="#e0edff" stroke="#1e71d6" stroke-width="3"/>
+  <text x="1012" y="122" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">UNCACHED DELTA</text>
+  <text x="1012" y="154" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Latest User / Tool Turn</text>
+  <text x="1012" y="185" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">New user message or latest</text>
+  <text x="1012" y="207" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">tool_result + model output</text>
+  <rect x="892" y="226" width="240" height="32" rx="6" fill="#dbeafe"/>
+  <text x="1012" y="247" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">Standard input/output tokens</text>
+
+  <!-- Usage Accounting Bar -->
+  <rect x="35" y="305" width="1130" height="82" rx="12" fill="#082445"/>
+  <text x="600" y="338" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Response usage Object Token Accounting</text>
+  <text x="600" y="368" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="15">Total Input = cache_read_input_tokens (90% cheaper!) + cache_creation_input_tokens + input_tokens (uncached tail)</text>
+</svg>
