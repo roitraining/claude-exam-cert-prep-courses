@@ -323,9 +323,7 @@ const hooks = {
 
 # Domain 1 Quiz: Agentic Architecture and Orchestration
 
-- Open the Exam Prep Program to complete the Domain 1 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domain 1 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-30-14-18-ccar-f-realistic-instructor.json)
 
 ---
 
