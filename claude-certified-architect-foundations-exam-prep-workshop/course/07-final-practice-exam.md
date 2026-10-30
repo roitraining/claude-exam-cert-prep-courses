@@ -8,8 +8,6 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 7: Final Practice Exam
 
-- [Open Practice Exam](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-30-15-01-ccar-f-complex-instructor.json)
-
 ---
 
 # Chapter 7: Objectives
@@ -47,9 +45,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 # Final Practice Exam
 
-- Open the Exam Prep Program to begin the Final Practice Exam
-
-<!-- TODO: Add Exam Prep Program URL for Final Practice Exam -->
+- [Open Practice Exam](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-30-15-01-ccar-f-complex-instructor.json)
 
 ---
 
