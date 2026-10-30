@@ -250,9 +250,7 @@ claude -p "Review the git diff for security and concurrency bugs" \
 
 # Domain 3 Quiz: Claude Code Configuration and Workflows
 
-- Open the Exam Prep Program to complete the Domain 3 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domain 3 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-30-14-48-ccar-f-realistic-instructor.json)
 
 ---
 
