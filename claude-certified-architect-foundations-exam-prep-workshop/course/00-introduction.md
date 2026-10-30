@@ -92,6 +92,6 @@
 - Hands-on experience with Claude Code
 - Familiarity with Model Context Protocol (MCP)
 - Understanding of LLM capabilities, context management, and structured outputs
-- To complete the labs you need access to Claude, Claude Code installed and authenticated, and a code or text editor such as VS Code
+- **To complete the labs you need access to Claude, Claude Code installed and authenticated, and a code or text editor such as VS Code**
 
 ![Prerequisites](images/prerequisites.png)
