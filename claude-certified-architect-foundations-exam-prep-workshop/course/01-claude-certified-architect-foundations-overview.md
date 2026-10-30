@@ -167,13 +167,13 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 # Scenario-to-Domain Mapping Matrix
 
 | Scenario | Domain 1: Agentic (27%) | Domain 2: Tools/MCP (18%) | Domain 3: Claude Code (20%) | Domain 4: Prompt/JSON (20%) | Domain 5: Context (15%) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **1. Customer Support Agent** | Primary | Primary | - | - | Primary |
-| **2. Code Gen with Claude Code** | - | - | Primary | - | Primary |
-| **3. Multi-Agent Research** | Primary | Primary | - | - | Primary |
-| **4. Developer Productivity** | Primary | Primary | Primary | - | - |
-| **5. Claude Code for CI/CD** | - | - | Primary | Primary | - |
-| **6. Structured Extraction** | - | - | - | Primary | Primary |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **1. Customer Support Agent** | ✓ | ✓ | | | ✓ |
+| **2. Code Gen with Claude Code** | | | ✓ | | ✓ |
+| **3. Multi-Agent Research** | ✓ | ✓ | | | ✓ |
+| **4. Developer Productivity** | ✓ | ✓ | ✓ | | |
+| **5. Claude Code for CI/CD** | | | ✓ | ✓ | |
+| **6. Structured Extraction** | | | | ✓ | ✓ |
 
 ---
 
