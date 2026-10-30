@@ -258,6 +258,8 @@ claude -p "Review the git diff for security and concurrency bugs" \
 
 **Time:** 45 minutes
 
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-architect-foundations-exam-prep-workshop/labs/lab-02-mcp-tool-design-and-claude-code-configuration)
+
 ---
 
 # What You Learned

@@ -232,6 +232,8 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 **Time:** 60 minutes
 
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-architect-foundations-exam-prep-workshop/labs/lab-03-structured-data-extraction-and-validation-pipelines)
+
 ---
 
 # What You Learned

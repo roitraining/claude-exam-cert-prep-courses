@@ -370,6 +370,8 @@ const hooks = {
 
 **Time:** 45 minutes
 
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-architect-foundations-exam-prep-workshop/labs/lab-01-building-a-multi-agent-system-with-the-claude-agent-sdk)
+
 ---
 
 # What You Learned
