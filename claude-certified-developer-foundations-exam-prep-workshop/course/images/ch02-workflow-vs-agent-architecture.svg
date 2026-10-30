@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Deterministic Workflow versus Autonomous Agent Architecture">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" role="img" aria-label="Deterministic Workflow versus Autonomous Agent Architecture">
   <defs>
     <marker id="arr-w1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#1e71d6"/>
@@ -8,52 +8,50 @@
     </marker>
   </defs>
 
-  <rect width="1200" height="420" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
-
   <!-- Left: Deterministic Workflow -->
-  <rect x="35" y="40" width="540" height="340" rx="16" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
-  <rect x="35" y="40" width="540" height="48" rx="16" fill="#1e71d6"/>
-  <text x="305" y="70" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Deterministic Workflow (Code-Driven Control Flow)</text>
+  <rect x="20" y="15" width="560" height="330" rx="16" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="20" y="15" width="560" height="50" rx="16" fill="#1e71d6"/>
+  <text x="300" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Deterministic Workflow (Code-Driven Control Flow)</text>
 
-  <rect x="65" y="120" width="135" height="80" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
-  <text x="132" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Step 1: Extract</text>
-  <text x="132" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">Fixed LLM Call</text>
+  <rect x="50" y="95" width="140" height="82" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
+  <text x="120" y="132" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Step 1: Extract</text>
+  <text x="120" y="156" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">Fixed LLM Call</text>
 
-  <line x1="200" y1="160" x2="230" y2="160" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-w1)"/>
+  <line x1="190" y1="136" x2="222" y2="136" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-w1)"/>
 
-  <rect x="238" y="120" width="135" height="80" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
-  <text x="305" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Step 2: Validate</text>
-  <text x="305" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">Code Gate</text>
+  <rect x="230" y="95" width="140" height="82" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
+  <text x="300" y="132" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Step 2: Validate</text>
+  <text x="300" y="156" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">Code Gate</text>
 
-  <line x1="373" y1="160" x2="403" y2="160" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-w1)"/>
+  <line x1="370" y1="136" x2="402" y2="136" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-w1)"/>
 
-  <rect x="411" y="120" width="135" height="80" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
-  <text x="478" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Step 3: Format</text>
-  <text x="478" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">Fixed LLM Call</text>
+  <rect x="410" y="95" width="140" height="82" rx="10" fill="#e0edff" stroke="#1e71d6" stroke-width="2"/>
+  <text x="480" y="132" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Step 3: Format</text>
+  <text x="480" y="156" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">Fixed LLM Call</text>
 
-  <rect x="65" y="235" width="481" height="115" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
-  <text x="305" y="268" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">When to Choose a Workflow:</text>
-  <text x="305" y="295" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">" Sequence of steps is known upfront and repeatable</text>
-  <text x="305" y="318" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">" Predictable latency, bounded token cost, strict compliance</text>
+  <rect x="50" y="205" width="500" height="115" rx="10" fill="#f0f7ff" stroke="#93c5fd"/>
+  <text x="300" y="238" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">When to Choose a Workflow:</text>
+  <text x="300" y="266" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="15">• Sequence of steps is known upfront and repeatable</text>
+  <text x="300" y="292" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="15">• Predictable latency, bounded token cost, strict compliance</text>
 
   <!-- Right: Autonomous Agent -->
-  <rect x="625" y="40" width="540" height="340" rx="16" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
-  <rect x="625" y="40" width="540" height="48" rx="16" fill="#6a55e4"/>
-  <text x="895" y="70" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Autonomous Agent (Model-Driven Control Flow)</text>
+  <rect x="620" y="15" width="560" height="330" rx="16" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="620" y="15" width="560" height="50" rx="16" fill="#6a55e4"/>
+  <text x="900" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Autonomous Agent (Model-Driven Control Flow)</text>
 
-  <rect x="665" y="120" width="200" height="80" rx="10" fill="#f3e8ff" stroke="#6a55e4" stroke-width="2"/>
-  <text x="765" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Claude Reasoning</text>
-  <text x="765" y="178" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="13">Picks next tool dynamically</text>
+  <rect x="655" y="95" width="210" height="82" rx="10" fill="#f3e8ff" stroke="#6a55e4" stroke-width="2"/>
+  <text x="760" y="132" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Claude Reasoning</text>
+  <text x="760" y="156" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="14">Picks next tool dynamically</text>
 
-  <path d="M 865 145 H 925" stroke="#6a55e4" stroke-width="3" marker-end="url(#arr-w2)"/>
-  <path d="M 925 175 H 865" stroke="#6a55e4" stroke-width="3" marker-end="url(#arr-w2)"/>
+  <path d="M 865 122 H 925" stroke="#6a55e4" stroke-width="3" marker-end="url(#arr-w2)"/>
+  <path d="M 925 152 H 865" stroke="#6a55e4" stroke-width="3" marker-end="url(#arr-w2)"/>
 
-  <rect x="935" y="120" width="195" height="80" rx="10" fill="#f3e8ff" stroke="#6a55e4" stroke-width="2"/>
-  <text x="1032" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Tool Harness + Hooks</text>
-  <text x="1032" y="178" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="13">Loops until end_turn</text>
+  <rect x="935" y="95" width="210" height="82" rx="10" fill="#f3e8ff" stroke="#6a55e4" stroke-width="2"/>
+  <text x="1040" y="132" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Tool Harness + Hooks</text>
+  <text x="1040" y="156" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="14">Loops until end_turn</text>
 
-  <rect x="655" y="235" width="481" height="115" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
-  <text x="895" y="268" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">When to Choose an Agent:</text>
-  <text x="895" y="295" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">" Open-ended tasks where required steps depend on live findings</text>
-  <text x="895" y="318" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">" Codebase debugging, multi-source research, complex support</text>
+  <rect x="650" y="205" width="500" height="115" rx="10" fill="#faf5ff" stroke="#d8b4fe"/>
+  <text x="900" y="238" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">When to Choose an Agent:</text>
+  <text x="900" y="266" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15">• Open-ended tasks where steps depend on live findings</text>
+  <text x="900" y="292" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15">• Codebase debugging, multi-source research, complex support</text>
 </svg>

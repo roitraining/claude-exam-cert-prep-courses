@@ -1,52 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Claude Messages API Stateless Request and Response Mechanics">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-label="Claude Messages API Stateless Request and Response Mechanics">
   <defs>
     <marker id="arr-m1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#1e71d6"/>
     </marker>
   </defs>
 
-  <rect width="1200" height="420" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
-  <text x="600" y="46" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Claude Messages API Mechanics: Stateless Requests, Content Blocks, and Streaming</text>
-
   <!-- Box 1: Request Payload -->
-  <rect x="30" y="80" width="350" height="295" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
-  <rect x="30" y="80" width="350" height="46" rx="14" fill="#1e71d6"/>
-  <text x="205" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">1. Request Payload (POST /v1/messages)</text>
-  <text x="55" y="154" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" model (pinned snapshot ID)</text>
-  <text x="55" y="182" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" max_tokens (required ceiling)</text>
-  <text x="55" y="210" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" system (top-level role/rules)</text>
-  <text x="55" y="238" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" tools + tool_choice</text>
-  <text x="55" y="266" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" thinking (enabled / adaptive)</text>
-  <text x="55" y="294" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" messages[] (full history required:</text>
-  <text x="72" y="316" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">text, image/PDF, tool_use, tool_result)</text>
+  <rect x="20" y="15" width="360" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="20" y="15" width="360" height="48" rx="14" fill="#1e71d6"/>
+  <text x="200" y="46" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">1. Request Payload (POST /v1/messages)</text>
+  <text x="45" y="92" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• model (pinned snapshot ID)</text>
+  <text x="45" y="122" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• max_tokens (required ceiling)</text>
+  <text x="45" y="152" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• system (top-level role/rules)</text>
+  <text x="45" y="182" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• tools + tool_choice</text>
+  <text x="45" y="212" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• thinking (enabled / adaptive)</text>
+  <text x="45" y="242" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• messages[] (full history required:</text>
+  <text x="62" y="266" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">text, image/PDF, tool_use, tool_result)</text>
 
-  <line x1="380" y1="225" x2="425" y2="225" stroke="#1e71d6" stroke-width="4" marker-end="url(#arr-m1)"/>
+  <line x1="380" y1="170" x2="425" y2="170" stroke="#1e71d6" stroke-width="4" marker-end="url(#arr-m1)"/>
 
   <!-- Box 2: Delivery Modes -->
-  <rect x="435" y="80" width="330" height="295" rx="14" fill="#082445"/>
-  <text x="600" y="116" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="1.4">2. INVOCATION MODES</text>
-  <rect x="455" y="135" width="290" height="70" rx="10" fill="#1e3a8a"/>
-  <text x="600" y="162" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Realtime Synchronous / SSE</text>
-  <text x="600" y="186" text-anchor="middle" fill="#bfdbfe" font-family="Inter, system-ui, sans-serif" font-size="13">message_start -&gt; content_block_delta</text>
+  <rect x="435" y="15" width="330" height="310" rx="14" fill="#082445"/>
+  <text x="600" y="52" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="1.4">2. INVOCATION MODES</text>
+  <rect x="455" y="72" width="290" height="74" rx="10" fill="#1e3a8a"/>
+  <text x="600" y="100" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Realtime Synchronous / SSE</text>
+  <text x="600" y="126" text-anchor="middle" fill="#bfdbfe" font-family="Inter, system-ui, sans-serif" font-size="13">message_start -&gt; content_block_delta</text>
 
-  <rect x="455" y="218" width="290" height="70" rx="10" fill="#312e81"/>
-  <text x="600" y="245" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Message Batches API (Async)</text>
-  <text x="600" y="269" text-anchor="middle" fill="#c7d2fe" font-family="Inter, system-ui, sans-serif" font-size="13">Up to 24h window | 50% cost savings</text>
+  <rect x="455" y="160" width="290" height="74" rx="10" fill="#312e81"/>
+  <text x="600" y="188" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Message Batches API (Async)</text>
+  <text x="600" y="214" text-anchor="middle" fill="#c7d2fe" font-family="Inter, system-ui, sans-serif" font-size="13">Up to 24h window | 50% cost savings</text>
 
-  <text x="600" y="325" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="14">Providers: Direct API, AWS Bedrock,</text>
-  <text x="600" y="347" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="14">Google Cloud Vertex AI</text>
+  <text x="600" y="272" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="14">Providers: Direct API, AWS Bedrock,</text>
+  <text x="600" y="294" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="14">Google Cloud Vertex AI</text>
 
-  <line x1="765" y1="225" x2="810" y2="225" stroke="#1e71d6" stroke-width="4" marker-end="url(#arr-m1)"/>
+  <line x1="765" y1="170" x2="810" y2="170" stroke="#1e71d6" stroke-width="4" marker-end="url(#arr-m1)"/>
 
   <!-- Box 3: Response Object -->
-  <rect x="820" y="80" width="350" height="295" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
-  <rect x="820" y="80" width="350" height="46" rx="14" fill="#16a34a"/>
-  <text x="995" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">3. Response Message Object</text>
-  <text x="845" y="158" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" content[] array of typed blocks:</text>
-  <text x="865" y="182" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">- thinking (reasoning trace + signature)</text>
-  <text x="865" y="204" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">- text (assistant natural language)</text>
-  <text x="865" y="226" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">- tool_use (id, name, input JSON)</text>
-  <text x="845" y="262" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" stop_reason:</text>
-  <text x="865" y="284" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14">end_turn | tool_use | max_tokens | stop_sequence</text>
-  <text x="845" y="320" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">" usage (input, output, cache tokens)</text>
+  <rect x="820" y="15" width="360" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <rect x="820" y="15" width="360" height="48" rx="14" fill="#16a34a"/>
+  <text x="1000" y="46" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">3. Response Message Object</text>
+  <text x="845" y="94" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• content[] array of typed blocks:</text>
+  <text x="862" y="120" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">- thinking (reasoning trace + signature)</text>
+  <text x="862" y="144" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">- text (assistant natural language)</text>
+  <text x="862" y="168" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">- tool_use (id, name, input JSON)</text>
+  <text x="845" y="206" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• stop_reason:</text>
+  <text x="862" y="230" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600">end_turn | tool_use | max_tokens | stop_sequence</text>
+  <text x="845" y="268" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• usage (input, output, cache tokens)</text>
 </svg>

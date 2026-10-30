@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Enterprise AI Delivery Lifecycle Phases">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-label="Enterprise AI Delivery Lifecycle Phases">
   <defs>
     <marker id="arr-l1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#1e71d6"/>
@@ -8,59 +8,56 @@
     </marker>
   </defs>
 
-  <rect width="1200" height="420" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
-  <text x="600" y="46" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Enterprise AI Solution Lifecycle: From Discovery to Continuous Iteration</text>
-
   <!-- Phase 1: Discovery -->
-  <rect x="25" y="90" width="205" height="190" rx="14" fill="#082445"/>
-  <text x="127" y="128" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">PHASE 1</text>
-  <text x="127" y="158" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Discovery</text>
-  <text x="127" y="192" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="13">" Business KPI alignment</text>
-  <text x="127" y="214" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="13">" Data/PII readiness audit</text>
-  <text x="127" y="236" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="13">" Error tolerance and SLAs</text>
+  <rect x="20" y="15" width="210" height="195" rx="14" fill="#082445"/>
+  <text x="125" y="52" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">PHASE 1</text>
+  <text x="125" y="84" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Discovery</text>
+  <text x="125" y="120" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="14">• Business KPI alignment</text>
+  <text x="125" y="146" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="14">• Data/PII readiness audit</text>
+  <text x="125" y="172" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="14">• Error tolerance and SLAs</text>
 
-  <line x1="230" y1="185" x2="255" y2="185" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-l1)"/>
+  <line x1="230" y1="112" x2="255" y2="112" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-l1)"/>
 
   <!-- Phase 2: Architecture & Prototype -->
-  <rect x="265" y="90" width="205" height="190" rx="14" fill="#1e71d6"/>
-  <text x="367" y="128" text-anchor="middle" fill="#bfdbfe" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">PHASE 2</text>
-  <text x="367" y="158" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Design and Eval</text>
-  <text x="367" y="192" text-anchor="middle" fill="#eff6ff" font-family="Inter, system-ui, sans-serif" font-size="13">" Golden eval dataset</text>
-  <text x="367" y="214" text-anchor="middle" fill="#eff6ff" font-family="Inter, system-ui, sans-serif" font-size="13">" Pattern and model choice</text>
-  <text x="367" y="236" text-anchor="middle" fill="#eff6ff" font-family="Inter, system-ui, sans-serif" font-size="13">" ADR documentation</text>
+  <rect x="265" y="15" width="210" height="195" rx="14" fill="#1e71d6"/>
+  <text x="370" y="52" text-anchor="middle" fill="#bfdbfe" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">PHASE 2</text>
+  <text x="370" y="84" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Design and Eval</text>
+  <text x="370" y="120" text-anchor="middle" fill="#eff6ff" font-family="Inter, system-ui, sans-serif" font-size="14">• Golden eval dataset</text>
+  <text x="370" y="146" text-anchor="middle" fill="#eff6ff" font-family="Inter, system-ui, sans-serif" font-size="14">• Pattern and model choice</text>
+  <text x="370" y="172" text-anchor="middle" fill="#eff6ff" font-family="Inter, system-ui, sans-serif" font-size="14">• ADR documentation</text>
 
-  <line x1="470" y1="185" x2="495" y2="185" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-l1)"/>
+  <line x1="475" y1="112" x2="500" y2="112" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-l1)"/>
 
   <!-- Phase 3: Governance & Hardening -->
-  <rect x="505" y="90" width="205" height="190" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
-  <text x="607" y="128" text-anchor="middle" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">PHASE 3</text>
-  <text x="607" y="158" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Hardening</text>
-  <text x="607" y="192" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">" Guardrails and SDK hooks</text>
-  <text x="607" y="214" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">" Security / legal sign-off</text>
-  <text x="607" y="236" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">" Red-team injection tests</text>
+  <rect x="510" y="15" width="210" height="195" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <text x="615" y="52" text-anchor="middle" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">PHASE 3</text>
+  <text x="615" y="84" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Hardening</text>
+  <text x="615" y="120" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">• Guardrails and SDK hooks</text>
+  <text x="615" y="146" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">• Security / legal sign-off</text>
+  <text x="615" y="172" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">• Red-team injection tests</text>
 
-  <line x1="710" y1="185" x2="735" y2="185" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-l1)"/>
+  <line x1="720" y1="112" x2="745" y2="112" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-l1)"/>
 
   <!-- Phase 4: Handoff & Rollout -->
-  <rect x="745" y="90" width="205" height="190" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
-  <text x="847" y="128" text-anchor="middle" fill="#6a55e4" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">PHASE 4</text>
-  <text x="847" y="158" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Handoff</text>
-  <text x="847" y="192" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">" Operational runbooks</text>
-  <text x="847" y="214" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">" Shadow / canary rollout</text>
-  <text x="847" y="236" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="13">" On-call escalation paths</text>
+  <rect x="755" y="15" width="210" height="195" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <text x="860" y="52" text-anchor="middle" fill="#6a55e4" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">PHASE 4</text>
+  <text x="860" y="84" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Handoff</text>
+  <text x="860" y="120" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">• Operational runbooks</text>
+  <text x="860" y="146" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">• Shadow / canary rollout</text>
+  <text x="860" y="172" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">• On-call escalation paths</text>
 
-  <line x1="950" y1="185" x2="975" y2="185" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-l1)"/>
+  <line x1="965" y1="112" x2="990" y2="112" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-l1)"/>
 
   <!-- Phase 5: Monitoring & Iteration -->
-  <rect x="985" y="90" width="190" height="190" rx="14" fill="#ecfdf5" stroke="#16a34a" stroke-width="3"/>
-  <text x="1080" y="128" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">PHASE 5</text>
-  <text x="1080" y="158" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Operations</text>
-  <text x="1080" y="192" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">" Drift and SLA telemetry</text>
-  <text x="1080" y="214" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">" Stratified trace sampling</text>
-  <text x="1080" y="236" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">" Model upgrade testing</text>
+  <rect x="1000" y="15" width="180" height="195" rx="14" fill="#ecfdf5" stroke="#16a34a" stroke-width="3"/>
+  <text x="1090" y="52" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">PHASE 5</text>
+  <text x="1090" y="84" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Operations</text>
+  <text x="1090" y="120" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14">• Drift and SLA telemetry</text>
+  <text x="1090" y="146" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14">• Stratified sampling</text>
+  <text x="1090" y="172" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14">• Model upgrade evals</text>
 
   <!-- Continuous Iteration Loop -->
-  <path d="M 1080 280 V 355 H 367 V 290" fill="none" stroke="#6a55e4" stroke-width="3" stroke-dasharray="8 5" marker-end="url(#arr-l2)"/>
-  <rect x="460" y="325" width="520" height="52" rx="10" fill="#f3e8ff" stroke="#6a55e4" stroke-width="2"/>
-  <text x="720" y="357" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Feedback Loop: Production edge cases feed Phase 2 Golden Evaluation Sets</text>
+  <path d="M 1090 210 V 285 H 370 V 220" fill="none" stroke="#6a55e4" stroke-width="3" stroke-dasharray="8 5" marker-end="url(#arr-l2)"/>
+  <rect x="440" y="255" width="560" height="54" rx="10" fill="#f3e8ff" stroke="#6a55e4" stroke-width="2"/>
+  <text x="720" y="288" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Feedback Loop: Production edge cases feed Phase 2 Golden Evaluation Sets</text>
 </svg>

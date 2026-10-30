@@ -1,48 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 440" width="1200" height="440" role="img" aria-label="Escalation and Ambiguity Resolution Decision Flow">
-  <rect width="1200" height="440" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
-  <text x="600" y="48" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="700">Customer Support Escalation and Ambiguity Decision Matrix</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 350" width="1200" height="350" role="img" aria-label="Escalation and Ambiguity Resolution Decision Flow">
   <!-- Case 1: Explicit Request for Human -->
-  <rect x="40" y="80" width="265" height="320" rx="14" fill="#ffffff" stroke="#dc2626" stroke-width="3"/>
-  <rect x="40" y="80" width="265" height="48" rx="14" fill="#dc2626"/>
-  <text x="172" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">1. Explicit Human Request</text>
-  <text x="172" y="160" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15">Transfer me to a human</text>
-  <text x="172" y="182" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15">supervisor right now.</text>
-  <rect x="60" y="220" width="225" height="150" rx="10" fill="#fef2f2"/>
-  <text x="172" y="254" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Action: Escalate Immediately</text>
-  <text x="172" y="284" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">Do NOT investigate first</text>
-  <text x="172" y="308" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">or try to talk them out of it</text>
+  <rect x="20" y="15" width="275" height="320" rx="14" fill="#ffffff" stroke="#dc2626" stroke-width="3"/>
+  <rect x="20" y="15" width="275" height="50" rx="14" fill="#dc2626"/>
+  <text x="157" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">1. Explicit Human Request</text>
+  <text x="157" y="100" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16">“Transfer me to a human</text>
+  <text x="157" y="124" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16">supervisor right now.”</text>
+  <rect x="40" y="160" width="235" height="150" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="157" y="198" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Action: Escalate Now</text>
+  <text x="157" y="230" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">Do NOT investigate first</text>
+  <text x="157" y="254" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">or try to talk them out of it</text>
 
   <!-- Case 2: Frustrated Customer, Straightforward Issue -->
-  <rect x="325" y="80" width="265" height="320" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
-  <rect x="325" y="80" width="265" height="48" rx="14" fill="#1e71d6"/>
-  <text x="457" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">2. Frustrated + In-Scope</text>
-  <text x="457" y="160" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15">This arrived broken! I am</text>
-  <text x="457" y="182" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15">so frustrated! (Has photo)</text>
-  <rect x="345" y="220" width="225" height="150" rx="10" fill="#e0edff"/>
-  <text x="457" y="254" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Action: Empathy + Offer Fix</text>
-  <text x="457" y="284" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">Acknowledge frustration and</text>
-  <text x="457" y="308" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">resolve; escalate if reiterated</text>
+  <rect x="315" y="15" width="275" height="320" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="315" y="15" width="275" height="50" rx="14" fill="#1e71d6"/>
+  <text x="452" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">2. Frustrated + In-Scope</text>
+  <text x="452" y="100" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16">“This arrived broken! I am</text>
+  <text x="452" y="124" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16">so frustrated!” (Has photo)</text>
+  <rect x="335" y="160" width="235" height="150" rx="10" fill="#e0edff" stroke="#93c5fd"/>
+  <text x="452" y="198" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Action: Empathy + Fix</text>
+  <text x="452" y="230" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">Acknowledge frustration and</text>
+  <text x="452" y="254" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">resolve; escalate if reiterated</text>
 
   <!-- Case 3: Policy Gap / Silent Policy -->
-  <rect x="610" y="80" width="265" height="320" rx="14" fill="#ffffff" stroke="#d97706" stroke-width="3"/>
-  <rect x="610" y="80" width="265" height="48" rx="14" fill="#d97706"/>
-  <text x="742" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">3. Policy Exception / Gap</text>
-  <text x="742" y="160" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15">Asks for competitor price</text>
-  <text x="742" y="182" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15">match (policy is silent)</text>
-  <rect x="630" y="220" width="225" height="150" rx="10" fill="#fffbeb"/>
-  <text x="742" y="254" text-anchor="middle" fill="#92400e" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Action: Escalate with Summary</text>
-  <text x="742" y="284" text-anchor="middle" fill="#78350f" font-family="Inter, system-ui, sans-serif" font-size="14">Never invent policy rules</text>
-  <text x="742" y="308" text-anchor="middle" fill="#78350f" font-family="Inter, system-ui, sans-serif" font-size="14">when documentation is silent</text>
+  <rect x="610" y="15" width="275" height="320" rx="14" fill="#ffffff" stroke="#d97706" stroke-width="3"/>
+  <rect x="610" y="15" width="275" height="50" rx="14" fill="#d97706"/>
+  <text x="747" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">3. Policy Exception / Gap</text>
+  <text x="747" y="100" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16">Asks for competitor price</text>
+  <text x="747" y="124" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16">match (policy is silent)</text>
+  <rect x="630" y="160" width="235" height="150" rx="10" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="747" y="198" text-anchor="middle" fill="#92400e" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Action: Escalate + Summary</text>
+  <text x="747" y="230" text-anchor="middle" fill="#78350f" font-family="Inter, system-ui, sans-serif" font-size="14">Never invent policy rules</text>
+  <text x="747" y="254" text-anchor="middle" fill="#78350f" font-family="Inter, system-ui, sans-serif" font-size="14">when documentation is silent</text>
 
   <!-- Case 4: Multiple Customer Matches -->
-  <rect x="895" y="80" width="265" height="320" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
-  <rect x="895" y="80" width="265" height="48" rx="14" fill="#6a55e4"/>
-  <text x="1027" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">4. Multiple Tool Matches</text>
-  <text x="1027" y="160" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15">get_customer("John Smith")</text>
-  <text x="1027" y="182" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15">returns 3 matching accounts</text>
-  <rect x="915" y="220" width="225" height="150" rx="10" fill="#f3e8ff"/>
-  <text x="1027" y="254" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Action: Ask for Identifier</text>
-  <text x="1027" y="284" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">Request email, phone, or</text>
-  <text x="1027" y="308" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">order ID; never guess</text>
+  <rect x="905" y="15" width="275" height="320" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="905" y="15" width="275" height="50" rx="14" fill="#6a55e4"/>
+  <text x="1042" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">4. Multiple Tool Matches</text>
+  <text x="1042" y="100" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16">get_customer("John Smith")</text>
+  <text x="1042" y="124" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16">returns 3 matching accounts</text>
+  <rect x="925" y="160" width="235" height="150" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="1042" y="198" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Action: Ask for Identifier</text>
+  <text x="1042" y="230" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">Request email, phone, or</text>
+  <text x="1042" y="254" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">order ID; never guess</text>
 </svg>

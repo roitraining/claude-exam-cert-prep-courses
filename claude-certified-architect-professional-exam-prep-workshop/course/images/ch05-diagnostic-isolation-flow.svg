@@ -1,56 +1,53 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 430" width="1200" height="430" role="img" aria-label="Diagnostic Root-Cause Isolation Across AI System Layers">
-  <rect width="1200" height="430" rx="18" fill="#f4f8fc" stroke="#dbe5f0" stroke-width="2"/>
-  <text x="600" y="48" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">Systematic Root-Cause Isolation Across AI Architecture Layers</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 350" width="1200" height="350" role="img" aria-label="Diagnostic Root-Cause Isolation Across AI System Layers">
   <!-- Layer 1: Retrieval / Data Layer -->
-  <rect x="35" y="80" width="265" height="310" rx="14" fill="#ffffff" stroke="#dc2626" stroke-width="3"/>
-  <rect x="35" y="80" width="265" height="48" rx="14" fill="#dc2626"/>
-  <text x="167" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">1. Retrieval / Index Layer</text>
-  <text x="167" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Symptom:</text>
-  <text x="167" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">Confident but wrong answers</text>
-  <text x="167" y="198" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">right after a document refresh</text>
-  <rect x="55" y="225" width="225" height="140" rx="10" fill="#fef2f2"/>
-  <text x="167" y="255" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root Cause Check:</text>
-  <text x="167" y="280" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">" Broken re-indexing job</text>
-  <text x="167" y="302" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">" Stale/irrelevant chunks</text>
-  <text x="167" y="324" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">" Embedding model mismatch</text>
+  <rect x="20" y="15" width="275" height="320" rx="14" fill="#ffffff" stroke="#dc2626" stroke-width="3"/>
+  <rect x="20" y="15" width="275" height="50" rx="14" fill="#dc2626"/>
+  <text x="157" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">1. Retrieval / Index Layer</text>
+  <text x="157" y="92" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Symptom:</text>
+  <text x="157" y="116" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">Confident wrong answers</text>
+  <text x="157" y="138" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">right after a doc refresh</text>
+  <rect x="40" y="162" width="235" height="150" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="157" y="194" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root Cause Check:</text>
+  <text x="157" y="222" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">• Broken re-indexing job</text>
+  <text x="157" y="246" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">• Stale/irrelevant chunks</text>
+  <text x="157" y="270" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="14">• Embedding model mismatch</text>
 
   <!-- Layer 2: Prompt / Context Layer -->
-  <rect x="322" y="80" width="265" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
-  <rect x="322" y="80" width="265" height="48" rx="14" fill="#1e71d6"/>
-  <text x="454" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">2. Prompt / Context Layer</text>
-  <text x="454" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Symptom:</text>
-  <text x="454" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">Relevant chunks retrieved, but</text>
-  <text x="454" y="198" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">output ignores rules or format</text>
-  <rect x="342" y="225" width="225" height="140" rx="10" fill="#e0edff"/>
-  <text x="454" y="255" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root Cause Check:</text>
-  <text x="454" y="280" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">" Ambiguous criteria / instructions</text>
-  <text x="454" y="302" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">" Lost-in-the-middle overload</text>
-  <text x="454" y="324" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">" Missing few-shot examples</text>
+  <rect x="315" y="15" width="275" height="320" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="315" y="15" width="275" height="50" rx="14" fill="#1e71d6"/>
+  <text x="452" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">2. Prompt / Context Layer</text>
+  <text x="452" y="92" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Symptom:</text>
+  <text x="452" y="116" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">Relevant chunks retrieved, but</text>
+  <text x="452" y="138" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">output ignores rules/format</text>
+  <rect x="335" y="162" width="235" height="150" rx="10" fill="#e0edff" stroke="#93c5fd"/>
+  <text x="452" y="194" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root Cause Check:</text>
+  <text x="452" y="222" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">• Ambiguous criteria</text>
+  <text x="452" y="246" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">• Lost-in-the-middle bloat</text>
+  <text x="452" y="270" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14">• Missing few-shot examples</text>
 
   <!-- Layer 3: Model Tier Layer -->
-  <rect x="610" y="80" width="265" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
-  <rect x="610" y="80" width="265" height="48" rx="14" fill="#6a55e4"/>
-  <text x="742" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">3. Model Capability Layer</text>
-  <text x="742" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Symptom:</text>
-  <text x="742" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">Clean context + clear prompt,</text>
-  <text x="742" y="198" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">but multi-hop logic fails</text>
-  <rect x="630" y="225" width="225" height="140" rx="10" fill="#f3e8ff"/>
-  <text x="742" y="255" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root Cause Check:</text>
-  <text x="742" y="280" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">" Model tier too small (Haiku)</text>
-  <text x="742" y="302" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">" Extended thinking disabled</text>
-  <text x="742" y="324" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">" Unpinned model version change</text>
+  <rect x="610" y="15" width="275" height="320" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="610" y="15" width="275" height="50" rx="14" fill="#6a55e4"/>
+  <text x="747" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">3. Model Capability Layer</text>
+  <text x="747" y="92" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Symptom:</text>
+  <text x="747" y="116" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">Clean context + clear prompt,</text>
+  <text x="747" y="138" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">but multi-hop logic fails</text>
+  <rect x="630" y="162" width="235" height="150" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="747" y="194" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root Cause Check:</text>
+  <text x="747" y="222" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">• Model tier too small (Haiku)</text>
+  <text x="747" y="246" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">• Extended thinking disabled</text>
+  <text x="747" y="270" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">• Unpinned model version shift</text>
 
   <!-- Layer 4: Tool / Integration Layer -->
-  <rect x="898" y="80" width="265" height="310" rx="14" fill="#ffffff" stroke="#082445" stroke-width="3"/>
-  <rect x="898" y="80" width="265" height="48" rx="14" fill="#082445"/>
-  <text x="1030" y="110" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">4. Integration / Tool Layer</text>
-  <text x="1030" y="155" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Symptom:</text>
-  <text x="1030" y="178" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">Wrong tool called or agent</text>
-  <text x="1030" y="198" text-anchor="middle" fill="#495f7a" font-family="Inter, system-ui, sans-serif" font-size="14">loops on failed backend calls</text>
-  <rect x="918" y="225" width="225" height="140" rx="10" fill="#e2ecf7"/>
-  <text x="1030" y="255" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root Cause Check:</text>
-  <text x="1030" y="280" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">" Overlapping tool descriptions</text>
-  <text x="1030" y="302" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">" Generic non-structured errors</text>
-  <text x="1030" y="324" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">" Swallowed upstream timeouts</text>
+  <rect x="905" y="15" width="275" height="320" rx="14" fill="#ffffff" stroke="#082445" stroke-width="3"/>
+  <rect x="905" y="15" width="275" height="50" rx="14" fill="#082445"/>
+  <text x="1042" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">4. Integration / Tool Layer</text>
+  <text x="1042" y="92" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Symptom:</text>
+  <text x="1042" y="116" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">Wrong tool called or agent</text>
+  <text x="1042" y="138" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">loops on failed backend calls</text>
+  <rect x="925" y="162" width="235" height="150" rx="10" fill="#e2ecf7" stroke="#94a3b8"/>
+  <text x="1042" y="194" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root Cause Check:</text>
+  <text x="1042" y="222" text-anchor="middle" fill="#0f172a" font-family="Inter, system-ui, sans-serif" font-size="14">• Overlapping tool descriptions</text>
+  <text x="1042" y="246" text-anchor="middle" fill="#0f172a" font-family="Inter, system-ui, sans-serif" font-size="14">• Generic non-structured errors</text>
+  <text x="1042" y="270" text-anchor="middle" fill="#0f172a" font-family="Inter, system-ui, sans-serif" font-size="14">• Swallowed upstream timeouts</text>
 </svg>
