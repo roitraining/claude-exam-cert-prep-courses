@@ -50,6 +50,29 @@
 
 ---
 
+<!-- layout: 2-column -->
+# Schedule
+
+### Day One
+- **9:00** - Overview
+- **9:45** - Agentic Architecture and Orchestration
+- **11:15** - Lab: Building a Multi-Agent System with the Claude Agent SDK
+- **12:00** - Lunch
+- **1:00** - Tool Design and MCP Integration
+- **2:30** - Claude Code Configuration and Workflows
+- **4:00** - Lab: MCP Tool Design and Claude Code Configuration
+
+### Day Two
+- **9:00** - Prompt Engineering and Structured Output
+- **11:00** - Lab: Structured Data Extraction and Validation Pipelines
+- **12:00** - Lunch
+- **1:00** - Context Management and Reliability
+- **2:45** - Lab: Context Preservation, Provenance, and Escalation Workflows
+- **3:45** - Final Practice Exam
+- **4:30** - Course Wrap-Up
+
+---
+
 <!-- layout: panel-right -->
 # Who Should Attend
 
