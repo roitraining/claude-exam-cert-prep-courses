@@ -87,10 +87,11 @@
 <!-- layout: panel-left -->
 # Prerequisites
 
-- At least 6 months of practical experience building with Claude in production environments
+- At least 6 months of practical experience building with Claude 
 - Working familiarity with the Claude API and Claude Agent SDK
-- Hands-on experience with Claude Code configuration and workflows
-- Familiarity with Model Context Protocol (MCP) integration
+- Hands-on experience with Claude Code
+- Familiarity with Model Context Protocol (MCP)
 - Understanding of LLM capabilities, context management, and structured outputs
+- To complete the labs you need access to Claude, Claude Code installed and authenticated, and a code or text editor such as VS Code
 
 ![Prerequisites](images/prerequisites.png)
