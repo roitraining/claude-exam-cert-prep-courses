@@ -125,9 +125,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Domain 7 Quiz: Developer Productivity and Operational Enablement
 
-- Open the Exam Prep Program to complete the Domain 7 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domain 7 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-11-54-ccar-p-realistic-instructor.json)
 
 ---
 

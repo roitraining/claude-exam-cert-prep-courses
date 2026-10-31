@@ -190,9 +190,7 @@ response = client.messages.create(
 
 # Domain 2 Quiz: Claude Models, Prompting, and Context Engineering
 
-- Open the Exam Prep Program to complete the Domain 2 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domain 2 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-11-46-ccar-p-realistic-instructor.json)
 
 ---
 

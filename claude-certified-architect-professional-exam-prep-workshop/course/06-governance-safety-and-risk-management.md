@@ -142,9 +142,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Domain 5 Quiz: Governance, Safety, and Risk Management
 
-- Open the Exam Prep Program to complete the Domain 5 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domain 5 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-11-52-ccar-p-realistic-instructor.json)
 
 ---
 
