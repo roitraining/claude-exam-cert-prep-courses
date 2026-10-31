@@ -130,11 +130,21 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 **Time:** 1–2 minutes
 
-- Open Claude (`claude.ai` or Claude Desktop). You can either open **Projects** or test this directly in a new chat as a system-instruction simulation:
-- Paste the following **System-Level Project Instruction** block and test question:
-  - `Project Instructions: You are the Proposal Desk Assistant for Acme Advisory. Always follow these 3 rules: (1) Ground all pricing and SLA answers strictly in the Reference Knowledge below and cite the section number. (2) If a client asks for a capability or discount not listed in the Reference Knowledge, state "Requires VP Sales Approval - not covered in standard playbook" and do not invent terms. (3) Format all client responses as a 3-bullet Executive Summary.`
-  - `Reference Knowledge: [Section 1.1: Standard implementation takes 4 weeks at $15,000. Section 1.2: Discounts up to 10% may be approved by the Regional Director.]`
-  - `Test Task: A prospect asks for a 2-week rush implementation and a 20% discount. Draft our internal guidance note.`
+- Open Claude (`claude.ai` or Claude Desktop) and paste this Project instruction simulation:
+
+```text
+Project Instructions:
+You are the Proposal Desk Assistant for Acme Advisory. Always follow these 3 rules:
+1. Ground all pricing and SLA answers strictly in the Reference Knowledge below and cite the section number.
+2. If a client asks for a capability or discount not listed in the Reference Knowledge, state "Requires VP Sales Approval - not covered in standard playbook" and do not invent terms.
+3. Format all responses as a 3-bullet Executive Summary.
+
+Reference Knowledge:
+Section 1.1: Standard implementation takes 4 weeks at $15,000.
+Section 1.2: Discounts up to 10% may be approved by the Regional Director.
+
+Test Task: A prospect asks for a 2-week rush implementation and a 20% discount. Draft our internal guidance note.
+```
 
 ---
 

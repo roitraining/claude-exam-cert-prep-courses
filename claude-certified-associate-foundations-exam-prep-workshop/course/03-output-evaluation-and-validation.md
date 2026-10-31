@@ -150,9 +150,17 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 **Time:** 1–2 minutes
 
-- Open Claude (`claude.ai` or Claude Desktop) and paste this short policy excerpt along with a verification prompt:
-  - `Policy Excerpt: "Section 4.1: Standard equipment requests under $750 are approved by team managers. Section 4.2: Requests over $750 require Finance VP sign-off. Travel meal per diem is capped at $65/day."`
-  - `Prompt: A colleague wrote this summary for our compliance handbook: "Per Section 4.3, equipment requests up to $1,000 are approved by team managers, and daily meal per diem is $75." Compare this draft against the Policy Excerpt above. List every factual or citation error in a 3-column table (Claim, Policy Reality, Correction), and then create a clean standalone Artifact containing a 1-page Employee Expense Quick-Reference Guide tailored for new hires.`
+- Open Claude (`claude.ai` or Claude Desktop) and paste this verification and Artifact prompt:
+
+```text
+Policy Excerpt:
+"Section 4.1: Standard equipment requests under $750 are approved by team managers. Section 4.2: Requests over $750 require Finance VP sign-off. Travel meal per diem is capped at $65/day."
+
+A colleague wrote this summary for our compliance handbook:
+"Per Section 4.3, equipment requests up to $1,000 are approved by team managers, and daily meal per diem is $75."
+
+Compare this draft against the Policy Excerpt above. List every factual or citation error in a 3-column table (Claim, Policy Reality, Correction), and then create a clean standalone Artifact containing a 1-page Employee Expense Quick-Reference Guide tailored for new hires.
+```
 
 ---
 

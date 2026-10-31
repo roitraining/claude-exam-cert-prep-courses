@@ -142,8 +142,17 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 **Time:** 1–2 minutes
 
 - Open Claude (`claude.ai` or Claude Desktop) and paste this workflow redesign prompt:
-  - `Our customer onboarding team manually processes new client intake: (1) read a 15-page client questionnaire PDF, (2) extract key goals and timeline risks into a kickoff deck outline, (3) verify contract SLA clauses against our legal playbook, (4) email the verified kickoff summary to the client, and (5) automatically sync the client's CRM record with our internal ERP database every night via REST API.`
-  - `Create a 4-column workflow table (Step, Associate Action in Claude, Required Human Validation Gate, Escalate to Developer/Architect?). Clearly identify which steps an Associate handles with built-in Claude features and which step must be escalated to a Claude Developer or Architect.`
+
+```text
+Our customer onboarding team manually processes new client intake:
+1. Read a 15-page client questionnaire PDF
+2. Extract key goals and timeline risks into a kickoff deck outline
+3. Verify contract SLA clauses against our legal playbook
+4. Email the verified kickoff summary to the client
+5. Automatically sync the client's CRM record with our internal ERP database every night via REST API
+
+Create a 4-column workflow table (Step, Associate Action in Claude, Required Human Validation Gate, Escalate to Developer/Architect?). Clearly identify which steps an Associate handles with built-in Claude features and which step must be escalated to a Claude Developer or Architect.
+```
 
 ---
 

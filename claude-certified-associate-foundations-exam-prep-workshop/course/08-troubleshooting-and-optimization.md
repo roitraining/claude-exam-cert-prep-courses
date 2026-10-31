@@ -115,11 +115,15 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 **Time:** 1–2 minutes
 
-- Open Claude (`claude.ai` or Claude Desktop) and inspect this underperforming prompt that a marketing coordinator used:
-  - `Broken Prompt: "Read our product notes and write everything we need for next month's launch, make it good and accurate, and don't make anything up."`
-- Paste this diagnostic exercise into Claude:
-  - `A teammate used this prompt: "Read our product notes and write everything we need for next month's launch, make it good and accurate, and don't make anything up."`
-  - `(1) Diagnose 3 specific reasons why this prompt produces poor, inconsistent outputs. (2) Rewrite it into a reusable, decomposed 2-step Prompt Template with [PLACEHOLDERS] for audience, source notes, and output format, plus a grounding rule for missing facts.`
+- Open Claude (`claude.ai` or Claude Desktop) and paste this prompt-troubleshooting exercise:
+
+```text
+A teammate used this underperforming prompt:
+"Read our product notes and write everything we need for next month's launch, make it good and accurate, and don't make anything up."
+
+1. Diagnose 3 specific reasons why this prompt produces poor, inconsistent outputs.
+2. Rewrite it into a reusable, decomposed 2-step Prompt Template with [PLACEHOLDERS] for audience, source notes, and output format, plus a grounding rule for missing facts.
+```
 
 ---
 

@@ -158,12 +158,17 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 **Time:** 1–2 minutes
 
 - Open Claude (`claude.ai` or Claude Desktop) in a new chat
-- **Step 1**: Paste this vague prompt and glance at how generic the result is:
-  - `Write a plan and announcement email for moving our team's weekly status updates from live meetings to async written updates.`
-- **Step 2**: Now replace it with a **decomposed, structured prompt**:
-  - `We are a 15-person project management team moving our 60-minute Monday status meeting to an async Friday written check-in. First, list 3 rollout risks and how to mitigate each in a 2-column table. Do not draft the team announcement email yet.`
-- **Step 3**: In one follow-up turn, iterate:
-  - `Using Risk #1 and #2 above, draft a friendly 120-word announcement email from the Operations Lead including the start date (Nov 10) and a bulleted 3-item check-in template.`
+- **Step 1**: Paste this decomposed, structured prompt:
+
+```text
+We are a 15-person project management team moving our 60-minute Monday status meeting to an async Friday written check-in. First, list 3 rollout risks and how to mitigate each in a 2-column table. Do not draft the team announcement email yet.
+```
+
+- **Step 2**: In one follow-up turn, paste this iteration prompt:
+
+```text
+Using Risk #1 and #2 above, draft a friendly 120-word announcement email from the Operations Lead including the start date (Nov 10) and a bulleted 3-item check-in template.
+```
 
 ---
 

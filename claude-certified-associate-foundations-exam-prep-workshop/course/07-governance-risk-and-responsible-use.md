@@ -121,13 +121,16 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 **Time:** 1–2 minutes
 
-- Imagine you have these 3 rows from an internal support escalation spreadsheet that you want Claude to analyze for root-cause trends:
-  - `Row 1: Maria Gomez | Acct #8849-2210 | maria.gomez@example.com | Billing double-charged after plan upgrade | $149`
-  - `Row 2: David Chen | Acct #7731-9044 | dchen@example.com | Billing double-charged after annual renewal | $299`
-  - `Row 3: Priya Patel | Acct #6612-3381 | priya.p@example.com | Password reset link expired after 2 minutes | $0`
-- **Step 1**: Strip the regulated personal identifiers (`Name`, `Acct #`, `Email`) and replace them with `Case_1`, `Case_2`, `Case_3`
-- **Step 2**: Paste **only the anonymized records** into Claude (`claude.ai` or Claude Desktop) and ask:
-  - `Analyze these 3 anonymized support escalations. Identify the top recurring billing defect and recommend one process fix.`
+- Notice how the regulated personal identifiers (`Name`, `Acct #`, `Email`) have been replaced with `Case_1`, `Case_2`, and `Case_3` before uploading
+- Open Claude (`claude.ai` or Claude Desktop) and paste this sanitized prompt:
+
+```text
+Analyze these 3 anonymized support escalations. Identify the top recurring billing defect and recommend one process fix:
+
+Case_1 | Billing double-charged after plan upgrade | $149
+Case_2 | Billing double-charged after annual renewal | $299
+Case_3 | Password reset link expired after 2 minutes | $0
+```
 
 ---
 

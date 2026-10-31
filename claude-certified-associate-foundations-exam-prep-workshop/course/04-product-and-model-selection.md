@@ -145,7 +145,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 - Open the same Claude chat you used in the Chapter 2 or Chapter 3 Do Now
 - Paste this **Session Handoff** prompt to compress the thread for a fresh session:
-  - `We are wrapping up this working session and moving to a fresh chat to keep our context window clean. Summarize our work so far into a compact "Session Handoff Block" (under 120 words) with three headings: (1) Approved Decisions and Facts, (2) Constraints and Style Rules to Keep, and (3) Next Immediate Task.`
+
+```text
+We are wrapping up this working session and moving to a fresh chat to keep our context window clean. Summarize our work so far into a compact "Session Handoff Block" (under 120 words) with three headings:
+1. Approved Decisions and Facts
+2. Constraints and Style Rules to Keep
+3. Next Immediate Task
+```
+
 - Copy the generated handoff block, open a **new chat**, and see how cleanly you can continue from that compact summary
 
 ---
