@@ -26,22 +26,6 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-<!-- layout: card-layout -->
-# Practice Exam Simulation Guidelines
-
-### Exam Format Match
-- 53 multiple-choice and multiple-response items spanning all eight CCDV-F blueprint domains.
-- Remember that **Domain 2 (Applications and Integration)** accounts for roughly one-third (33.1%) of the exam.
-
-### Time Management
-- Budget roughly 2 minutes 15 seconds per item across the 120-minute window.
-- Flag uncertain items, record your best answer, and review flagged questions before submitting.
-
-### Diagnostic Review
-- Note any questions where two options looked plausible so we can examine the underlying blueprint rule in the review session.
-
----
-
 # Final Practice Exam
 
 - [Open Practice Exam](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-12-19-ccdv-f-realistic-instructor.json)

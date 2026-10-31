@@ -26,23 +26,6 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-<!-- layout: card-layout -->
-# Practice Exam Simulation Rules
-
-### Scenario Structure
-- Questions are grouped into realistic production scenarios matching the 6 official CCAR-F exam scenarios.
-- Read each scenario’s toolset, architecture, and SLA target before answering its item set.
-
-### Pacing Target
-- Aim for roughly 1.5 to 2 minutes per question.
-- Flag uncertain items and keep moving; never leave a question unanswered.
-
-### Diagnostic Goal
-- Note which domain or task statement feels ambiguous as you work through the questions.
-- Use the review session immediately after to close any remaining knowledge gaps.
-
----
-
 # Final Practice Exam
 
 - [Open Practice Exam](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-30-15-01-ccar-f-complex-instructor.json)

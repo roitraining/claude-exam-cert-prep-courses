@@ -26,22 +26,6 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
-<!-- layout: card-layout -->
-# Practice Exam Simulation Guidelines
-
-### Exam Format Match
-- 63 multiple-choice and multiple-response items spanning all seven CCAR-P blueprint domains.
-- Pay close attention to multiple-response prompts that specify selecting two or three options.
-
-### Time Management
-- Budget roughly 1 minute 50 seconds per item across the 120-minute session.
-- Flag lengthy architectural trade-off items, record your best choice, and return during your final review pass.
-
-### Diagnostic Focus
-- Note which of the seven domains feels most challenging during the simulation so we can dissect those items in the review session.
-
----
-
 # Final Practice Exam
 
 - [Open Practice Exam](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-11-57-ccar-p-realistic-instructor.json)
