@@ -188,6 +188,8 @@ async def run_agent_loop(user_prompt: str, tools: list[dict]):
 
 **Time:** 45 minutes
 
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-developer-foundations-exam-prep-workshop/labs/lab-01-building-agents-and-workflows)
+
 ---
 
 # What You Learned

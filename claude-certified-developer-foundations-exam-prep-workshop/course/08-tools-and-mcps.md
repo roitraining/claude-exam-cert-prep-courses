@@ -176,6 +176,8 @@ def check_sku_stock(sku: str, warehouse: str) -> dict:
 
 **Time:** 60 minutes
 
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-developer-foundations-exam-prep-workshop/labs/lab-04-developing-secure-tools-and-mcp-servers)
+
 ---
 
 <!-- layout: 2-column -->

@@ -97,5 +97,6 @@
 - At least 6 months of hands-on experience with Claude or comparable LLM systems
 - Fluency with REST APIs and CLI tools
 - Working knowledge of LLM fundamentals, agents, context management, and MCP
+- To complete the labs you need access to Claude, Claude Code installed and authenticated, and a code or text editor such as VS Code
 
 ![Prerequisites](images/prerequisites.png)

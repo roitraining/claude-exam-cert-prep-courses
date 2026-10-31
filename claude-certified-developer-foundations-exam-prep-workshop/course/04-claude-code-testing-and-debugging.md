@@ -192,6 +192,8 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 **Time:** 45 minutes
 
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-developer-foundations-exam-prep-workshop/labs/lab-02-api-integration-claude-code-and-debugging)
+
 ---
 
 <!-- layout: 2-column -->

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 2 Overview: Messages API and Batches API, Claude Code Configuration, and Trace Debugging">
+  <!-- Panel 1: Messages API & Batches API -->
+  <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 1: Realtime vs Batch API</text>
+  <rect x="42" y="92" width="290" height="96" rx="10" fill="#e0edff"/>
+  <text x="187" y="118" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Stateless Messages API</text>
+  <text x="187" y="142" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Top-level system + pinned snapshot</text>
+  <text x="187" y="164" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Strict tool_use / tool_result pairing</text>
+  <rect x="42" y="204" width="290" height="106" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="187" y="232" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Message Batches API (10K Docs)</text>
+  <text x="187" y="256" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">50% cost discount | 24h window</text>
+  <text x="187" y="278" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Correlate responses via custom_id</text>
+
+  <!-- Panel 2: Claude Code Configuration -->
+  <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <rect x="382" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
+  <text x="550" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 2: Claude Code Config</text>
+  <rect x="405" y="92" width="290" height="64" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="550" y="118" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">CLAUDE.md + .claude/rules/</text>
+  <text x="550" y="140" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Shared memory + path globs</text>
+  <rect x="405" y="170" width="290" height="64" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="550" y="196" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">.claude/settings.json</text>
+  <text x="550" y="218" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">allow: npm test | deny: Read(.env*)</text>
+  <rect x="405" y="248" width="290" height="62" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="550" y="274" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Skills + Headless Mode (-p)</text>
+  <text x="550" y="296" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">context: fork | --json-schema</text>
+
+  <!-- Panel 3: Trace Analysis & Isolation -->
+  <rect x="745" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="745" y="25" width="335" height="48" rx="14" fill="#6a55e4"/>
+  <text x="912" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 3 and 4: Trace Debugging</text>
+  <rect x="768" y="92" width="290" height="96" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="912" y="118" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Integration-Layer Bugs</text>
+  <text x="912" y="142" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">stop_reason == "max_tokens" truncation</text>
+  <text x="912" y="164" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Missing tool_result (400) | Swallowed err</text>
+  <rect x="768" y="204" width="290" height="106" rx="10" fill="#082445"/>
+  <text x="912" y="232" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Model / Tool Config Layer</text>
+  <text x="912" y="256" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Clean payload + vague descriptions</text>
+  <text x="912" y="278" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">-&gt; Expand tool descriptions</text>
+</svg>

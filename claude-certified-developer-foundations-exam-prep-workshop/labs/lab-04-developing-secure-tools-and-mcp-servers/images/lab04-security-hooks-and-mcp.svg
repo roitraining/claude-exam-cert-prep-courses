@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 4 Overview: Prompt Injection Defense, MCP Server Primitives, and Customization Selection">
+  <!-- Panel 1: Prompt Injection & Safety Hooks -->
+  <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#dc2626" stroke-width="3"/>
+  <rect x="20" y="25" width="335" height="48" rx="14" fill="#dc2626"/>
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 1: Security and Hooks</text>
+  <rect x="42" y="92" width="290" height="96" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="187" y="118" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Indirect Prompt Injection</text>
+  <text x="187" y="142" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">Isolate untrusted web pages in XML</text>
+  <text x="187" y="164" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">Enforce least-privilege tool sets</text>
+  <rect x="42" y="204" width="290" height="106" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="187" y="232" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Deterministic Claude Hooks</text>
+  <text x="187" y="256" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Block rm -rf, DROP TABLE, .env</text>
+  <text x="187" y="278" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Redact PII before external logging</text>
+
+  <!-- Panel 2: MCP Server Development -->
+  <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="382" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
+  <text x="550" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 2: MCP Server Primitives</text>
+  <rect x="405" y="92" width="290" height="64" rx="10" fill="#e0edff"/>
+  <text x="550" y="118" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Tools (Model-Controlled)</text>
+  <text x="550" y="140" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">check_sku_stock + structured isError</text>
+  <rect x="405" y="170" width="290" height="64" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="550" y="196" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Resources (App-Controlled)</text>
+  <text x="550" y="218" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">inventory://catalog/schema (read-only)</text>
+  <rect x="405" y="248" width="290" height="62" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="550" y="274" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Prompts + stdio Transport</text>
+  <text x="550" y="296" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Log to stderr (never corrupt stdout)</text>
+
+  <!-- Panel 3: Customization Selection & Key Hygiene -->
+  <rect x="745" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="745" y="25" width="335" height="48" rx="14" fill="#6a55e4"/>
+  <text x="912" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 3 and 4: Customization</text>
+  <rect x="768" y="92" width="290" height="96" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="912" y="118" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Selecting the Right Primitive</text>
+  <text x="912" y="142" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Multi-app internal API -&gt; MCP Server</text>
+  <text x="912" y="164" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Built-in | Custom Tool | Skill</text>
+  <rect x="768" y="204" width="290" height="106" rx="10" fill="#082445"/>
+  <text x="912" y="232" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Secrets and Identity</text>
+  <text x="912" y="256" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">.mcp.json "${ENV_VAR}" expansion</text>
+  <text x="912" y="278" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Per-env keys + caller RBAC audit</text>
+</svg>

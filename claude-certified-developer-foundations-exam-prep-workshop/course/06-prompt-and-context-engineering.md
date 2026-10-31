@@ -160,6 +160,8 @@ except ValidationError as err:
 
 **Time:** 45 minutes
 
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-developer-foundations-exam-prep-workshop/labs/lab-03-model-optimization-and-context-engineering)
+
 ---
 
 <!-- layout: 2-column -->
