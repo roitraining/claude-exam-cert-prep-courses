@@ -96,5 +96,6 @@
 - At least 3 years of experience in systems architecture or platform engineering
 - At least 6 months of hands-on experience with Claude or comparable LLM systems in production
 - Experience delivering end-to-end systems from discovery to deployment
+- To complete the labs you need access to Claude, Claude Code installed and authenticated, and a code or text editor such as VS Code
 
 ![Prerequisites](images/prerequisites.png)

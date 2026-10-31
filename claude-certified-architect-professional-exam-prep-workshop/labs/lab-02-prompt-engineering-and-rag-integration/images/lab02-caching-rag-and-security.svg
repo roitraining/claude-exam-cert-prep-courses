@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 2 Overview: Prompt Caching Prefix, Least Privilege Tools, and Hybrid RAG">
+  <!-- Panel 1: Prompt Caching & XML Boundaries -->
+  <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 1: Caching and XML Tags</text>
+  <rect x="42" y="92" width="290" height="96" rx="10" fill="#e0edff"/>
+  <text x="187" y="118" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Static Prefix First</text>
+  <text x="187" y="142" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Tools -&gt; System + 8K Policy</text>
+  <text x="187" y="164" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">cache_control: {"type": "ephemeral"}</text>
+  <rect x="42" y="204" width="290" height="106" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="187" y="232" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">XML Trust Boundaries</text>
+  <text x="187" y="256" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">&lt;policy_document&gt; (Trusted)</text>
+  <text x="187" y="278" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">&lt;untrusted_ticket&gt; (Dynamic end)</text>
+
+  <!-- Panel 2: Least-Privilege Capability Removal -->
+  <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#dc2626" stroke-width="3"/>
+  <rect x="382" y="25" width="335" height="48" rx="14" fill="#dc2626"/>
+  <text x="550" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 2: Least Privilege</text>
+  <rect x="405" y="92" width="290" height="96" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="550" y="118" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Eliminate Capability Bloat</text>
+  <text x="550" y="142" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">Remove issue_refund and</text>
+  <text x="550" y="164" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">delete_user_account entirely</text>
+  <rect x="405" y="204" width="290" height="106" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="550" y="232" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Identity Propagation</text>
+  <text x="550" y="256" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Pass caller-scoped OAuth/JWT</text>
+  <text x="550" y="278" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Never use shared superuser token</text>
+
+  <!-- Panel 3: Hybrid RAG & Connection Protocols -->
+  <rect x="745" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <rect x="745" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
+  <text x="912" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 3 and 4: RAG and Routing</text>
+  <rect x="768" y="92" width="290" height="96" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="912" y="118" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Hybrid RAG + Reranking</text>
+  <text x="912" y="142" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Dense Vector + BM25 + ACL Filter</text>
+  <text x="912" y="164" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Retrieve Top-25 -&gt; Rerank Top-5</text>
+  <rect x="768" y="204" width="290" height="106" rx="10" fill="#082445"/>
+  <text x="912" y="232" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Protocols and Model Tiers</text>
+  <text x="912" y="256" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">MCP vs Direct API vs A2A</text>
+  <text x="912" y="278" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Haiku -&gt; Sonnet -&gt; Opus cascade</text>
+</svg>

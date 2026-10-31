@@ -152,6 +152,8 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 **Time:** 45 minutes
 
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-architect-professional-exam-prep-workshop/labs/lab-03-evaluation-pipelines-and-safety-guardrails)
+
 ---
 
 # What You Learned

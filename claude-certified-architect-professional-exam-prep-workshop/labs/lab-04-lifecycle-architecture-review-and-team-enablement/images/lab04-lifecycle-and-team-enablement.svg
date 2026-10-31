@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 4 Overview: ADRs and Stakeholder SLAs, Team Claude Code Standardization, and Operational Runbooks">
+  <!-- Panel 1: ADRs & Stakeholder SLAs -->
+  <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 1: ADRs and SLAs</text>
+  <rect x="42" y="92" width="290" height="96" rx="10" fill="#e0edff"/>
+  <text x="187" y="118" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Tailored Stakeholder Briefs</text>
+  <text x="187" y="142" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Execs: ROI and cost per resolution</text>
+  <text x="187" y="164" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Legal/Sec: ZDR, BAA, least privilege</text>
+  <rect x="42" y="204" width="290" height="106" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="187" y="232" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Statistical Quality + Gates</text>
+  <text x="187" y="256" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Never promise 100% LLM determinism</text>
+  <text x="187" y="278" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Pair eval floors with code hooks</text>
+
+  <!-- Panel 2: Team Claude Code Standardization -->
+  <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <rect x="382" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
+  <text x="550" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 2: Team Claude Code</text>
+  <rect x="405" y="92" width="290" height="64" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="550" y="118" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root CLAUDE.md + @import</text>
+  <text x="550" y="140" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Version-controlled team standards</text>
+  <rect x="405" y="170" width="290" height="64" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text x="550" y="196" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">.claude/rules/ + /arch-review</text>
+  <text x="550" y="218" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Path globs + shared slash commands</text>
+  <rect x="405" y="248" width="290" height="62" rx="10" fill="#e0edff" stroke="#93c5fd"/>
+  <text x="550" y="274" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Forked Skill + claude -p CI</text>
+  <text x="550" y="296" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">context: fork | --json-schema</text>
+
+  <!-- Panel 3: Operational Debugging & Runbooks -->
+  <rect x="745" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="745" y="25" width="335" height="48" rx="14" fill="#6a55e4"/>
+  <text x="912" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 3 and 4: Ops Runbooks</text>
+  <rect x="768" y="92" width="290" height="96" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="912" y="118" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Production Incident Triage</text>
+  <text x="912" y="142" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">1. Post-refresh RAG -&gt; Index rollback</text>
+  <text x="912" y="164" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">2. 4x cost spike -&gt; Fix cache prefix</text>
+  <rect x="768" y="204" width="290" height="106" rx="10" fill="#082445"/>
+  <text x="912" y="232" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Lifecycle Governance</text>
+  <text x="912" y="256" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Pin model IDs + golden eval gates</text>
+  <text x="912" y="278" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">before promoting model upgrades</text>
+</svg>
