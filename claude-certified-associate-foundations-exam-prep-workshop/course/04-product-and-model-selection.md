@@ -170,10 +170,9 @@ We are wrapping up this working session and moving to a fresh chat to keep our c
 
 ---
 
-<!-- TODO QUIZ: Replace href once the CCAO-F Domains 1-3 quiz JSON is published -->
 # Quiz 1: Domains 1 to 3 Review
 
-- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/ccao-f-quiz-1-domains-1-3.json)
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-13-37-ccao-f-realistic-instructor.json)
 
 ---
 

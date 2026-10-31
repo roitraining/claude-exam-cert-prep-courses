@@ -26,10 +26,9 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-<!-- TODO QUIZ: Replace href once the CCAO-F Final Practice Exam JSON is published -->
 # Final Practice Exam
 
-- [Open Practice Exam](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/ccao-f-final-practice-exam.json)
+- [Open Practice Exam](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-13-42-ccao-f-realistic-instructor.json)
 
 ---
 

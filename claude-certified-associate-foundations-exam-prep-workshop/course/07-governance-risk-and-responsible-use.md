@@ -148,10 +148,9 @@ Case_3 | Password reset link expired after 2 minutes | $0
 
 ---
 
-<!-- TODO QUIZ: Replace href once the CCAO-F Domains 4-6 quiz JSON is published -->
 # Quiz 2: Domains 4 to 6 Review
 
-- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/ccao-f-quiz-2-domains-4-6.json)
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-13-40-ccao-f-realistic-instructor.json)
 
 ---
 
