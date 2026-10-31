@@ -19,7 +19,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 5: Configuration and Knowledge Management (12%)
+# Domain 5: Configuration and Knowledge
 
 | Objective | Exam Focus |
 | :--- | :--- |
@@ -33,14 +33,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 6
 
-- **Configuring Projects and System Instructions**
-- Managing Knowledge Sources and Connectors
-- Maintaining Configurations Over Time
+- **Projects and Instructions**
+- Knowledge and Connectors
+- Maintaining Configurations
 
 ---
 
 <!-- layout: stacked -->
-# Anatomy of a Well-Configured Claude Project
+# Anatomy of a Claude Project
 
 - **System-level Project instructions**: persistent rules that automatically guide Claude’s role, tone, formatting, and boundaries in every chat within the Project
 - **Project knowledge base**: curated reference files (style guides, product specs, approved templates, policy manuals) available across all Project conversations
@@ -51,7 +51,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: card-layout -->
-# Writing Effective System-Level Instructions
+# Writing System-Level Instructions
 
 ### 1. Define Role, Audience, and Tone
 - Specify who Claude is assisting, the default target audience, and house communication standards (for example, “Write in concise, plain business English; avoid jargon”).
@@ -70,14 +70,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 6
 
-- Configuring Projects and System Instructions
-- **Managing Knowledge Sources and Connectors**
-- Maintaining Configurations Over Time
+- Projects and Instructions
+- **Knowledge and Connectors**
+- Maintaining Configurations
 
 ---
 
 <!-- layout: 2-column -->
-# Uploaded Project Files vs Workspace Connectors
+# Uploaded Files vs Workspace Connectors
 
 ### Uploaded Project Knowledge
 - Static files (PDFs, docs, CSVs, markdown templates) uploaded directly into a Claude Project
@@ -92,7 +92,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: card-layout -->
-# Best Practices for Curating Project Knowledge
+# Curating Project Knowledge
 
 ### Avoid Uploading Conflicting Versions
 - Uploading both `2024_Pricing_Policy.pdf` and `2026_Pricing_Policy_FINAL.pdf` in the same Project causes contradictory answers.
@@ -109,13 +109,13 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 6
 
-- Configuring Projects and System Instructions
-- Managing Knowledge Sources and Connectors
-- **Maintaining Configurations Over Time**
+- Projects and Instructions
+- Knowledge and Connectors
+- **Maintaining Configurations**
 
 ---
 
-# Maintaining and Updating Project Configurations
+# Maintaining Project Configurations
 
 - **Treat Project configurations as living assets**: when company policies, product pricing, or team templates change, outdated Project knowledge will cause Claude to produce confident but obsolete outputs
 - **Four-step maintenance cadence**:
@@ -126,7 +126,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Do Now: Configuring a Claude Project with Custom Instructions
+# Do Now: Custom Project Instructions
 
 **Time:** 1–2 minutes
 
@@ -134,22 +134,25 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ```text
 Project Instructions:
-You are the Proposal Desk Assistant for Acme Advisory. Always follow these 3 rules:
-1. Ground all pricing and SLA answers strictly in the Reference Knowledge below and cite the section number.
-2. If a client asks for a capability or discount not listed in the Reference Knowledge, state "Requires VP Sales Approval - not covered in standard playbook" and do not invent terms.
+You are the Proposal Desk Assistant for Acme Advisory. Follow 3 rules:
+1. Ground all pricing and SLA answers strictly in Reference Knowledge
+   below and cite the section number.
+2. If a client asks for terms not listed below, state "Requires VP
+   Sales Approval - not in standard playbook" and do not invent terms.
 3. Format all responses as a 3-bullet Executive Summary.
 
 Reference Knowledge:
 Section 1.1: Standard implementation takes 4 weeks at $15,000.
-Section 1.2: Discounts up to 10% may be approved by the Regional Director.
+Section 1.2: Discounts up to 10% may be approved by a Regional Director.
 
-Test Task: A prospect asks for a 2-week rush implementation and a 20% discount. Draft our internal guidance note.
+Test Task: A prospect asks for a 2-week rush implementation and a 20%
+discount. Draft our internal guidance note.
 ```
 
 ---
 
 <!-- layout: 2-column -->
-# Do Now Debrief: What to Notice for the Exam
+# Do Now Debrief: Exam Takeaways
 
 ### How System Instructions Shaped the Output
 - Without needing to repeat formatting or policy rules in the task prompt, Claude automatically formatted a 3-bullet summary, cited `Section 1.1` and `Section 1.2`, and flagged both the 2-week rush timeline and the 20% discount as **“Requires VP Sales Approval - not covered in standard playbook”**

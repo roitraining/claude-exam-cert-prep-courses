@@ -19,7 +19,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 6: Governance, Risk, and Responsible Use (15%)
+# Domain 6: Governance and Responsible Use
 
 | Objective | Exam Focus |
 | :--- | :--- |
@@ -33,14 +33,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 7
 
-- **Appropriate vs Inappropriate Use Cases**
-- Data Sensitivity, Privacy, and Anonymization
-- Organizational Policies and Ethical AI
+- **Appropriate AI Use Cases**
+- Data Privacy and Redaction
+- Governance and Ethical AI
 
 ---
 
 <!-- layout: 2-column -->
-# Identifying Appropriate vs Inappropriate Use Cases
+# Appropriate vs Inappropriate Use Cases
 
 ### Appropriate Use Cases
 - Drafting, summarizing, and analyzing business content using approved tools and sanitized datasets
@@ -57,9 +57,9 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 7
 
-- Appropriate vs Inappropriate Use Cases
-- **Data Sensitivity, Privacy, and Anonymization**
-- Organizational Policies and Ethical AI
+- Appropriate AI Use Cases
+- **Data Privacy and Redaction**
+- Governance and Ethical AI
 
 ---
 
@@ -75,7 +75,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: card-layout -->
-# Four Practical Data Sanitization Techniques
+# Four Data Sanitization Techniques
 
 ### 1. Column Removal
 - Delete columns that are irrelevant to the analytical goal (such as `Customer_Full_Name`, `Account_Number`, `Street_Address`, `Phone`) before exporting a CSV or spreadsheet for analysis.
@@ -94,14 +94,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 7
 
-- Appropriate vs Inappropriate Use Cases
-- Data Sensitivity, Privacy, and Anonymization
-- **Organizational Policies and Ethical AI**
+- Appropriate AI Use Cases
+- Data Privacy and Redaction
+- **Governance and Ethical AI**
 
 ---
 
 <!-- layout: card-layout -->
-# Following Governance Standards and Ethical AI Principles
+# Governance Standards and Ethical AI
 
 ### Organizational AI Policy Alignment
 - Always follow your organization’s data classification tiers, approved tool lists, and mandatory human sign-off rules.
@@ -117,7 +117,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Do Now: Anonymizing Sensitive Data Before Prompting
+# Do Now: Anonymizing Sensitive Data
 
 **Time:** 1–2 minutes
 
@@ -125,7 +125,8 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 - Open Claude (`claude.ai` or Claude Desktop) and paste this sanitized prompt:
 
 ```text
-Analyze these 3 anonymized support escalations. Identify the top recurring billing defect and recommend one process fix:
+Analyze these 3 anonymized support escalations. Identify the top
+recurring billing defect and recommend one process fix:
 
 Case_1 | Billing double-charged after plan upgrade | $149
 Case_2 | Billing double-charged after annual renewal | $299
@@ -135,7 +136,7 @@ Case_3 | Password reset link expired after 2 minutes | $0
 ---
 
 <!-- layout: 2-column -->
-# Do Now Debrief: What to Notice for the Exam
+# Do Now Debrief: Exam Takeaways
 
 ### Why Anonymization Wins
 - Claude identified the exact billing trend (double-charging on subscription changes) with **zero exposure** of customer names, account numbers, or emails

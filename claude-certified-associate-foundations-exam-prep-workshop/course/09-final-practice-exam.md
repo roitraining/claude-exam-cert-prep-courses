@@ -22,7 +22,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 # Chapter 9
 
 - **Practice Exam**
-- Exam Review and Questions and Answers
+- Exam Review and Q and A
 
 ---
 
@@ -36,11 +36,11 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 # Chapter 9
 
 - Practice Exam
-- **Exam Review and Questions and Answers**
+- **Exam Review and Q and A**
 
 ---
 
-# Rapid Review: Domains 1 to 4 Cheat Sheet
+# Rapid Review: Domains 1 to 4
 
 | Domain | Exam Scenario | Correct Associate Decision | Common Trap to Avoid |
 | :--- | :--- | :--- | :--- |
@@ -53,7 +53,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Rapid Review: Domains 5 to 7 Cheat Sheet
+# Rapid Review: Domains 5 to 7
 
 | Domain | Exam Scenario | Correct Associate Decision | Common Trap to Avoid |
 | :--- | :--- | :--- | :--- |

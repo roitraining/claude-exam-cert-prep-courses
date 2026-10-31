@@ -23,7 +23,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 # Chapter 1
 
 - **Understanding the Exam**
-- The Associate Role vs Developer and Architect Scopes
+- Associate vs Technical Roles
 - Preparing to Pass the Exam
 
 ---
@@ -60,7 +60,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
-# Minimally Qualified Candidate (MQC) Profile
+# Target Candidate Profile (MQC)
 
 ### Professional Role Profile
 - Professionals in **operations, marketing, project management, HR, education, communications, business analysis, and consulting**
@@ -80,7 +80,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 # Chapter 1
 
 - Understanding the Exam
-- **The Associate Role vs Developer and Architect Scopes**
+- **Associate vs Technical Roles**
 - Preparing to Pass the Exam
 
 ---
@@ -114,13 +114,13 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 # Chapter 1
 
 - Understanding the Exam
-- The Associate Role vs Developer and Architect Scopes
+- Associate vs Technical Roles
 - **Preparing to Pass the Exam**
 
 ---
 
 <!-- layout: card-layout -->
-# Three Official CCAO-F Sample Question Patterns
+# Official Sample Question Patterns
 
 ### 1. Validating Confident Citations (Domain 2)
 - **Scenario**: Claude summarizes a new regulation and confidently cites a specific subsection number for the compliance team.

@@ -18,7 +18,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 7: Troubleshooting and Optimization (10%)
+# Domain 7: Troubleshooting (10%)
 
 | Objective | Exam Focus |
 | :--- | :--- |
@@ -31,14 +31,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 8
 
-- **Diagnosing Underperforming Prompts**
-- Adjusting Approaches from Feedback
-- Optimizing Repeatable Workflows
+- **Diagnosing Poor Outputs**
+- Adjusting from Feedback
+- Optimizing Workflows
 
 ---
 
 <!-- layout: stacked -->
-# Systematic Troubleshooting: Symptom -> Cause -> Fix
+# Troubleshooting: Symptom to Fix
 
 - **Do not guess randomly when an output misses the mark**: inspect the failure symptom first to identify what is missing or conflicting in your prompt, context, or feature choice
 - **Most poor outputs trace to four root causes**:
@@ -51,7 +51,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Diagnostic Reference Table for the Exam
+# Diagnostic Reference Table
 
 | Observed Output Symptom | Likely Root Cause | Best Corrective Action |
 | :--- | :--- | :--- |
@@ -66,14 +66,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 8
 
-- Diagnosing Underperforming Prompts
-- **Adjusting Approaches from Feedback**
-- Optimizing Repeatable Workflows
+- Diagnosing Poor Outputs
+- **Adjusting from Feedback**
+- Optimizing Workflows
 
 ---
 
 <!-- layout: 2-column -->
-# Adjusting Your Approach Based on Results and Feedback
+# Adjusting Your Approach from Feedback
 
 ### When Prompt Tweaks Are Enough
 - The model has the right source facts, but the tone is too formal, the summary is too long, or a table needs an extra column
@@ -88,14 +88,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 8
 
-- Diagnosing Underperforming Prompts
-- Adjusting Approaches from Feedback
-- **Optimizing Repeatable Workflows**
+- Diagnosing Poor Outputs
+- Adjusting from Feedback
+- **Optimizing Workflows**
 
 ---
 
 <!-- layout: card-layout -->
-# Four Levers for Optimizing Repeatable Workflows
+# Four Levers for Workflow Optimization
 
 ### 1. Standardize Winning Prompts into Templates
 - Once you iterate a prompt until it produces reliable results, save it as a reusable prompt template with clear `[BRACKETED_VARIABLES]` so teammates do not reinvent it from scratch.
@@ -111,7 +111,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Do Now: Diagnosing and Fixing an Underperforming Prompt
+# Do Now: Fixing a Weak Prompt
 
 **Time:** 1–2 minutes
 
@@ -119,16 +119,19 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ```text
 A teammate used this underperforming prompt:
-"Read our product notes and write everything we need for next month's launch, make it good and accurate, and don't make anything up."
+"Read our product notes and write everything we need for next month's
+launch, make it good and accurate, and don't make anything up."
 
-1. Diagnose 3 specific reasons why this prompt produces poor, inconsistent outputs.
-2. Rewrite it into a reusable, decomposed 2-step Prompt Template with [PLACEHOLDERS] for audience, source notes, and output format, plus a grounding rule for missing facts.
+1. Diagnose 3 specific reasons why this prompt produces poor outputs.
+2. Rewrite it into a reusable, decomposed 2-step Prompt Template with
+   [PLACEHOLDERS] for audience, source notes, and output format, plus
+   a grounding rule for missing facts.
 ```
 
 ---
 
 <!-- layout: 2-column -->
-# Do Now Debrief: What to Notice for the Exam
+# Do Now Debrief: Exam Takeaways
 
 ### Why the Broken Prompt Failed
 - **“Write everything we need”** is an overloaded, undefined scope with no audience or format

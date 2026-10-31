@@ -19,7 +19,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 2: Output Evaluation and Validation (21%)
+# Domain 2: Output Evaluation (21%)
 
 | Objective | Exam Focus |
 | :--- | :--- |
@@ -35,14 +35,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 3
 
-- **Evaluating Accuracy, Hallucinations, and Bias**
-- Fact-Checking and Human Review
-- Audience Adaptation and Output Formats
+- **Accuracy and Hallucinations**
+- Fact-Checking and Review
+- Audience and Output Formats
 
 ---
 
 <!-- layout: stacked -->
-# Evaluating Accuracy, Completeness, and Hallucinations
+# Evaluating Accuracy and Completeness
 
 - **Largest domain on the CCAO-F exam (21%)**: every Associate must verify AI outputs before using them in business decisions
 - **Hallucinations look fluent and confident**: language models can fabricate specific-looking details - such as regulation subsection numbers, legal citations, financial figures, or URLs - while sounding completely certain
@@ -53,7 +53,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: card-layout -->
-# Spotting Hallucinations, Inconsistencies, and Biases
+# Spotting Hallucinations and Bias
 
 ### Fabricated Details (Hallucinations)
 - Invented policy clauses, non-existent study authors, or made-up statistics when the source document does not contain the answer.
@@ -72,14 +72,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 3
 
-- Evaluating Accuracy, Hallucinations, and Bias
-- **Fact-Checking and Human Review**
-- Audience Adaptation and Output Formats
+- Accuracy and Hallucinations
+- **Fact-Checking and Review**
+- Audience and Output Formats
 
 ---
 
 <!-- layout: 2-column -->
-# Fact-Checking Techniques vs Exam Traps
+# Fact-Checking vs Exam Traps
 
 ### Reliable Validation Practices
 - **Check primary authoritative sources**: verify cited regulation subsections, contract terms, and statistics directly against the official document
@@ -98,7 +98,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Determining When Human Expertise and Review Are Required
+# When Human Review Is Required
 
 - **High-stakes external or regulated outputs**: legal, compliance, medical, financial, HR policy, and external customer commitments always require qualified human review before release
 - **Subject-matter judgment calls**: strategic trade-offs, personnel evaluations, and exceptions to company policy cannot be delegated solely to an AI model
@@ -109,14 +109,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 3
 
-- Evaluating Accuracy, Hallucinations, and Bias
-- Fact-Checking and Human Review
-- **Audience Adaptation and Output Formats**
+- Accuracy and Hallucinations
+- Fact-Checking and Review
+- **Audience and Output Formats**
 
 ---
 
 <!-- layout: 2-column -->
-# Editing, Adapting, and Comparing Outputs for Your Audience
+# Adapting Outputs for Your Audience
 
 ### Adapting for Different Audiences
 - **Executive leadership**: concise bottom-line-up-front (BLUF) summary, business impact, cost/risk trade-offs, and clear decisions needed
@@ -146,7 +146,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Do Now: Fact-Checking Citations and Formatting with Artifacts
+# Do Now: Fact-Checking and Artifacts
 
 **Time:** 1–2 minutes
 
@@ -154,18 +154,24 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ```text
 Policy Excerpt:
-"Section 4.1: Standard equipment requests under $750 are approved by team managers. Section 4.2: Requests over $750 require Finance VP sign-off. Travel meal per diem is capped at $65/day."
+"Section 4.1: Standard equipment requests under $750 are approved by
+team managers. Section 4.2: Requests over $750 require Finance VP
+sign-off. Travel meal per diem is capped at $65/day."
 
 A colleague wrote this summary for our compliance handbook:
-"Per Section 4.3, equipment requests up to $1,000 are approved by team managers, and daily meal per diem is $75."
+"Per Section 4.3, equipment requests up to $1,000 are approved by
+team managers, and daily meal per diem is $75."
 
-Compare this draft against the Policy Excerpt above. List every factual or citation error in a 3-column table (Claim, Policy Reality, Correction), and then create a clean standalone Artifact containing a 1-page Employee Expense Quick-Reference Guide tailored for new hires.
+Compare this draft against the Policy Excerpt above. List every
+factual or citation error in a 3-column table (Claim, Policy Reality,
+Correction), and then create a standalone Artifact with a 1-page
+Employee Expense Quick-Reference Guide tailored for new hires.
 ```
 
 ---
 
 <!-- layout: 2-column -->
-# Do Now Debrief: What to Notice for the Exam
+# Do Now Debrief: Exam Takeaways
 
 ### What You Verified
 - Grounding Claude against the **authoritative source text** immediately exposed three errors: the fabricated `Section 4.3` citation, the wrong `$1,000` threshold, and the wrong `$75` per diem

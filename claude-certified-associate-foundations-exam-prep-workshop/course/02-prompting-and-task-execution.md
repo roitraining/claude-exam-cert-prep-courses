@@ -19,7 +19,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 1: Prompting and Task Execution (14%)
+# Domain 1: Prompting and Execution (14%)
 
 | Objective | Exam Focus |
 | :--- | :--- |
@@ -33,14 +33,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 2
 
-- **Creating Effective Business Prompts**
-- Task Decomposition Techniques
-- Iterating and Adapting by Task Type
+- **Effective Business Prompts**
+- Task Decomposition
+- Iterating by Task Type
 
 ---
 
 <!-- layout: card-layout -->
-# Four Pillars of an Effective Business Prompt
+# Four Pillars of an Effective Prompt
 
 ### 1. Role and Objective
 - State clearly what task Claude is performing and the business goal you want to achieve.
@@ -59,7 +59,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
-# Vague Request vs Structured Business Prompt
+# Vague vs Structured Business Prompts
 
 ### Vague Request (Unpredictable Output)
 - **Prompt**: “Write an update about our Q3 software rollout delay.”
@@ -82,14 +82,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 2
 
-- Creating Effective Business Prompts
-- **Task Decomposition Techniques**
-- Iterating and Adapting by Task Type
+- Effective Business Prompts
+- **Task Decomposition**
+- Iterating by Task Type
 
 ---
 
 <!-- layout: stacked -->
-# Decomposing Complex Requests into Manageable Steps
+# Decomposing Complex Requests
 
 - **Why monolithic prompts underperform**: asking Claude to analyze raw survey responses, identify root causes, design a 90-day action plan, and write three stakeholder emails in a single prompt often produces shallow or incomplete results
 - **Sequential decomposition**: break complex workflows into logical stages where you review each output before triggering the next step
@@ -100,7 +100,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 3-column -->
-# Three Practical Task Decomposition Patterns
+# Three Task Decomposition Patterns
 
 ### 1. Outline First, Draft Second
 - **Step 1**: Ask Claude to propose a structured outline and key arguments based on your source notes
@@ -121,13 +121,13 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 2
 
-- Creating Effective Business Prompts
-- Task Decomposition Techniques
-- **Iterating and Adapting by Task Type**
+- Effective Business Prompts
+- Task Decomposition
+- **Iterating by Task Type**
 
 ---
 
-# Adapting Prompting Strategies by Task Type
+# Adapting Strategies by Task Type
 
 | Task Type | Goal | Recommended Prompting Strategy |
 | :--- | :--- | :--- |
@@ -139,7 +139,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
-# Iterating Prompts to Improve Output Quality
+# Iterating Prompts for Higher Quality
 
 ### Ineffective Iteration Habits
 - Repeating “Make it better” or “Try again” without explaining what missed the mark
@@ -153,7 +153,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Do Now: Decomposing and Iterating a Complex Business Prompt
+# Do Now: Decomposing a Business Prompt
 
 **Time:** 1–2 minutes
 
@@ -161,19 +161,24 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 - **Step 1**: Paste this decomposed, structured prompt:
 
 ```text
-We are a 15-person project management team moving our 60-minute Monday status meeting to an async Friday written check-in. First, list 3 rollout risks and how to mitigate each in a 2-column table. Do not draft the team announcement email yet.
+We are a 15-person project management team moving our 60-minute
+Monday status meeting to an async Friday written check-in.
+First, list 3 rollout risks and how to mitigate each in a
+2-column table. Do not draft the team announcement email yet.
 ```
 
 - **Step 2**: In one follow-up turn, paste this iteration prompt:
 
 ```text
-Using Risk #1 and #2 above, draft a friendly 120-word announcement email from the Operations Lead including the start date (Nov 10) and a bulleted 3-item check-in template.
+Using Risk #1 and #2 above, draft a friendly 120-word
+announcement email from the Operations Lead including the
+start date (Nov 10) and a bulleted 3-item check-in template.
 ```
 
 ---
 
 <!-- layout: 2-column -->
-# Do Now Debrief: What to Notice for the Exam
+# Do Now Debrief: Exam Takeaways
 
 ### What Improved in Claude
 - **Decomposition** stopped Claude from rushing into a generic email before addressing practical rollout risks

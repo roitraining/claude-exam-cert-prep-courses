@@ -19,7 +19,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 3: Product and Model Selection (12%)
+# Domain 3: Product and Model Selection
 
 | Objective | Exam Focus |
 | :--- | :--- |
@@ -33,14 +33,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 4
 
-- **Selecting Claude Product Features**
-- Differentiating Haiku, Sonnet, and Opus
-- Managing Context and Memory
+- **Claude Product Features**
+- Haiku, Sonnet, and Opus
+- Context and Memory
 
 ---
 
 <!-- layout: card-layout -->
-# Matching Claude Product Features to the Job
+# Matching Features to the Job
 
 ### Standard Chat
 - Best for one-off questions, quick drafting, ad-hoc brainstorming, and tasks that do not require persistent background files across future sessions.
@@ -61,14 +61,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 4
 
-- Selecting Claude Product Features
-- **Differentiating Haiku, Sonnet, and Opus**
-- Managing Context and Memory
+- Claude Product Features
+- **Haiku, Sonnet, and Opus**
+- Context and Memory
 
 ---
 
 <!-- layout: 3-column -->
-# Differentiating the Claude Model Family
+# Comparing the Claude Model Family
 
 ### Claude Haiku
 - **Speed and cost leader**: fastest response time and lowest cost
@@ -88,7 +88,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: stacked -->
-# Aligning Model Selection with Cost, Speed, and Quality
+# Balancing Cost, Speed, and Quality
 
 - **Match the model to the task requirements**: always balance **quality**, **speed (latency)**, and **cost**
 - **Official exam pattern**: when an associate needs to generate a **high volume of short customer-reply drafts** where speed and cost matter more than deep reasoning, choose a **faster, lower-cost model (Haiku)**
@@ -101,14 +101,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 4
 
-- Selecting Claude Product Features
-- Differentiating Haiku, Sonnet, and Opus
-- **Managing Context and Memory**
+- Claude Product Features
+- Haiku, Sonnet, and Opus
+- **Context and Memory**
 
 ---
 
 <!-- layout: 2-column -->
-# Understanding Context Window Limitations
+# Understanding Context Window Limits
 
 ### How the Context Window Works
 - Every chat has a finite **context window** holding your uploaded files, conversation history, and Claude’s responses
@@ -139,7 +139,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Do Now: Managing Context Limits with a Clean Session Handoff
+# Do Now: Clean Session Handoff
 
 **Time:** 1–2 minutes
 
@@ -147,7 +147,9 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 - Paste this **Session Handoff** prompt to compress the thread for a fresh session:
 
 ```text
-We are wrapping up this working session and moving to a fresh chat to keep our context window clean. Summarize our work so far into a compact "Session Handoff Block" (under 120 words) with three headings:
+We are wrapping up this working session and moving to a fresh chat
+to keep our context window clean. Summarize our work so far into a
+compact "Session Handoff Block" (under 120 words) with three headings:
 1. Approved Decisions and Facts
 2. Constraints and Style Rules to Keep
 3. Next Immediate Task
@@ -158,7 +160,7 @@ We are wrapping up this working session and moving to a fresh chat to keep our c
 ---
 
 <!-- layout: 2-column -->
-# Do Now Debrief: What to Notice for the Exam
+# Do Now Debrief: Exam Takeaways
 
 ### Why This Works in Practice
 - Instead of dragging 30 turns of rough drafts and rejected edits into the next phase of work, a 120-word handoff block preserves 100% of your verified decisions with minimal context overhead

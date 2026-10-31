@@ -19,7 +19,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 4: Workflow Integration and Solution Design (16%)
+# Domain 4: Workflow Integration (16%)
 
 | Objective | Exam Focus |
 | :--- | :--- |
@@ -34,14 +34,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 5
 
-- **Analyzing Requirements and Use Cases**
-- Augmenting and Redesigning Workflows
-- Stakeholder Communication and Escalation
+- **Requirements and Use Cases**
+- Redesigning Workflows
+- Stakeholders and Escalation
 
 ---
 
 <!-- layout: card-layout -->
-# Evaluating Business Use Cases for Claude
+# Evaluating Business Use Cases
 
 ### High-Fit Associate Use Cases
 - Summarizing unstructured documents, RFPs, meeting transcripts, and customer feedback.
@@ -57,7 +57,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
-# Using Claude for Research, Planning, and Solution Design
+# Research, Planning, and Solution Design
 
 ### Discovery and Requirement Analysis
 - Turn raw stakeholder interview notes into structured user requirements, acceptance criteria, and risk registers
@@ -73,9 +73,9 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 5
 
-- Analyzing Requirements and Use Cases
-- **Augmenting and Redesigning Workflows**
-- Stakeholder Communication and Escalation
+- Requirements and Use Cases
+- **Redesigning Workflows**
+- Stakeholders and Escalation
 
 ---
 
@@ -94,7 +94,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: stacked -->
-# Designing Human-in-the-Loop Workflow Checkpoints
+# Human-in-the-Loop Workflow Checkpoints
 
 - **AI prepares, humans decide**: place Claude where unstructured synthesis and first-draft creation take the most time, and place human checkpoints before external or high-impact actions
 - **Standardize inputs and outputs**: define what inputs the associate provides at the start of the workflow and what verification checklist must pass at the end
@@ -107,14 +107,14 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: navigation -->
 # Chapter 5
 
-- Analyzing Requirements and Use Cases
-- Augmenting and Redesigning Workflows
-- **Stakeholder Communication and Escalation**
+- Requirements and Use Cases
+- Redesigning Workflows
+- **Stakeholders and Escalation**
 
 ---
 
 <!-- layout: card-layout -->
-# Communicating Value and Limitations to Stakeholders
+# Communicating Value and Limitations
 
 ### Framing Business Value Realistically
 - Highlight measurable improvements in cycle time, first-draft consistency, research breadth, and staff capacity for higher-judgment work.
@@ -127,7 +127,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# When to Handle as an Associate vs Escalate
+# Associate Scope vs Technical Escalation
 
 | Business Need | Who Owns It | Why |
 | :--- | :--- | :--- |
@@ -137,7 +137,7 @@ Claude Certified Associate - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Do Now: Redesigning a Team Workflow and Scoping Escalations
+# Do Now: Workflow and Escalation Design
 
 **Time:** 1–2 minutes
 
@@ -149,15 +149,17 @@ Our customer onboarding team manually processes new client intake:
 2. Extract key goals and timeline risks into a kickoff deck outline
 3. Verify contract SLA clauses against our legal playbook
 4. Email the verified kickoff summary to the client
-5. Automatically sync the client's CRM record with our internal ERP database every night via REST API
+5. Sync the client's CRM record with our ERP database nightly via REST API
 
-Create a 4-column workflow table (Step, Associate Action in Claude, Required Human Validation Gate, Escalate to Developer/Architect?). Clearly identify which steps an Associate handles with built-in Claude features and which step must be escalated to a Claude Developer or Architect.
+Create a 4-column table (Step, Associate Action in Claude, Required
+Human Gate, Escalate to Developer/Architect?). Identify which steps an
+Associate handles and which step must be escalated.
 ```
 
 ---
 
 <!-- layout: 2-column -->
-# Do Now Debrief: What to Notice for the Exam
+# Do Now Debrief: Exam Takeaways
 
 ### What the Workflow Table Shows
 - **Steps 1 to 4** are classic Associate workflows: summarizing the intake PDF, structuring the kickoff outline in an Artifact, comparing SLA clauses against a legal reference doc (with mandatory human legal/account review before emailing the client)
