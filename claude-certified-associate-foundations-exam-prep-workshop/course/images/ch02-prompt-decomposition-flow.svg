@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" role="img" aria-label="Task Decomposition and Iteration Flow">
+  <rect width="1200" height="320" rx="16" fill="#f8fafc"/>
+  <!-- Step 1 -->
+  <rect x="30" y="55" width="250" height="200" rx="14" fill="#e0ecff" stroke="#1e71d6" stroke-width="2.5"/>
+  <text x="155" y="95" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">1. Scope and Extract</text>
+  <text x="155" y="135" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Define role, goal, and</text>
+  <text x="155" y="160" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">extract key facts from</text>
+  <text x="155" y="185" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">source material</text>
+
+  <!-- Arrow 1 -->
+  <path d="M285 155 H325" stroke="#1e71d6" stroke-width="4" fill="none"/>
+  <polygon points="325,147 340,155 325,163" fill="#1e71d6"/>
+
+  <!-- Step 2 -->
+  <rect x="345" y="55" width="250" height="200" rx="14" fill="#e6e4ff" stroke="#4e5ce4" stroke-width="2.5"/>
+  <text x="470" y="95" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">2. Analyze and Outline</text>
+  <text x="470" y="135" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Evaluate patterns, risks,</text>
+  <text x="470" y="160" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">and approve outline</text>
+  <text x="470" y="185" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">at human checkpoint</text>
+
+  <!-- Arrow 2 -->
+  <path d="M600 155 H640" stroke="#4e5ce4" stroke-width="4" fill="none"/>
+  <polygon points="640,147 655,155 640,163" fill="#4e5ce4"/>
+
+  <!-- Step 3 -->
+  <rect x="660" y="55" width="240" height="200" rx="14" fill="#efe3ff" stroke="#7c47d9" stroke-width="2.5"/>
+  <text x="780" y="95" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">3. Draft Deliverable</text>
+  <text x="780" y="135" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Generate target format</text>
+  <text x="780" y="160" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">with audience, tone,</text>
+  <text x="780" y="185" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">and length constraints</text>
+
+  <!-- Arrow 3 -->
+  <path d="M905 155 H945" stroke="#7c47d9" stroke-width="4" fill="none"/>
+  <polygon points="945,147 960,155 945,163" fill="#7c47d9"/>
+
+  <!-- Step 4 -->
+  <rect x="965" y="55" width="205" height="200" rx="14" fill="#fae2f8" stroke="#bd35c2" stroke-width="2.5"/>
+  <text x="1067" y="95" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">4. Iterate and Refine</text>
+  <text x="1067" y="135" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Specify what to keep</text>
+  <text x="1067" y="160" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">and what to adjust</text>
+  <text x="1067" y="185" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">with examples</text>
+</svg>

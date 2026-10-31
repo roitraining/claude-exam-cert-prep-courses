@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" role="img" aria-label="Claude Project Configuration Layers">
+  <rect width="1200" height="320" rx="16" fill="#f8fafc"/>
+  <rect x="40" y="35" width="340" height="250" rx="14" fill="#e0ecff" stroke="#1e71d6" stroke-width="2.5"/>
+  <text x="210" y="78" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">1. System Instructions</text>
+  <text x="210" y="122" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Role, tone, and audience rules</text>
+  <text x="210" y="152" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Mandatory output templates</text>
+  <text x="210" y="182" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Grounding and refusal rules</text>
+  <text x="210" y="232" text-anchor="middle" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Applied to every Project chat</text>
+
+  <rect x="430" y="35" width="340" height="250" rx="14" fill="#e6e4ff" stroke="#4e5ce4" stroke-width="2.5"/>
+  <text x="600" y="78" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">2. Knowledge and Connectors</text>
+  <text x="600" y="122" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Uploaded PDFs, SOPs, style guides</text>
+  <text x="600" y="152" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Google Drive and Gmail connectors</text>
+  <text x="600" y="182" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Remove outdated versions promptly</text>
+  <text x="600" y="232" text-anchor="middle" fill="#4e5ce4" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Single authoritative source of truth</text>
+
+  <rect x="820" y="35" width="340" height="250" rx="14" fill="#fae2f8" stroke="#bd35c2" stroke-width="2.5"/>
+  <text x="990" y="78" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">3. Ongoing Maintenance</text>
+  <text x="990" y="122" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Archive superseded policies</text>
+  <text x="990" y="152" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Test updated instructions</text>
+  <text x="990" y="182" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Notify teammates of changes</text>
+  <text x="990" y="232" text-anchor="middle" fill="#bd35c2" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Prevents stale or conflicting outputs</text>
+</svg>

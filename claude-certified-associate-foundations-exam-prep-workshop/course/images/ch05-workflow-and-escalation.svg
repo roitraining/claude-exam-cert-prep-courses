@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" role="img" aria-label="Workflow Redesign and Escalation Boundary">
+  <rect width="1200" height="320" rx="16" fill="#f8fafc"/>
+  <rect x="30" y="35" width="740" height="250" rx="14" fill="#e0ecff" stroke="#1e71d6" stroke-width="2.5"/>
+  <text x="400" y="72" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">Associate Scope (Built-In Claude Platform)</text>
+
+  <rect x="55" y="100" width="215" height="150" rx="10" fill="#ffffff" stroke="#1e71d6" stroke-width="1.5"/>
+  <text x="162" y="135" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">1. Ingest and Draft</text>
+  <text x="162" y="168" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">Projects, research mode,</text>
+  <text x="162" y="192" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">and structured prompts</text>
+
+  <rect x="292" y="100" width="215" height="150" rx="10" fill="#ffffff" stroke="#1e71d6" stroke-width="1.5"/>
+  <text x="400" y="135" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">2. Curate in Artifacts</text>
+  <text x="400" y="168" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">Tables, SOP templates,</text>
+  <text x="400" y="192" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">and audience adaptation</text>
+
+  <rect x="530" y="100" width="215" height="150" rx="10" fill="#ffffff" stroke="#1e71d6" stroke-width="1.5"/>
+  <text x="637" y="135" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">3. Human Review Gate</text>
+  <text x="637" y="168" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">Verify citations, facts,</text>
+  <text x="637" y="192" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">and policy compliance</text>
+
+  <path d="M775 160 H815" stroke="#bd35c2" stroke-width="4" fill="none"/>
+  <polygon points="815,152 830,160 815,168" fill="#bd35c2"/>
+
+  <rect x="835" y="35" width="335" height="250" rx="14" fill="#fae2f8" stroke="#bd35c2" stroke-width="2.5"/>
+  <text x="1002" y="72" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">Escalate to Technical Roles</text>
+  <text x="1002" y="125" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Claude Developer (CCDV-F)</text>
+  <text x="1002" y="150" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">Custom API code, Agent SDK,</text>
+  <text x="1002" y="172" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">and custom MCP servers</text>
+  <text x="1002" y="212" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Claude Architect (CCAR)</text>
+  <text x="1002" y="237" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">Enterprise multi-agent RAG</text>
+  <text x="1002" y="259" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">and cloud governance</text>
+</svg>

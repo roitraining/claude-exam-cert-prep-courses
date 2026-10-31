@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="CCAO-F Exam Domain Weights">
+  <defs>
+    <linearGradient id="ao1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1e71d6"/>
+      <stop offset="1" stop-color="#3d62e4"/>
+    </linearGradient>
+    <linearGradient id="ao2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4e5ce4"/>
+      <stop offset="1" stop-color="#754fe0"/>
+    </linearGradient>
+    <linearGradient id="ao3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c47d9"/>
+      <stop offset="1" stop-color="#bd35c2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- D1: 14% -->
+  <text x="24" y="46" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Domain 1: Prompting and Task Execution</text>
+  <rect x="570" y="24" width="490" height="30" rx="6" fill="#e2ecf7"/>
+  <rect x="570" y="24" width="315" height="30" rx="6" fill="url(#ao1)"/>
+  <text x="1080" y="46" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">14%</text>
+
+  <!-- D2: 21% -->
+  <text x="24" y="102" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Domain 2: Output Evaluation and Validation (Largest)</text>
+  <rect x="570" y="80" width="490" height="30" rx="6" fill="#e2ecf7"/>
+  <rect x="570" y="80" width="472" height="30" rx="6" fill="url(#ao1)"/>
+  <text x="1080" y="102" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">21%</text>
+
+  <!-- D3: 12% -->
+  <text x="24" y="158" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Domain 3: Product and Model Selection</text>
+  <rect x="570" y="136" width="490" height="30" rx="6" fill="#e2ecf7"/>
+  <rect x="570" y="136" width="270" height="30" rx="6" fill="url(#ao2)"/>
+  <text x="1080" y="158" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">12%</text>
+
+  <!-- D4: 16% -->
+  <text x="24" y="214" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Domain 4: Workflow Integration and Solution Design</text>
+  <rect x="570" y="192" width="490" height="30" rx="6" fill="#e2ecf7"/>
+  <rect x="570" y="192" width="360" height="30" rx="6" fill="url(#ao2)"/>
+  <text x="1080" y="214" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">16%</text>
+
+  <!-- D5: 12% -->
+  <text x="24" y="270" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Domain 5: Configuration and Knowledge Management</text>
+  <rect x="570" y="248" width="490" height="30" rx="6" fill="#e2ecf7"/>
+  <rect x="570" y="248" width="270" height="30" rx="6" fill="url(#ao2)"/>
+  <text x="1080" y="270" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">12%</text>
+
+  <!-- D6: 15% -->
+  <text x="24" y="326" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Domain 6: Governance, Risk, and Responsible Use</text>
+  <rect x="570" y="304" width="490" height="30" rx="6" fill="#e2ecf7"/>
+  <rect x="570" y="304" width="337" height="30" rx="6" fill="url(#ao3)"/>
+  <text x="1080" y="326" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">15%</text>
+
+  <!-- D7: 10% -->
+  <text x="24" y="382" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">Domain 7: Troubleshooting and Optimization</text>
+  <rect x="570" y="360" width="490" height="30" rx="6" fill="#e2ecf7"/>
+  <rect x="570" y="360" width="225" height="30" rx="6" fill="url(#ao3)"/>
+  <text x="1080" y="382" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700">10%</text>
+</svg>

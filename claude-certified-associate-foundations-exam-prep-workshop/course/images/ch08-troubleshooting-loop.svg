@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" role="img" aria-label="Prompt Troubleshooting Diagnostic Loop">
+  <rect width="1200" height="320" rx="16" fill="#f8fafc"/>
+  <rect x="30" y="55" width="250" height="200" rx="14" fill="#e0ecff" stroke="#1e71d6" stroke-width="2.5"/>
+  <text x="155" y="98" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">1. Observe Symptom</text>
+  <text x="155" y="138" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Generic prose, wrong format,</text>
+  <text x="155" y="164" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">hallucinated detail, or</text>
+  <text x="155" y="190" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">forgotten constraints</text>
+
+  <path d="M285 155 H325" stroke="#1e71d6" stroke-width="4" fill="none"/>
+  <polygon points="325,147 340,155 325,163" fill="#1e71d6"/>
+
+  <rect x="345" y="55" width="250" height="200" rx="14" fill="#e6e4ff" stroke="#4e5ce4" stroke-width="2.5"/>
+  <text x="470" y="98" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">2. Isolate Root Cause</text>
+  <text x="470" y="138" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Vague criteria? Overloaded</text>
+  <text x="470" y="164" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">single step? Stale Project</text>
+  <text x="470" y="190" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">file? Saturated chat?</text>
+
+  <path d="M600 155 H640" stroke="#4e5ce4" stroke-width="4" fill="none"/>
+  <polygon points="640,147 655,155 640,163" fill="#4e5ce4"/>
+
+  <rect x="660" y="55" width="240" height="200" rx="14" fill="#efe3ff" stroke="#7c47d9" stroke-width="2.5"/>
+  <text x="780" y="98" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">3. Apply Targeted Fix</text>
+  <text x="780" y="138" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Decompose steps, add</text>
+  <text x="780" y="164" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">few-shot examples, or</text>
+  <text x="780" y="190" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">restart with handoff</text>
+
+  <path d="M905 155 H945" stroke="#7c47d9" stroke-width="4" fill="none"/>
+  <polygon points="945,147 960,155 945,163" fill="#7c47d9"/>
+
+  <rect x="965" y="55" width="205" height="200" rx="14" fill="#fae2f8" stroke="#bd35c2" stroke-width="2.5"/>
+  <text x="1067" y="98" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">4. Standardize</text>
+  <text x="1067" y="138" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">Save as reusable</text>
+  <text x="1067" y="164" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">template or Project</text>
+  <text x="1067" y="190" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="16">instruction</text>
+</svg>
