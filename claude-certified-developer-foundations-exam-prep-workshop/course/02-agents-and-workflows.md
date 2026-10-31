@@ -178,9 +178,7 @@ async def run_agent_loop(user_prompt: str, tools: list[dict]):
 
 # Domain 1 Quiz: Agents and Workflows
 
-- Open the Exam Prep Program to complete the Domain 1 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domain 1 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-12-10-ccdv-f-realistic-instructor.json)
 
 ---
 

@@ -160,9 +160,7 @@ def pre_tool_use_safety_hook(tool_name: str, tool_input: dict) -> dict:
 
 # Domain 7 Quiz: Security and Safety
 
-- Open the Exam Prep Program to complete the Domain 7 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domain 7 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-12-16-ccdv-f-realistic-instructor.json)
 
 ---
 

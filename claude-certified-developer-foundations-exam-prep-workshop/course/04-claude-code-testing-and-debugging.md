@@ -182,9 +182,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Domains 3 and 4 Quiz: Claude Code, Testing, and Debugging
 
-- Open the Exam Prep Program to complete the Domains 3 and 4 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domains 3 and 4 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-12-13-ccdv-f-realistic-instructor.json)
 
 ---
 

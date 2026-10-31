@@ -150,9 +150,7 @@ except ValidationError as err:
 
 # Domain 6 Quiz: Prompt and Context Engineering
 
-- Open the Exam Prep Program to complete the Domain 6 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domain 6 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-12-15-ccdv-f-realistic-instructor.json)
 
 ---
 

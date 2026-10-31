@@ -166,9 +166,7 @@ def check_sku_stock(sku: str, warehouse: str) -> dict:
 
 # Domain 8 Quiz: Tools and MCPs
 
-- Open the Exam Prep Program to complete the Domain 8 review questions
-
-<!-- TODO: Add Exam Prep Program URL for Domain 8 Quiz -->
+- [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-12-17-ccdv-f-realistic-instructor.json)
 
 ---
 
