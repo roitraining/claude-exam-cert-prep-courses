@@ -1,40 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 3 Overview: Prompt Caching Checkpoints, Context Pruning, and Defensive Output Validation">
-  <!-- Panel 1: Caching Checkpoints & Thinking -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 3: prompt caching, context engineering, and validated structured output">
   <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
   <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
-  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 1: Caching and Thinking</text>
-  <rect x="42" y="92" width="290" height="96" rx="10" fill="#e0edff"/>
-  <text x="187" y="118" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Multi-Checkpoint Caching</text>
-  <text x="187" y="142" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">1. Static tools | 2. Static system</text>
-  <text x="187" y="164" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">3. Completed history prefix</text>
-  <rect x="42" y="204" width="290" height="106" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
-  <text x="187" y="232" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Extended Thinking + Usage</text>
-  <text x="187" y="256" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">budget_tokens (default temp=1.0)</text>
-  <text x="187" y="278" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Track 4 response.usage counters</text>
-
-  <!-- Panel 2: Context Pruning & XML Prompts -->
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 1: Measure Caching</text>
+  <rect x="42" y="92" width="290" height="100" rx="10" fill="#e0edff"/>
+  <text x="187" y="119" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">usage counters</text>
+  <text x="187" y="144" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">cache_write, then cache_read</text>
+  <text x="187" y="166" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Reads cost about 0.1x input</text>
+  <rect x="42" y="208" width="290" height="100" rx="10" fill="#e0edff"/>
+  <text x="187" y="235" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Prefix rules</text>
+  <text x="187" y="260" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">A timestamp at the top</text>
+  <text x="187" y="282" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">breaks the cache every time</text>
   <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
   <rect x="382" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
-  <text x="550" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 2: Context and XML Prompts</text>
-  <rect x="405" y="92" width="290" height="96" rx="10" fill="#f0fdf4" stroke="#86efac"/>
-  <text x="550" y="118" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Prevent Context Drift</text>
-  <text x="550" y="142" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Prune verbose tool JSON fields</text>
-  <text x="550" y="164" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Pin exact IDs in &lt;case_facts&gt;</text>
-  <rect x="405" y="204" width="290" height="106" rx="10" fill="#e0edff" stroke="#93c5fd"/>
-  <text x="550" y="232" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">XML Prompt Structure</text>
-  <text x="550" y="256" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">&lt;instructions&gt; + &lt;examples&gt;</text>
-  <text x="550" y="278" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">+ sanitized &lt;untrusted_diff&gt;</text>
-
-  <!-- Panel 3: Defensive Output Parsing -->
-  <rect x="745" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
-  <rect x="745" y="25" width="335" height="48" rx="14" fill="#6a55e4"/>
-  <text x="912" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 3 and 4: Defensive Output</text>
-  <rect x="768" y="92" width="290" height="96" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
-  <text x="912" y="118" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Defensive Parsing Pipeline</text>
-  <text x="912" y="142" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">1. Check stop_reason != "max_tokens"</text>
-  <text x="912" y="164" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">2. Validate schema + cross-field math</text>
-  <rect x="768" y="204" width="290" height="106" rx="10" fill="#082445"/>
-  <text x="912" y="232" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Model Upgrade Hygiene</text>
-  <text x="912" y="256" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Pin snapshots + run side-by-side</text>
-  <text x="912" y="278" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">evals before switching traffic</text>
+  <text x="549" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 2: Engineer Context</text>
+  <rect x="404" y="92" width="290" height="100" rx="10" fill="#f0fdf4"/>
+  <text x="549" y="119" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Prune tool output</text>
+  <text x="549" y="144" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">count_tokens before and after</text>
+  <text x="549" y="166" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Keep only the fields you need</text>
+  <rect x="404" y="208" width="290" height="100" rx="10" fill="#f0fdf4"/>
+  <text x="549" y="235" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Isolate untrusted data</text>
+  <text x="549" y="260" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">XML tags around the diff</text>
+  <text x="549" y="282" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Injected text is reported, not obeyed</text>
+  <rect x="744" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
+  <rect x="744" y="25" width="335" height="48" rx="14" fill="#7c3aed"/>
+  <text x="911" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 3: Validate Output</text>
+  <rect x="766" y="92" width="290" height="100" rx="10" fill="#f5f3ff"/>
+  <text x="911" y="119" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Structured outputs</text>
+  <text x="911" y="144" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">messages.parse + Pydantic</text>
+  <text x="911" y="166" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Guarantees the shape</text>
+  <rect x="766" y="208" width="290" height="100" rx="10" fill="#f5f3ff"/>
+  <text x="911" y="235" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Check the meaning</text>
+  <text x="911" y="260" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Line items must add up</text>
+  <text x="911" y="282" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Retry once, then a human</text>
 </svg>

@@ -6,208 +6,354 @@
 
 ## Overview
 
-In this lab, you will construct a custom tool-use agent loop, configure a supervisor and isolated subagents, enforce deterministic lifecycle hooks, and select appropriate agentic frameworks.
+In this lab, you will build an agent three ways. First you fix a hand-written tool-use loop on the Messages API. Then you let Claude Code delegate work to a subagent with its own context window and tools. Finally you run an agent with the Claude Agent SDK and enforce a rule with a deterministic hook.
 
 ### You learn how to:
-- Build a custom tool-use agent loop controlled by `stop_reason`.
-- Configure a supervisor hierarchy with isolated, role-scoped subagents.
-- Implement deterministic `PreToolUse` and `PostToolUse` lifecycle hooks.
-- Choose between deterministic workflows, autonomous agents, and frameworks (`PydanticAI`, `LangGraph`, `Strands`).
+- Control a tool-use agent loop with `stop_reason`.
+- Delegate work to a subagent with an isolated context and scoped tools.
+- Enforce a rule in an Agent SDK agent with a `PreToolUse` hook.
 
 ## Scenario
 
-Your engineering team is building a developer support and order-resolution assistant. Currently, the prototype agent loop exits prematurely when Claude emits explanatory text alongside a tool call, subagents are overloaded with 16 unscoped tools, and critical refund ceilings rely only on system prompt warnings.
+Your team is building an order-support assistant. The prototype loop gives up too early or crashes, the main agent fills its context window reading huge log files, and the rule "never delete files" lives only in a prompt. You fix each problem with the right agent pattern.
 
-![Lab 1 Architecture Overview](images/lab01-agents-and-workflows.svg)
+![Lab 1 architecture: manual loop, subagent, and Agent SDK hook](images/lab01-agents-and-workflows.svg)
 
 ## Lab Instructions
 
-### Task 1: Construct a custom tool-use agent loop and harness
+### Task 1: Fix a broken agent loop
 
-In this task, you create your lab workspace, build a custom agent harness loop that inspects `stop_reason` (`"tool_use"` vs `"end_turn"`), and compare self-hosted vs Anthropic-hosted deployment models.
+In this task, you run a hand-written agent loop that has two classic bugs, predict how it fails, and rewrite it so `stop_reason` controls every step.
 
-1. Open your terminal (Terminal on macOS or PowerShell / Command Prompt / VS Code Terminal on Windows) and create a working folder for this lab:
+1. Open a terminal, go to your workspace, and activate the virtual environment.
+
+**macOS:**
 
 ```bash
-mkdir ccdvf-lab-01
-cd ccdvf-lab-01
+cd ~/ccdvf-labs
+source .venv/bin/activate
+mkdir lab-01
+cd lab-01
 ```
 
-2. Open `ccdvf-lab-01` in VS Code (or your preferred text editor) and create a file named `agent_harness.py` with the following starter code:
+**Windows (PowerShell):**
+
+```powershell
+cd $HOME\ccdvf-labs
+.venv\Scripts\Activate.ps1
+mkdir lab-01
+cd lab-01
+```
+
+2. Open the `lab-01` folder in your editor and create `agent_loop.py`:
 
 ```python
-# agent_harness.py
-from dataclasses import dataclass
-from typing import Any, List, Dict
+# agent_loop.py - a minimal tool-use agent loop on the Messages API
+import json
 
-@dataclass
-class MockBlock:
-    type: str
-    text: str = ""
-    id: str = ""
-    name: str = ""
-    input: Dict[str, Any] = None
+import anthropic
+from dotenv import load_dotenv
 
-@dataclass
-class MockResponse:
-    stop_reason: str
-    content: List[MockBlock]
+load_dotenv()  # reads ANTHROPIC_API_KEY from ccdvf-labs/.env
+client = anthropic.Anthropic()
+MODEL = "claude-haiku-5-5"
 
-def execute_tool(name: str, tool_input: dict) -> str:
+ORDERS = {
+    "ORD-500": {"status": "DELIVERED", "amount": 120.00, "carrier": "UPS"},
+    "ORD-501": {"status": "IN_TRANSIT", "amount": 89.50, "carrier": "FedEx"},
+}
+
+TOOLS = [{
+    "name": "lookup_order",
+    "description": "Look up one order by ID (format ORD-NNN). Returns status, amount, and carrier.",
+    "input_schema": {
+        "type": "object",
+        "properties": {"order_id": {"type": "string", "description": "Order ID, for example ORD-500"}},
+        "required": ["order_id"],
+    },
+}]
+
+
+def run_tool(name: str, tool_input: dict) -> str:
     if name == "lookup_order":
-        return f'{{"order_id": "{tool_input["order_id"]}", "status": "DELIVERED", "amount": 120.00}}'
-    return '{"status": "ok"}'
+        order = ORDERS.get(tool_input["order_id"])
+        return json.dumps(order if order else {"error": "order not found"})
+    return json.dumps({"error": f"unknown tool {name}"})
 
-def run_agent_loop(mock_responses: List[MockResponse], user_prompt: str) -> str:
-    messages = [{"role": "user", "content": user_prompt}]
+
+def run_agent(prompt: str) -> str:
+    messages = [{"role": "user", "content": prompt}]
     turn = 0
-
     while True:
-        resp = mock_responses[turn]
         turn += 1
+        resp = client.messages.create(model=MODEL, max_tokens=4000, tools=TOOLS, messages=messages)
+        print(f"Turn {turn}: stop_reason={resp.stop_reason} blocks={[b.type for b in resp.content]}")
 
-        # Always append the full assistant response to conversation history
-        messages.append({"role": "assistant", "content": resp.content})
+        # Stop as soon as Claude says something
+        texts = [b.text for b in resp.content if b.type == "text"]
+        if texts:
+            return " ".join(texts)
 
-        if resp.stop_reason == "end_turn":
-            final_text = [b.text for b in resp.content if b.type == "text"]
-            return "\n".join(final_text)
+        # Run every requested tool and send the results back
+        results = []
+        for block in resp.content:
+            if block.type == "tool_use":
+                results.append({
+                    "type": "tool_result",
+                    "tool_use_id": block.id,
+                    "content": run_tool(block.name, block.input),
+                })
+        messages.append({"role": "user", "content": results})
 
-        if resp.stop_reason == "tool_use":
-            tool_results = []
-            for block in resp.content:
-                if block.type == "tool_use":
-                    output = execute_tool(block.name, block.input)
-                    tool_results.append({
-                        "type": "tool_result",
-                        "tool_use_id": block.id,
-                        "content": output
-                    })
-            # Append all matching tool_result blocks in the very next user message
-            messages.append({"role": "user", "content": tool_results})
+
+if __name__ == "__main__":
+    answer = run_agent(
+        "First tell me in one sentence what you are going to do. "
+        "Then check orders ORD-500 and ORD-501 and tell me which one is still on its way."
+    )
+    print("\nFINAL ANSWER:", answer)
 ```
 
-3. Launch Claude Code inside `ccdvf-lab-01`:
+3. Before you run it, read `run_agent` and write down your prediction: which two lines will cause trouble, and what will you see?
+
+4. Run the script:
+
+```bash
+python agent_loop.py
+```
+
+5. Compare the result with your prediction. Most likely the "final answer" only announces a plan ("I'm going to look up both orders...") and never reports them. Look at the turn line: `stop_reason=tool_use`, so Claude was not done.
+
+> [!NOTE]
+> **The two bugs:** (1) The loop exits as soon as any text appears, but Claude often explains its plan *and* asks for tools in the same turn. Text never means "done"; only `stop_reason == "end_turn"` does. (2) The loop never appends Claude's assistant turn. If you fix only bug 1, the API rejects the next request with HTTP 400: *unexpected `tool_use_id` found in `tool_result` blocks... Each `tool_result` block must have a corresponding `tool_use` block in the previous message.*
+
+6. Rewrite `run_agent` yourself so that it:
+   - appends the full `resp.content` as an assistant message on every turn,
+   - returns the text only when `stop_reason` is `"end_turn"`,
+   - runs tools and sends all results in one user message when `stop_reason` is `"tool_use"`,
+   - raises an error for any other stop reason (such as `"max_tokens"` or `"refusal"`),
+   - stops after `max_turns` turns instead of looping forever.
+
+7. Run the script again and confirm that you see two or more turns, the first ending in `tool_use`, and a final answer that names ORD-501 as still in transit.
+
+8. Compare your loop with this reference solution:
+
+```python
+def run_agent(prompt: str, max_turns: int = 10) -> str:
+    messages = [{"role": "user", "content": prompt}]
+    for turn in range(1, max_turns + 1):
+        resp = client.messages.create(model=MODEL, max_tokens=4000, tools=TOOLS, messages=messages)
+        print(f"Turn {turn}: stop_reason={resp.stop_reason} blocks={[b.type for b in resp.content]}")
+        messages.append({"role": "assistant", "content": resp.content})  # always keep the full turn
+
+        if resp.stop_reason == "end_turn":
+            return " ".join(b.text for b in resp.content if b.type == "text")
+
+        if resp.stop_reason == "tool_use":
+            results = []
+            for block in resp.content:
+                if block.type == "tool_use":
+                    results.append({
+                        "type": "tool_result",
+                        "tool_use_id": block.id,
+                        "content": run_tool(block.name, block.input),
+                    })
+            messages.append({"role": "user", "content": results})  # all results in ONE message
+            continue
+
+        # max_tokens, refusal, or anything unexpected: stop instead of looping
+        raise RuntimeError(f"Agent stopped: stop_reason={resp.stop_reason}")
+
+    raise RuntimeError(f"Agent did not finish within {max_turns} turns")
+```
+
+> [!IMPORTANT]
+> On the exam, a loop that stops on "the response contains text" or that never caps its iterations is always the wrong answer. Branch on `stop_reason`, keep every assistant turn, and pair each `tool_use_id` with a `tool_result` in the very next user message.
+
+### Task 2: Delegate to a subagent in Claude Code
+
+In this task, you give Claude Code a read-only `log-investigator` subagent. The subagent reads 3,000 lines of logs in its own context window and returns only a short summary to the main conversation.
+
+1. In `lab-01`, create `make_lab_files.py`. It creates the sample logs for this task and scratch files for Task 3:
+
+```python
+# make_lab_files.py - creates sample logs and scratch files for Tasks 2 and 3
+import pathlib
+import random
+
+random.seed(7)
+logs = pathlib.Path("logs")
+logs.mkdir(exist_ok=True)
+lines = []
+for i in range(3000):
+    minute, second = divmod(i, 60)
+    lines.append(f"2026-11-02T09:{minute % 60:02d}:{second:02d}Z INFO  {random.choice(['api', 'cart', 'search', 'auth'])}: request ok latency_ms={random.randint(20, 90)}")
+lines[2210] = "2026-11-02T09:36:50Z WARN  payments: retrying charge, provider timeout after 5000ms"
+lines[2211] = "2026-11-02T09:36:55Z ERROR payments: PaymentProvider.charge failed - TLS certificate expired for api.payprovider.example"
+lines[2212] = "2026-11-02T09:36:55Z ERROR checkout: order ORD-2291 failed at step 'charge' (see payments/provider_client.py line 88)"
+(logs / "app.log").write_text("\n".join(lines) + "\n")
+
+tmp = pathlib.Path("tmp")
+tmp.mkdir(exist_ok=True)
+for n in range(5):
+    (tmp / f"cache_{n}.tmp").write_text("scratch data\n")
+(tmp / "KEEP_customer_export.csv").write_text("id,name\n1,Ada\n")
+print("Created logs/app.log (3,000 lines) and tmp/ with 6 files")
+```
+
+2. Run it:
+
+```bash
+python make_lab_files.py
+```
+
+3. Create the folders `.claude` and `.claude/agents` inside `lab-01` (in your editor, or with `mkdir .claude` and then `mkdir .claude/agents`).
+
+4. Create `.claude/agents/log-investigator.md`:
+
+```markdown
+---
+name: log-investigator
+description: Investigates the log files in logs/ and reports the root cause of errors. Use it for any question about errors or failures in the logs.
+tools: Read, Grep, Glob
+model: haiku
+---
+You are a log investigator. Search the files in logs/ for WARN and ERROR lines.
+Return a short report with: the first error, its timestamp, the failing component,
+the file and line it points to, and the likely root cause.
+Never paste whole log files; quote at most three lines.
+```
+
+5. Start Claude Code in `lab-01`, and accept the prompt to trust the folder:
 
 ```bash
 claude
 ```
 
-4. In Claude Code, run the following prompt to add a test harness and deployment comparison to `agent_harness.py`:
+6. Run `/agents` and confirm that `log-investigator` appears under project agents. Press Esc to close the list.
+
+7. Send this prompt:
 
 ```text
-Read agent_harness.py. Add a __main__ block to agent_harness.py that:
-1. Simulates a 2-turn conversation where Turn 1 returns BOTH a text block ("Let me check order ORD-500 for you.") AND a tool_use block (id="toolu_01", name="lookup_order", input={"order_id": "ORD-500"}) with stop_reason="tool_use", and Turn 2 returns the final resolution with stop_reason="end_turn".
-2. Prints the conversation messages array after completion to verify that assistant tool_use blocks and user tool_result blocks are properly paired.
-3. Also create a file named deployment-models.md comparing when to choose a Self-Hosted Agent Harness (direct VPC database access, custom Python/TS hooks) vs an Anthropic-Hosted / Managed Agent environment (rapid deployment, managed container sandboxing).
-Run agent_harness.py and show the output.
+Use the log-investigator subagent to find out why checkout failed. Then tell me which component failed and which file and line the log points to.
 ```
 
-5. Review the output in Claude Code to confirm that the loop continues cleanly on `stop_reason == "tool_use"` even when explanatory text is present in the same response.
+8. Watch Claude Code start the subagent, then read the short report that comes back.
 
-> [!IMPORTANT]
-> Never terminate a tool-use loop just because `response.content` contains a `text` block or a natural-language phrase. Always control the loop using `response.stop_reason` (`"tool_use"` vs `"end_turn"`).
+9. Run `/context` and note how much of the main context window is used.
 
-### Task 2: Configure a supervisor and isolated subagents
+10. Answer these questions in a file named `task2-notes.md`:
+    - Why does `log-investigator` have only `Read`, `Grep`, and `Glob`?
+    - The subagent did not see your conversation. What did the main agent have to put into the task it delegated?
+    - Run `/clear`, then ask Claude to read all of `logs/app.log` itself, and run `/context` again. What difference do you see, and why does it matter for a long session?
 
-In this task, you configure a manager/supervisor agent (`allowedTools: ["Task"]`) and two specialized subagents with isolated context windows, 4 to 5 role-scoped tools, and explicit context passing.
+11. Type `/exit` to leave Claude Code.
 
-1. In `ccdvf-lab-01`, create a file named `supervisor-subagents.json` defining the supervisor and its specialized worker subagents:
+> [!NOTE]
+> **Check your answers:** Scoped tools make the subagent safer (it cannot edit or delete) and help it choose the right tool. A standard subagent starts with a fresh context, so the parent must pass everything it needs in the task prompt. Reading the full log in the main session fills the main context window with thousands of lines, while delegation returns only a few lines of summary.
 
-```json
-{
-  "supervisor": {
-    "name": "incident-supervisor",
-    "description": "Decomposes bug reports, delegates log search and patch generation to subagents, and verifies fixes.",
-    "allowedTools": ["Task"],
-    "contextRule": "Subagents operate in isolated context windows and never inherit supervisor history automatically. Always pass required stack traces, file paths, and findings explicitly in each Task prompt."
-  },
-  "subagents": [
-    {
-      "name": "log-investigator",
-      "description": "Searches application logs and stack traces to identify the failing module and line number.",
-      "allowedTools": ["Grep", "Glob", "Read", "fetch_error_trace"]
-    },
-    {
-      "name": "patch-author",
-      "description": "Applies targeted code fixes and runs unit tests on the identified file.",
-      "allowedTools": ["Read", "Edit", "Write", "run_unit_tests"]
-    }
-  ]
-}
-```
+### Task 3: Enforce a rule with an Agent SDK hook
 
-2. Ask Claude Code to generate `delegation-trace.json` showing how `incident-supervisor` delegates to `log-investigator` and passes its structured findings explicitly to `patch-author`:
+In this task, you run an agent built with the Claude Agent SDK, which is the Claude Code harness as a Python library. You complete a `PreToolUse` hook that blocks file deletion in code, not in a prompt.
 
-```text
-Read supervisor-subagents.json. Create delegation-trace.json showing:
-1. Why giving each subagent 4 role-scoped tools improves selection accuracy compared to giving one agent 16 mixed tools.
-2. The exact Task tool_use payload sent from incident-supervisor to patch-author, demonstrating how the stack trace and file path discovered by log-investigator are passed explicitly inside the Task prompt.
-```
-
-3. Open `delegation-trace.json` in your editor and verify the explicit context payload passed to `patch-author`.
-
-### Task 3: Enforce deterministic safety and normalization with SDK hooks
-
-In this task, you write `PreToolUse` and `PostToolUse` lifecycle hooks that deterministically block unauthorized actions and prune/normalize verbose tool outputs before they enter the model’s context window.
-
-1. In `ccdvf-lab-01`, create a file named `lifecycle_hooks.py`:
+1. In `lab-01`, create `sdk_agent.py`:
 
 ```python
-# lifecycle_hooks.py
-from datetime import datetime, timezone
+# sdk_agent.py - an Agent SDK agent with a deterministic PreToolUse hook
+import asyncio
 
-def pre_tool_use_hook(tool_name: str, tool_input: dict, verified_customer_id: str | None) -> dict:
-    # Block order or refund tools if customer identity has not been verified yet
-    if tool_name in ("lookup_order", "issue_refund") and not verified_customer_id:
-        return {"decision": "block", "reason": "Must verify customer via get_customer first."}
+from dotenv import load_dotenv
+from claude_agent_sdk import (AssistantMessage, ClaudeAgentOptions, HookMatcher,
+                              ResultMessage, TextBlock, ToolUseBlock, query)
 
-    # Block refunds over $500 deterministically
-    if tool_name == "issue_refund" and float(tool_input.get("amount", 0)) > 500.0:
-        return {"decision": "block", "reason": "Refund exceeds $500 limit; escalate to human."}
+load_dotenv()  # the Agent SDK reads ANTHROPIC_API_KEY from the environment
 
-    return {"decision": "allow"}
 
-def post_tool_use_hook(raw_order_payload: dict) -> dict:
-    # Prune 30+ internal warehouse fields and normalize Unix epoch to ISO 8601
-    created_epoch = raw_order_payload.get("created_epoch", 1761820800)
-    iso_date = datetime.fromtimestamp(created_epoch, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    return {
-        "order_id": raw_order_payload.get("order_id"),
-        "status": raw_order_payload.get("status"),
-        "amount": raw_order_payload.get("amount"),
-        "created_at_iso": iso_date
-    }
+async def block_deletes(input_data, tool_use_id, context):
+    command = input_data["tool_input"].get("command", "")
+    print(f"  [hook] checking: {command}")
+    # TODO: if the command can delete files, return a deny decision. Check for at least:
+    # "rm ", "-delete", "unlink", "rmtree", "os.remove", "Remove-Item", "del "
+    # {"hookSpecificOutput": {"hookEventName": "PreToolUse",
+    #                         "permissionDecision": "deny",
+    #                         "permissionDecisionReason": "..."}}
+    return {}  # empty dict = no decision, the tool call runs
+
+
+async def main():
+    options = ClaudeAgentOptions(
+        model="claude-haiku-5-5",
+        allowed_tools=["Bash", "PowerShell", "Read", "Glob"],  # pre-approved, so no prompts
+        max_turns=8,
+        hooks={"PreToolUse": [HookMatcher(matcher="Bash|PowerShell", hooks=[block_deletes])]},
+    )
+    prompt = "Free up disk space: delete every .tmp file in ./tmp (the tmp folder in the current directory), then list what is left."
+    async for message in query(prompt=prompt, options=options):
+        if isinstance(message, AssistantMessage):
+            for block in message.content:
+                if isinstance(block, TextBlock):
+                    print(f"Claude: {block.text}")
+                elif isinstance(block, ToolUseBlock):
+                    print(f"Tool call: {block.name} {block.input}")
+        elif isinstance(message, ResultMessage):
+            print(f"\nDone: {message.subtype}, cost ${message.total_cost_usd or 0:.4f}")
+
+
+asyncio.run(main())
 ```
 
-2. Ask Claude Code to add a `__main__` verification block to `lifecycle_hooks.py` and run it:
+2. Complete the TODO in `block_deletes` so that any command containing one of the listed words returns the deny decision shown in the comment, with a reason that tells Claude what to do instead.
 
-```text
-Add a __main__ test block to lifecycle_hooks.py that tests blocking an unverified lookup_order call, blocking a $750 issue_refund call, and pruning/normalizing a raw order payload containing extra warehouse noise fields. Run lifecycle_hooks.py and show the output.
+> [!WARNING]
+> Complete the TODO **before** you run the script. The tools are pre-approved, so without the hook the agent really deletes the files. If that happens, run `python make_lab_files.py` to recreate them.
+
+3. Look in the `tmp` folder and confirm that it holds five `.tmp` files and one `.csv` file. If you ever need to reset them, run `python make_lab_files.py` again.
+
+4. Run the agent:
+
+```bash
+python sdk_agent.py
 ```
 
-3. Confirm in the terminal output that the hooks enforce the rules deterministically in code.
+5. Read the output. Confirm that the hook printed the delete command, denied it, and that the five `.tmp` files still exist. Notice how the agent reacts to the denial reason: it reports what it would delete instead.
 
-### Bonus Task 4: Select between PydanticAI, LangGraph, and Strands
+> [!NOTE]
+> The SDK may print a notice that claude.ai connectors are disabled because `ANTHROPIC_API_KEY` is set. That is expected: the Agent SDK runs on your API key, not on your Claude subscription.
 
-In this bonus task, you match four developer project scenarios to either a deterministic Workflow or an Autonomous Agent, and select the best-fit agentic framework (**PydanticAI**, **LangGraph**, or **Strands**).
+6. Add your answers to `task2-notes.md`:
+    - The same rule could go in the prompt ("never delete files"). Why is the hook a stronger guarantee?
+    - Your hook checks a list of words. Name two commands that could still remove or destroy the files without using any of those words. What does that tell you about blocking commands with a denylist?
 
-1. In `ccdvf-lab-01`, ask Claude Code to create `framework-selection-guide.md` containing a decision table for these four projects:
-   - **Project A**: A fixed 3-step document intake pipeline that extracts invoice fields, validates every field against strict Python type contracts, and automatically feeds Pydantic validation errors back to Claude for retry.
-   - **Project B**: A complex multi-step compliance workflow modeled as a stateful cyclic graph with explicit conditional edges, durable state checkpointing, time-travel debugging, and human-in-the-loop pause/resume interrupts.
-   - **Project C**: A lightweight, model-driven coding assistant that registers MCP tools with minimal boilerplate and lets Claude’s native reasoning loop drive tool selection.
-   - **Project D**: A predictable nightly job that translates release notes into 3 languages in a fixed sequence.
+> [!NOTE]
+> **Reference hook:**
+>
+> ```python
+> delete_words = ("rm ", "-delete", "unlink", "rmtree", "os.remove", "Remove-Item", "del ")
+> if any(word in command for word in delete_words):
+>     return {"hookSpecificOutput": {"hookEventName": "PreToolUse",
+>                                    "permissionDecision": "deny",
+>                                    "permissionDecisionReason": "Deleting files is not allowed. Report what you would delete instead."}}
+> ```
+>
+> A hook runs on every matching tool call, so a prompt injection or a confused model cannot talk past it. But a denylist only blocks what it lists: `mv tmp/cache_0.tmp /dev/null`, `truncate -s 0`, or a short Python script could still destroy the data. Real deployments pair hooks with least-privilege tools, permission rules, and sandboxing. You practice that layering in Lab 4.
 
-2. Verify in `framework-selection-guide.md` that:
-   - **Project A** maps to **PydanticAI**.
-   - **Project B** maps to **LangGraph**.
-   - **Project C** maps to **Strands (Strands Agents)**.
-   - **Project D** uses a **deterministic Workflow** (prompt chaining) rather than an open-ended autonomous agent.
+### Bonus Task 4: Add a guarded refund tool
+
+Use what you built in Tasks 1 and 3, with fewer instructions.
+
+1. Add a `refund_order` tool (inputs `order_id` and `amount`) to the loop in `agent_loop.py`.
+
+2. Enforce two rules **in code**, before the refund runs, and return an error `tool_result` (with `"is_error": True`) when a rule fails:
+   - The refund amount must be $500 or less.
+   - The order must already have been looked up with `lookup_order` in this conversation.
+
+3. Prove both rules with test prompts, including one prompt that asks Claude to skip the lookup and one that asks for a $750 refund.
+
+4. **Stretch:** rewrite the Task 1 job ("compare two orders") as a fixed two-step workflow in plain code: look up both orders yourself, then make one Claude call to write the answer. Note when you would choose this workflow over the agent loop.
 
 ## Congratulations!
 
 In this lab, you have:
-- Built a custom tool-use agent loop controlled by `stop_reason`.
-- Configured a supervisor hierarchy with isolated, role-scoped subagents.
-- Implemented deterministic `PreToolUse` and `PostToolUse` lifecycle hooks.
-- Chosen between deterministic workflows, autonomous agents, and frameworks (`PydanticAI`, `LangGraph`, `Strands`).
+- Controlled a tool-use agent loop with `stop_reason`.
+- Delegated work to a subagent with an isolated context and scoped tools.
+- Enforced a rule in an Agent SDK agent with a `PreToolUse` hook.

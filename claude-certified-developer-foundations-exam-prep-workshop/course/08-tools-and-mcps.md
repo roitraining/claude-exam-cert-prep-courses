@@ -113,11 +113,11 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Authoring an MCP Server with Tools and Resources
 
-- **Exposing a reusable internal inventory service** via the Python MCP SDK (`FastMCP`):
+- **Exposing a reusable internal inventory service** with the Python MCP SDK (`MCPServer`, called `FastMCP` before SDK 2.0):
 
 ```python
-from mcp.server.fastmcp import FastMCP
-mcp = FastMCP("inventory-service")
+from mcp.server.mcpserver import MCPServer
+mcp = MCPServer("inventory-service")
 
 @mcp.resource("inventory://catalog/schema")
 def get_inventory_schema() -> str:
@@ -180,7 +180,7 @@ def check_sku_stock(sku: str, warehouse: str) -> dict:
 
 # Lab 4: Developing Secure Tools and MCP Servers
 
-**Time:** 60 minutes
+**Time:** 45 minutes
 
 - [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-developer-foundations-exam-prep-workshop/labs/lab-04-developing-secure-tools-and-mcp-servers)
 

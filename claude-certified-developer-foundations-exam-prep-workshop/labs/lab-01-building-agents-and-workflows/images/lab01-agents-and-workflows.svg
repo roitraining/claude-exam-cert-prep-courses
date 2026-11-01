@@ -1,40 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 1 Overview: Custom Agent Harness, Supervisor Delegation, SDK Hooks, and Frameworks">
-  <!-- Panel 1: Custom Agent Harness Loop -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 1: manual agent loop, subagent delegation, and Agent SDK hook">
   <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
   <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
-  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 1: Agent Harness Loop</text>
-  <rect x="42" y="92" width="290" height="96" rx="10" fill="#e0edff"/>
-  <text x="187" y="118" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">stop_reason Control Flow</text>
-  <text x="187" y="142" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">"tool_use" -&gt; execute + tool_result</text>
-  <text x="187" y="164" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">"end_turn" -&gt; return final response</text>
-  <rect x="42" y="204" width="290" height="106" rx="10" fill="#f0fdf4" stroke="#86efac"/>
-  <text x="187" y="232" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Deployment Models</text>
-  <text x="187" y="256" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Self-hosted VPC harness vs</text>
-  <text x="187" y="278" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Anthropic-hosted managed sandbox</text>
-
-  <!-- Panel 2: Supervisor & Subagent Isolation -->
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 1: Fix the Agent Loop</text>
+  <rect x="42" y="92" width="290" height="100" rx="10" fill="#e0edff"/>
+  <text x="187" y="119" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Branch on stop_reason</text>
+  <text x="187" y="144" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">tool_use -&gt; run tools, send results</text>
+  <text x="187" y="166" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">end_turn -&gt; return the answer</text>
+  <rect x="42" y="208" width="290" height="100" rx="10" fill="#e0edff"/>
+  <text x="187" y="235" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Never loop forever</text>
+  <text x="187" y="260" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Keep every assistant turn</text>
+  <text x="187" y="282" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Cap turns; stop on max_tokens</text>
   <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
   <rect x="382" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
-  <text x="550" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 2: Supervisor and Subagents</text>
-  <rect x="405" y="92" width="290" height="96" rx="10" fill="#f0fdf4" stroke="#86efac"/>
-  <text x="550" y="118" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Supervisor (allowedTools: ["Task"])</text>
-  <text x="550" y="142" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Decomposes goals and routes tasks</text>
-  <text x="550" y="164" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Passes required context explicitly</text>
-  <rect x="405" y="204" width="290" height="106" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
-  <text x="550" y="232" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Specialized Subagents</text>
-  <text x="550" y="256" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Isolated context windows</text>
-  <text x="550" y="278" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">4 to 5 role-scoped tools each</text>
-
-  <!-- Panel 3: Deterministic Hooks & Frameworks -->
-  <rect x="745" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
-  <rect x="745" y="25" width="335" height="48" rx="14" fill="#6a55e4"/>
-  <text x="912" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 3 and 4: Hooks and Frameworks</text>
-  <rect x="768" y="92" width="290" height="96" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
-  <text x="912" y="118" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">PreToolUse and PostToolUse</text>
-  <text x="912" y="142" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">Deterministic code prerequisite checks</text>
-  <text x="912" y="164" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">and output pruning / normalization</text>
-  <rect x="768" y="204" width="290" height="106" rx="10" fill="#082445"/>
-  <text x="912" y="232" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Agentic Frameworks</text>
-  <text x="912" y="256" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">PydanticAI | LangGraph | Strands</text>
-  <text x="912" y="278" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Workflow vs Autonomous Agent</text>
+  <text x="549" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 2: Delegate to a Subagent</text>
+  <rect x="404" y="92" width="290" height="100" rx="10" fill="#f0fdf4"/>
+  <text x="549" y="119" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">log-investigator</text>
+  <text x="549" y="144" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Own context window</text>
+  <text x="549" y="166" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Read, Grep, Glob only</text>
+  <rect x="404" y="208" width="290" height="100" rx="10" fill="#f0fdf4"/>
+  <text x="549" y="235" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Main agent</text>
+  <text x="549" y="260" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Passes the task explicitly</text>
+  <text x="549" y="282" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Gets back a short summary</text>
+  <rect x="744" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
+  <rect x="744" y="25" width="335" height="48" rx="14" fill="#7c3aed"/>
+  <text x="911" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 3: Agent SDK Hook</text>
+  <rect x="766" y="92" width="290" height="100" rx="10" fill="#f5f3ff"/>
+  <text x="911" y="119" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">query() + ClaudeAgentOptions</text>
+  <text x="911" y="144" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Claude Code harness as a library</text>
+  <text x="911" y="166" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Model, tools, max_turns</text>
+  <rect x="766" y="208" width="290" height="100" rx="10" fill="#f5f3ff"/>
+  <text x="911" y="235" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">PreToolUse hook</text>
+  <text x="911" y="260" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Denies rm in code, every time</text>
+  <text x="911" y="282" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Prompts can be ignored; hooks not</text>
 </svg>

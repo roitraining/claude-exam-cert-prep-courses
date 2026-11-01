@@ -1,41 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 4 Overview: Prompt Injection Defense, MCP Server Primitives, and Customization Selection">
-  <!-- Panel 1: Prompt Injection & Safety Hooks -->
-  <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#dc2626" stroke-width="3"/>
-  <rect x="20" y="25" width="335" height="48" rx="14" fill="#dc2626"/>
-  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 1: Security and Hooks</text>
-  <rect x="42" y="92" width="290" height="96" rx="10" fill="#fef2f2" stroke="#fca5a5"/>
-  <text x="187" y="118" text-anchor="middle" fill="#991b1b" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Indirect Prompt Injection</text>
-  <text x="187" y="142" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">Isolate untrusted web pages in XML</text>
-  <text x="187" y="164" text-anchor="middle" fill="#7f1d1d" font-family="Inter, system-ui, sans-serif" font-size="13">Enforce least-privilege tool sets</text>
-  <rect x="42" y="204" width="290" height="106" rx="10" fill="#f0fdf4" stroke="#86efac"/>
-  <text x="187" y="232" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Deterministic Claude Hooks</text>
-  <text x="187" y="256" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Block rm -rf, DROP TABLE, .env</text>
-  <text x="187" y="278" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Redact PII before external logging</text>
-
-  <!-- Panel 2: MCP Server Development -->
-  <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
-  <rect x="382" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
-  <text x="550" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 2: MCP Server Primitives</text>
-  <rect x="405" y="92" width="290" height="64" rx="10" fill="#e0edff"/>
-  <text x="550" y="118" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Tools (Model-Controlled)</text>
-  <text x="550" y="140" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">check_sku_stock + structured isError</text>
-  <rect x="405" y="170" width="290" height="64" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
-  <text x="550" y="196" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Resources (App-Controlled)</text>
-  <text x="550" y="218" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">inventory://catalog/schema (read-only)</text>
-  <rect x="405" y="248" width="290" height="62" rx="10" fill="#f0fdf4" stroke="#86efac"/>
-  <text x="550" y="274" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Prompts + stdio Transport</text>
-  <text x="550" y="296" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Log to stderr (never corrupt stdout)</text>
-
-  <!-- Panel 3: Customization Selection & Key Hygiene -->
-  <rect x="745" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
-  <rect x="745" y="25" width="335" height="48" rx="14" fill="#6a55e4"/>
-  <text x="912" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Task 3 and 4: Customization</text>
-  <rect x="768" y="92" width="290" height="96" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
-  <text x="912" y="118" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Selecting the Right Primitive</text>
-  <text x="912" y="142" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Multi-app internal API -&gt; MCP Server</text>
-  <text x="912" y="164" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="13">Built-in | Custom Tool | Skill</text>
-  <rect x="768" y="204" width="290" height="106" rx="10" fill="#082445"/>
-  <text x="912" y="232" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Secrets and Identity</text>
-  <text x="912" y="256" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">.mcp.json "${ENV_VAR}" expansion</text>
-  <text x="912" y="278" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="13">Per-env keys + caller RBAC audit</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 4: guard hook, permission rules, MCP server, and customization choices">
+  <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 1: Hooks and Permissions</text>
+  <rect x="42" y="92" width="290" height="100" rx="10" fill="#e0edff"/>
+  <text x="187" y="119" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">guard.py PreToolUse hook</text>
+  <text x="187" y="144" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Blocks rm -rf, DROP TABLE</text>
+  <text x="187" y="166" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Tested on its own first</text>
+  <rect x="42" y="208" width="290" height="100" rx="10" fill="#e0edff"/>
+  <text x="187" y="235" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Defense in depth</text>
+  <text x="187" y="260" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Injected page cannot pass the hook</text>
+  <text x="187" y="282" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Deny rules block .env reads</text>
+  <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <rect x="382" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
+  <text x="549" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 2: Real MCP Server</text>
+  <rect x="404" y="92" width="290" height="100" rx="10" fill="#f0fdf4"/>
+  <text x="549" y="119" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">MCPServer: inventory</text>
+  <text x="549" y="144" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Tool, resource, and prompt</text>
+  <text x="549" y="166" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Logs to stderr, never stdout</text>
+  <rect x="404" y="208" width="290" height="100" rx="10" fill="#f0fdf4"/>
+  <text x="549" y="235" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Connect to Claude Code</text>
+  <text x="549" y="260" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">claude mcp add --scope project</text>
+  <text x="549" y="282" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Approve, then /mcp</text>
+  <rect x="744" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
+  <rect x="744" y="25" width="335" height="48" rx="14" fill="#7c3aed"/>
+  <text x="911" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 3: Errors and Choices</text>
+  <rect x="766" y="92" width="290" height="100" rx="10" fill="#f5f3ff"/>
+  <text x="911" y="119" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Useful tool errors</text>
+  <text x="911" y="144" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">isError with a clear fix</text>
+  <text x="911" y="166" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Never a fake empty result</text>
+  <rect x="766" y="208" width="290" height="100" rx="10" fill="#f5f3ff"/>
+  <text x="911" y="235" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Pick the right option</text>
+  <text x="911" y="260" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Built-in, custom tool, Skill,</text>
+  <text x="911" y="282" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">MCP server, or plugin</text>
 </svg>

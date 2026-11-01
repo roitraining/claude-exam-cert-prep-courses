@@ -50,7 +50,7 @@ Slide counts below include **content slides where the instructor talks** (includ
 
 | Chapter # | Slide Count | Lecture Time | Activity Time | Quiz Time |
 | :--- | :---: | :---: | :---: | :---: |
-| **00: Introduction** | 7 | 21 min | 0 min | 0 min |
+| **00: Introduction** | 7 | 21 min | 20 min | 0 min |
 | **01: Developer Foundations Overview** | 9 | 27 min | 0 min | 0 min |
 | **02: Agents and Workflows** | 13 | 39 min | 45 min | 15 min |
 | **03: Applications and Integration** | 16 | 48 min | 0 min | 15 min |
@@ -58,11 +58,11 @@ Slide counts below include **content slides where the instructor talks** (includ
 | **05: Model Selection and Optimization** | 12 | 36 min | 0 min | 15 min |
 | **06: Prompt and Context Engineering** | 10 | 30 min | 45 min | 15 min |
 | **07: Security and Safety** | 11 | 33 min | 0 min | 15 min |
-| **08: Tools and MCPs** | 11 | 33 min | 60 min | 15 min |
+| **08: Tools and MCPs** | 11 | 33 min | 45 min | 15 min |
 | **09: Final Practice Exam** | 7 | 21 min | 0 min | 30 min |
-| **Total** | **109** | **327 min (5.5 hrs)** | **195 min (3.3 hrs)** | **135 min (2.3 hrs)** |
+| **Total** | **109** | **327 min (5.5 hrs)** | **200 min (3.3 hrs)** | **135 min (2.3 hrs)** |
 
-**Combined Classroom Time (Lecture + Activity + Quiz):** `657 min` (`11.0 hours`)
+**Combined Classroom Time (Lecture + Activity + Quiz):** `662 min` (`11.0 hours`)
 
 ---
 
