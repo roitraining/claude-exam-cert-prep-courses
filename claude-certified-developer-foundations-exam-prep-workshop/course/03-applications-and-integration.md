@@ -12,10 +12,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 3: Objectives
 
-- Map functional and infrastructure requirements across the SDLC
-- Integrate the Messages API, streaming, and Message Batches API
-- Apply async I/O, resilient retries, and refactoring patterns
-- Manage session boundaries and pinned model configurations
+- Map functional and infrastructure requirements to design choices
+- Integrate the Messages API, streaming, multi-format input, and batches
+- Apply async I/O, resilient retries, and Claude-assisted SDLC practices
+- Manage session boundaries, pinned configurations, and plugins
 
 ---
 
@@ -53,7 +53,21 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - **Planning and Discovery**: define success metrics and build the initial golden evaluation dataset.
 - **Development and Integration**: implement stateless API handlers, typed schemas, and deterministic hooks.
 - **Testing and Deployment**: gate CI/CD merges on automated evaluations and roll out via canary/shadow stages.
-- **Operations and Maintenance**: monitor token usage, cache hit rates, latency p95, and model deprecations.
+- **Operations and Maintenance**: monitor token usage, cache hit rates, latency p95, and model deprecations and retirements.
+
+---
+
+# From Requirement to Design Choice
+
+| Requirement in the Scenario | Design Choice the Exam Expects |
+| :--- | :--- |
+| **Users watch the answer appear; low perceived latency** | Stream the response (SSE); consider Haiku for the fast path |
+| **Thousands of non-urgent jobs; cost is the priority** | Message Batches API (50% discount, results within 24 hours) |
+| **Same long system prompt or document on every call** | Prompt caching on the stable prefix |
+| **Data must stay in a region or cloud account** | `inference_geo`, or Claude via Bedrock, Vertex AI, or Foundry |
+| **Strict data retention rules** | Check zero data retention eligibility per model before you commit |
+| **Outputs feed a database or downstream API** | Structured outputs with a JSON Schema, then validate |
+| **Agent must act on private internal systems** | Self-hosted harness or a secured remote MCP server |
 
 ---
 
@@ -71,48 +85,71 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 # Claude Messages API Mechanics
 
 - **Stateless API contract**: the Messages API does not store conversation state on the server; your application must pass the required conversation history in the `messages` array on every request
-- **Top-level `system` parameter**: pass system instructions in the top-level `system` field rather than as a `"system"` role inside `messages`
+- **Top-level `system` parameter**: put the main system instructions in the top-level `system` field; newer models also accept a mid-conversation `{"role": "system"}` message to add operator instructions without breaking the cache (never as `messages[0]`)
 - **Multi-format content blocks**: a single message’s `content` can contain an array of typed blocks (`text`, `image` base64/URL, `document` PDF, `tool_use`, `tool_result`, `thinking`)
 
 ![Claude Messages API Mechanics](images/ch03-messages-api-mechanics.svg)
 
 ---
 
-# Streaming, Vision, and Multi-Turn `tool_result` Rules
+# Streaming and Multi-Turn `tool_result` Rules
 
-- **Server-Sent Events (SSE) streaming**: use `client.messages.stream(...)` to receive incremental events (`message_start`, `content_block_start`, `content_block_delta`, `content_block_stop`, `message_delta`, `message_stop`) for low perceived latency
-- **Strict `tool_use` / `tool_result` pairing**: whenever an `"assistant"` message contains one or more `tool_use` blocks, the **immediately following `"user"` message** must contain the matching `tool_result` blocks (referenced by `tool_use_id`) before any new user text
+- **SSE streaming** lowers perceived latency; required for large `max_tokens` (avoids HTTP timeouts)
+- **Strict pairing**: the user message after a `tool_use` must start with its `tool_result` blocks
 
 ```python
+client = AsyncAnthropic()  # async client required for "async with"
 async with client.messages.stream(
-    model="claude-sonnet-4-20250514",
-    max_tokens=1024,
+    model="claude-sonnet-5-5", max_tokens=16000,
     system="You are a production log analyzer.",
     messages=[{"role": "user", "content": "Summarize this stack trace."}],
 ) as stream:
     async for text in stream.text_stream:
         print(text, end="", flush=True)
+    final = await stream.get_final_message()  # full Message, usage, stop_reason
 ```
 
 ---
 
-<!-- layout: 3-column -->
+<!-- layout: card-layout -->
+# Vision, Documents, and Files API Data Access
+
+### Images (Vision)
+- Send `image` blocks as base64, URL, or Files API `file_id` (JPEG, PNG, GIF, WebP).
+- Current models read up to 2576 px on the long edge, which can cost several thousand tokens per image: downsample when fidelity is not needed.
+
+### PDFs and Documents
+- Send a `document` block (base64, URL, or `file_id`) placed before the question text.
+- Claude reads both the text and the page images of a PDF, so charts and tables are understood.
+
+### Files API (GA)
+- Upload once with `client.files.upload(...)`, then reference the `file_id` across many requests instead of re-sending bytes.
+- The content block type must match the file’s MIME type (`document` for PDF, `image` for images).
+
+### Citations
+- Set `citations: {"enabled": true}` on document blocks to get `cited_text` and page or character locations for each claim.
+- Use citations when answers must be traceable to source documents.
+
+---
+
+<!-- layout: card-layout -->
 # Invoking Claude via First-Party and Cloud Vendors
 
-### Anthropic Direct API
-- Uses `Anthropic()` or `AsyncAnthropic()` from the `anthropic` SDK
-- Authenticates via `ANTHROPIC_API_KEY`
-- Fastest access to newly released platform features and headers
+### Claude API (Anthropic)
+- `Anthropic()` or `AsyncAnthropic()` authenticated with `ANTHROPIC_API_KEY` (or workload identity federation).
+- First access to new features such as fast mode, Managed Agents, and new beta tools.
 
 ### Amazon Bedrock
-- Uses `AnthropicBedrock()` client wrapper or AWS `boto3` Bedrock Runtime
-- Authenticates via **AWS IAM roles / SigV4** credentials (`AWS_REGION`)
-- Ideal when enterprise workloads and VPC controls already live in AWS
+- `AnthropicBedrockMantle(aws_region=...)` with AWS IAM credentials; model IDs take an `anthropic.` prefix.
+- Fits when workloads, VPC controls, and billing already live in AWS (Claude Platform on AWS is the Anthropic-operated alternative).
 
 ### Google Cloud Vertex AI
-- Uses `AnthropicVertex(project_id=..., region=...)` client wrapper
-- Authenticates via **Google Cloud Application Default Credentials (ADC) / IAM**
-- Keeps traffic within GCP project boundaries and billing
+- `AnthropicVertex(project_id=..., region="global")` with Application Default Credentials.
+- Keeps traffic and billing inside the GCP project.
+
+### Microsoft Foundry
+- `AnthropicFoundry(...)` with an Azure resource; billed through the Microsoft Marketplace.
+- Feature availability differs by platform: check before you design around a beta feature.
 
 ---
 
@@ -132,7 +169,7 @@ async with client.messages.stream(
 <!-- below-columns -->
 
 > [!IMPORTANT]
-> Exam Rule: Sending 10,000 requests in parallel via the synchronous Messages API or lowering `max_tokens` does **not** unlock the 50% batch discount. Always select the **Message Batches API** for latency-tolerant bulk jobs.
+> Exam rule: parallel synchronous calls or a lower `max_tokens` do **not** get the 50% discount. Use the **Message Batches API** for latency-tolerant bulk jobs.
 
 ---
 
@@ -150,19 +187,34 @@ async with client.messages.stream(
 # Software Engineering Foundations for AI Apps
 
 ### Asynchronous Programming (`AsyncAnthropic`)
-- LLM calls are network I/O bound (often 1 to 15 seconds).
+- LLM calls are network I/O bound (seconds to minutes per call).
 - Use `AsyncAnthropic` with `asyncio.gather` (or `Promise.all` in TypeScript) with bounded semaphores so concurrent requests never block the event loop.
 
 ### Resilient REST Integration
-- Configure connection timeouts, idempotency, and exponential backoff with jitter for transient `429` (rate limit) and `529` (overloaded) responses.
-- Respect the `retry-after` HTTP response header when present.
+- The official SDKs already retry `408`, `409`, `429`, and `5xx` twice by default with backoff; tune `max_retries` and `timeout` instead of hand-rolling retries.
+- Respect the `retry-after` header, and make your own side-effecting tools idempotent so a retry cannot double-charge or double-send.
 
-### Small-Scale vs Large-Scale Refactoring
-- Use direct targeted edits (`Edit` tool) for localized single-file refactoring.
-- Use Plan Mode, dependency mapping, and incremental per-module verification for large-scale cross-repository refactoring.
+### REST and JSON Contracts
+- The SDKs wrap `POST /v1/messages`: know the request shape (`model`, `max_tokens`, `system`, `messages`, `tools`) and the response shape (`content` blocks, `stop_reason`, `usage`).
+- Parse tool inputs and model JSON with a real JSON parser and schema validation, never string matching.
 
 ### SDLC and Code Review Integration
 - Treat prompts, tool schemas, and evaluation datasets as version-controlled code artifacts reviewed in pull requests alongside application code.
+
+---
+
+<!-- layout: 2-column -->
+# Version Control, Code Review, and Refactoring with Claude
+
+### Version Control and Code Review
+- Let Claude Code create branches, commits, and pull requests, but keep human review on every merge
+- Run Claude in CI with the Claude Code GitHub Actions integration or `claude -p` for automated PR review comments
+- Use `/security-review` (or a review Skill) to check diffs for vulnerabilities before merge
+
+### Small- vs Large-Scale Refactoring
+- **Small**: a targeted `Edit` in one file, verified by the existing tests
+- **Large**: start in Plan Mode, map dependencies, split work by module across subagents or git worktrees, and verify each module before moving on
+- Keep the test suite green as the contract: Claude refactors, tests decide
 
 ---
 
@@ -202,8 +254,30 @@ async with client.messages.stream(
 - Sanitize and validate all model outputs against strict JSON schemas before persisting
 
 ### Configuration Management and Version Pinning
-- **Pin exact model versions** in production (for example, `claude-sonnet-4-20250514` rather than `-latest` aliases) so silent model updates cannot alter production behavior unexpectedly
-- Version-control `CLAUDE.md`, `settings.json`, prompt templates, and plugin dependencies so any deployment can be reproduced or rolled back cleanly
+- **Pin an explicit model ID** in config (for example, `claude-sonnet-5-5`), plus your SDK version and `anthropic-version` header, so upgrades happen only when you choose; older models use dated IDs such as `claude-haiku-4-5-20251001`
+- Track deprecation and retirement dates: a retired model ID fails every request
+- Version-control `CLAUDE.md`, `settings.json`, prompt templates, and plugin versions so any deployment can be reproduced or rolled back
+
+---
+
+<!-- layout: card-layout -->
+# Claude Code Plugins and Plugin Management
+
+### What a Plugin Bundles
+- A plugin packages Skills, subagents, hooks, MCP servers, and commands behind one manifest (`.claude-plugin/plugin.json`).
+- Install one plugin instead of copying many config files into every repository.
+
+### Marketplaces and Installation
+- Add a catalog with `/plugin marketplace add <repo-or-url>`, then `/plugin install <name>@<marketplace>`.
+- Teams publish an internal marketplace repository for approved plugins.
+
+### Configuration and Dependencies
+- Enabled plugins are recorded in `settings.json` (`enabledPlugins`), so a project can require the same plugins for every developer.
+- Pin plugin versions and review updates like any other dependency, because a plugin can add hooks and tools.
+
+### When to Use a Plugin
+- Use a plugin when a set of Skills, hooks, and MCP servers must be shared across many repositories or teams.
+- Use project files (`.claude/`) when the configuration belongs to one repository.
 
 ---
 
@@ -215,10 +289,10 @@ async with client.messages.stream(
 
 # What You Learned
 
-- Mapped functional and infrastructure requirements across the SDLC
-- Integrated the Messages API, streaming, and Message Batches API
-- Applied async I/O, resilient retries, and refactoring patterns
-- Managed session boundaries and pinned model configurations
+- Mapped functional and infrastructure requirements to design choices
+- Integrated the Messages API, streaming, multi-format input, and batches
+- Applied async I/O, resilient retries, and Claude-assisted SDLC practices
+- Managed session boundaries, pinned configurations, and plugins
 
 ---
 

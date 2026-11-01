@@ -12,10 +12,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 4: Objectives
 
-- Configure Claude Code memory, rules, skills, and permissions
-- Operate interactive, Plan, Headless, and Streaming modes
+- Configure Claude Code rules, skills, agents, memory, and permissions
+- Operate interactive, Plan, headless, streaming, and auto modes
 - Handle API and tool errors with resilient recovery strategies
-- Analyze execution traces to isolate root causes
+- Analyze execution traces and evals to isolate root causes
 
 ---
 
@@ -38,42 +38,44 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-<!-- layout: card-layout -->
 # Five Core Components of Claude Code
 
-### 1. Memory (`CLAUDE.md`)
-- Hierarchical persistent context loaded automatically: user scope (`~/.claude/CLAUDE.md`), project scope (`CLAUDE.md` or `.claude/CLAUDE.md`), and subdirectory scope.
-- Initialize a repository’s baseline `CLAUDE.md` with `/init` and inspect active files with `/memory`.
+| Component | Where It Lives | What It Does |
+| :--- | :--- | :--- |
+| **Rules** | `CLAUDE.md` files and `.claude/rules/*.md` | Persistent instructions; rule files can use `paths:` globs to load only for matching files |
+| **Skills** | `.claude/skills/<name>/SKILL.md` | On-demand workflows: only the name and description load until the Skill is invoked (`context: fork`, `allowed-tools`, `argument-hint`) |
+| **Commands** | Built-in (`/init`, `/compact`, `/clear`) and custom | Custom slash commands are now Skills you invoke by name; legacy `.claude/commands/*.md` files still work |
+| **Agents** | `.claude/agents/<name>.md` | Subagents with their own prompt, tools, model, and context window, spawned through the `Agent` tool (formerly `Task`) |
+| **Agent Memory** | Auto memory and subagent `memory:` | Notes Claude writes and reloads across sessions (see next slide) |
 
-### 2. Rules (`.claude/rules/*.md`)
-- Topic-specific markdown rules with YAML frontmatter `paths` globs (such as `paths: ["**/*.test.ts"]`) that activate conditionally when matching files are edited.
+---
 
-### 3. Skills (`.claude/skills/<name>/SKILL.md`)
-- On-demand task workflows with frontmatter options (`context: fork` for isolated subagent execution, `allowed-tools` for safety restrictions, `argument-hint`).
+<!-- layout: 2-column -->
+# The `CLAUDE.md` Hierarchy and Agent Memory
 
-### 4. Slash Commands and Agents
-- Custom reusable prompt templates in `.claude/commands/` (team-shared) or `~/.claude/commands/` (personal), plus specialized subagents like `Explore`.
+### `CLAUDE.md` Hierarchy (You Write It)
+- **Managed policy** (organization-wide, set by IT) -> **user** (`~/.claude/CLAUDE.md`) -> **project** (`./CLAUDE.md` or `.claude/CLAUDE.md`, committed) -> **subdirectory** files loaded when Claude works there
+- Use `@path/to/file` imports to pull in shared docs without copying them
+- Start a repository with `/init`; inspect what loaded with `/memory`
+- Team rules belong in the project file, not in `~/.claude/CLAUDE.md`
+
+### Agent Memory (Claude Writes It)
+- **Auto memory**: Claude saves learnings to a per-project `MEMORY.md` index plus topic files and reloads them next session
+- **Subagent memory**: `memory: user | project | local` in an agent’s frontmatter gives it a persistent directory (for example, `.claude/agent-memory/<agent-name>/`)
+- Review memory like code: stale or wrong memories steer future sessions
 
 ---
 
 # Configuring `settings.json` and Permissions
 
-- **Settings hierarchy**: user settings (`~/.claude/settings.json`), shared project settings (`.claude/settings.json`), and uncommitted local overrides (`.claude/settings.local.json`)
-- **Granular tool permission rules**: control which shell commands, files, and MCP tools can run without manual prompts
+- **Precedence (highest first)**: managed -> CLI flags -> local (`.claude/settings.local.json`) -> project (`.claude/settings.json`) -> user (`~/.claude/settings.json`)
+- **Rules**: `deny` beats `ask` beats `allow`; a narrower allow cannot override a broad deny (also Domain 2 configuration)
 
 ```json
 {
   "permissions": {
-    "allow": [
-      "Bash(npm run test:*)",
-      "Bash(git status)",
-      "Read(src/**)"
-    ],
-    "deny": [
-      "Read(.env*)",
-      "Bash(rm -rf:*)",
-      "Bash(curl:*)"
-    ]
+    "allow": ["Bash(npm run test *)", "Bash(git status)", "Read(src/**)"],
+    "deny": ["Read(./.env*)", "Read(./secrets/**)", "Bash(curl *)"]
   }
 }
 ```
@@ -91,19 +93,20 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 3-column -->
-# Claude Code Execution Modes
+# Claude Code Execution and Permission Modes
 
 ### Interactive and Plan Mode
-- Default conversational terminal/IDE loop
-- Switch to **Plan Mode** for complex multi-file refactoring or architectural changes to explore dependencies safely before modifying files
+- Default conversational terminal or IDE loop
+- **Plan Mode** reads and researches without editing source files: use it before complex multi-file refactors
 
-### Headless Mode (`-p` / `--print`)
-- Runs a single prompt non-interactively, prints to stdout, and exits immediately
-- Combine with `--output-format json` and `--json-schema` for automated CI/CD PR checks
+### Headless and Streaming
+- `claude -p "..."` (`--print`) runs one prompt non-interactively and exits: the CI/CD form
+- `--output-format json` (add `--json-schema` for validated structured output) or `stream-json` for real-time events to a harness
 
-### Streaming and Auto-Mode
-- `--output-format stream-json` emits real-time JSON events for programmatic harnesses
-- Auto-approval modes must only run inside isolated containers/sandboxes with strict `deny` rules
+### Permission Modes
+- `default`, `acceptEdits`, `plan`, `dontAsk`
+- **`auto`**: a classifier reviews each action instead of prompting you; deny and ask rules still apply
+- **`bypassPermissions`**: skips prompts; only in isolated containers or VMs
 
 ---
 
@@ -113,7 +116,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 ### Resuming and Branching Sessions
 - **`claude --continue` (`-c`)**: resumes the most recent conversation in the current directory
 - **`claude --resume <session-name>` (`-r`)**: resumes a specific named investigation session across workdays
-- **`fork_session`**: branches a conversation from a shared codebase analysis baseline to test two competing implementation strategies independently
+- **`claude --resume <id> --fork-session`** (Agent SDK: `fork_session=True`): branches from a shared analysis baseline to test two competing implementation strategies independently
 
 ### Managing Context Health Mid-Session
 - **`/compact`**: summarizes verbose tool history into a concise state summary when the context window fills up during long debugging sessions
@@ -134,17 +137,17 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: card-layout -->
 # Identifying API and Tool Error Types
 
-### Client and Validation Errors (`400`, `401`, `403`, `404`)
-- **`400 invalid_request_error`**: malformed JSON, missing `tool_result` block after `tool_use`, or exceeding context window limits (do **not** blind-retry without fixing the request).
-- **`401/403`**: invalid API key or missing IAM permission (fail fast and alert).
+### Client and Validation Errors (`400`, `401`, `403`, `404`, `413`)
+- **`400 invalid_request_error`**: malformed request, missing `tool_result` after `tool_use`, a parameter the model no longer supports, or too many tokens. Fix the request; do **not** blind-retry.
+- **`401` / `403`**: invalid key or missing permission (fail fast and alert). **`413`**: request too large.
 
 ### Rate Limits and Overloads (`429`, `500`, `529`)
-- **`429 rate_limit_error`**: token or request quota exceeded; read the `retry-after` header and back off.
-- **`529 overloaded_error` / `500`**: temporary service saturation; retry with **exponential backoff and jitter**.
+- **`429 rate_limit_error`**: quota exceeded; honor `retry-after`. **`529 overloaded_error`** / **`500 api_error`**: transient; back off with jitter.
+- The SDKs retry these twice by default and raise typed exceptions (`RateLimitError`, `APIStatusError`): catch most-specific first.
 
-### Tool Execution and Schema Errors
-- MCP tool returns `isError: true` or model output fails Pydantic validation.
-- Feed structured validation errors back to the model in a self-correction turn (up to a bounded max retry count).
+### Not Errors: Check `stop_reason`
+- `refusal` and `max_tokens` arrive as HTTP 200, so check `stop_reason` before reading `content`.
+- Tool failures go back as a `tool_result` with `is_error: true` (MCP: `isError`); schema failures go back as a bounded self-correction retry.
 
 ---
 
@@ -175,8 +178,23 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 | :--- | :--- | :--- |
 | **`JSONDecodeError` when parsing structured output** | Check `response.stop_reason` | If `stop_reason == "max_tokens"`, **Integration Layer**: increase `max_tokens` and use `tool_use` schema |
 | **API returns `400` on turn 3 of an agent loop** | Check message ordering after assistant `tool_use` | **Integration Layer**: ensure every `tool_use_id` has a matching `tool_result` in the very next user message |
-| **Agent claims no orders exist when database timed out** | Check raw `tool_result` payload sent back to Claude | **Integration Layer**: tool caught the timeout and returned `[]` instead of `isError: true` |
+| **Agent claims no orders exist when database timed out** | Check raw `tool_result` payload sent back to Claude | **Integration Layer**: tool caught the timeout and returned `[]` instead of a `tool_result` with `is_error: true` |
 | **Agent picks `get_customer` when given an order number** | Check `tools` array descriptions in the request | **Model / Tool Config Layer**: expand tool descriptions with explicit input formats and boundaries |
+
+---
+
+<!-- layout: 2-column -->
+# Evals and Production Quality Monitoring
+
+### Offline Evals (Before You Ship)
+- Build a golden dataset from real traffic, including edge cases and past failures
+- Grade with code checks first (schema valid, exact match), then an LLM-as-judge with a written rubric
+- Gate CI on the eval suite: prompt, model, or tool changes must not regress the score
+
+### Online Monitoring (After You Ship)
+- Trace every request: inputs, tool calls, `stop_reason`, latency, and `usage` (OpenTelemetry works with the SDKs)
+- Alert on shifts in refusal rate, schema-failure rate, cache hit rate, and cost per completed task
+- Feed production failures back into the golden dataset
 
 ---
 
@@ -198,12 +216,12 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 # What You Learned
 
 ### Claude Code Configuration and Modes
-- Configured Claude Code memory, rules, skills, and permissions
-- Operated interactive, Plan, Headless, and Streaming modes
+- Configured Claude Code rules, skills, agents, memory, and permissions
+- Operated interactive, Plan, headless, streaming, and auto modes
 
 ### Error Recovery and Trace Isolation
 - Handled API and tool errors with resilient recovery strategies
-- Analyzed execution traces to isolate root causes
+- Analyzed execution traces and evals to isolate root causes
 
 ---
 

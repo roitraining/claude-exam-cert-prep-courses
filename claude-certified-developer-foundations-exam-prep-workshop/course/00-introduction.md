@@ -59,21 +59,21 @@
 
 ### Day One
 - **9:00** - Overview
-- **9:45** - Agents and Workflows
-- **11:15** - Lab: Building Agents and Workflows
+- **9:50** - Agents and Workflows
+- **11:00** - Lab 1: Building Agents and Workflows
 - **12:00** - Lunch
 - **1:00** - Applications and Integration
-- **2:45** - Claude Code, Testing, and Debugging
-- **4:00** - Lab: API Integration, Claude Code, and Debugging
+- **2:15** - Claude Code, Testing, and Debugging
+- **3:30** - Lab 2: API, Claude Code, and Debugging
 
 ### Day Two
 - **9:00** - Model Selection and Optimization
-- **10:15** - Prompt and Context Engineering
-- **11:15** - Lab: Model Optimization and Context Engineering
+- **10:00** - Prompt and Context Engineering
+- **11:15** - Lab 3: Optimization and Context
 - **12:00** - Lunch
 - **1:00** - Security and Safety
 - **2:00** - Tools and MCPs
-- **3:00** - Lab: Developing Secure Tools and MCP Servers
+- **3:00** - Lab 4: Secure Tools and MCP Servers
 - **4:00** - Final Practice Exam
 - **4:45** - Course Wrap-Up
 

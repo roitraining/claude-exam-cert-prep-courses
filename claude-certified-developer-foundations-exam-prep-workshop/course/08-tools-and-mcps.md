@@ -44,27 +44,33 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - Write descriptions that specify exact purpose, expected parameter formats (such as `ORD-XXXXX`), example queries, edge cases, and when **not** to use the tool relative to similar tools.
 
 ### 2. Focused Tool Sets
-- Keep per-agent tool sets small (4 to 5 role-relevant tools) to maximize selection accuracy and prevent capability bloat.
+- Keep per-agent tool sets small and role-relevant to maximize selection accuracy; for very large catalogs, mark tools `defer_loading: true` and add the tool search tool so Claude loads only what it needs.
 
-### 3. Structured Error Handling (`isError`)
-- Return `isError: true` with `errorCategory` (`transient`, `validation`, `business_rule`, `permission`) and `isRetryable` booleans so the agent can recover intelligently.
+### 3. Structured Error Handling
+- Return failures as results, not silence: `is_error: true` on a Messages API `tool_result` (MCP uses `isError: true`), with a message that says what went wrong and whether a retry can help (a common convention: `transient`, `validation`, `permission` categories).
 
 ### 4. Approval Patterns for Sensitive Actions
 - Require explicit human approval or deterministic `PreToolUse` verification before executing destructive or state-changing tools.
 
 ---
 
-<!-- layout: 2-column -->
+<!-- layout: 3-column -->
 # Client-Side vs Server-Side Tools
 
-### Client-Side Tools (Harness Dispatched)
-- Defined in the `tools` array with a JSON `input_schema`
-- Claude returns `stop_reason: "tool_use"` with the tool `name` and `input` arguments
-- **Your application harness** executes the function (calling your internal DB or API) and sends the result back in a `tool_result` block on the next turn
+### Client Tools (You Define)
+- Declared in `tools` with `name`, `description`, and `input_schema` (add `strict: true` for guaranteed schema-valid input)
+- Claude returns `stop_reason: "tool_use"`; **your harness** runs the function and returns a `tool_result`
+- The only option that reaches private systems directly
 
-### Server-Side / Managed Tools
-- Executed directly within the managed Anthropic environment (such as managed web search or sandboxed code execution) without requiring a client round-trip for execution
-- Cannot directly reach private internal services inside your corporate VPC unless exposed via a secure tunnel or remote MCP server
+### Anthropic-Defined Client Tools
+- Schema supplied by Anthropic, executed by you: `bash`, `text_editor`, `memory`, computer use
+- Declare by `type` (for example, `{"type": "bash_20250124", "name": "bash"}`) with no `input_schema`
+- You still own sandboxing and approval
+
+### Server Tools (Anthropic Executes)
+- `web_search`, `web_fetch`, `code_execution`, tool search: results arrive in the same response, no round trip
+- Long server loops can stop with `stop_reason: "pause_turn"`: resend to resume
+- Cannot reach your private VPC services
 
 ---
 
@@ -91,16 +97,17 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
-# MCP Transports (`stdio` vs Sockets / HTTP) and Authoring
+# MCP Transports (`stdio` vs Streamable HTTP) and Integration
 
 ### `stdio` Transport (Local Process)
-- MCP Host spawns the MCP Server as a local child process and communicates over standard input/output (`stdin`/`stdout`)
-- Ideal for local developer tooling in Claude Code or Claude Desktop
-- **Important rule**: never write debug logs to `stdout` in a `stdio` MCP server (it corrupts JSON-RPC frames); log to `stderr` instead
+- Host spawns the server as a child process; JSON-RPC over `stdin` / `stdout`
+- Ideal for local tooling in Claude Code or Claude Desktop
+- **Rule**: never log to `stdout` (it corrupts JSON-RPC frames); use `stderr`
+- Claude Code scopes: **local**, **project** (`.mcp.json`, shared), **user**
 
-### HTTP / SSE / Socket Transport (Remote Service)
-- MCP Server runs as a standalone network service shared across multiple applications and teams
-- Supports centralized authentication, container scaling, and independent deployment life cycles
+### Streamable HTTP Transport (Remote Service)
+- Current remote transport (HTTP+SSE is deprecated): one service shared by many apps, with OAuth and independent deployment
+- Connect via `claude mcp add --transport http`, claude.ai connectors, or the Messages API **MCP connector** (`mcp_servers` + `mcp_toolset`)
 
 ---
 
@@ -110,7 +117,6 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ```python
 from mcp.server.fastmcp import FastMCP
-
 mcp = FastMCP("inventory-service")
 
 @mcp.resource("inventory://catalog/schema")
@@ -120,7 +126,7 @@ def get_inventory_schema() -> str:
 
 @mcp.tool()
 def check_sku_stock(sku: str, warehouse: str) -> dict:
-    """Checks real-time stock quantity for a SKU (format: SKU-NNNNN) in a specific warehouse."""
+    """Real-time stock for a SKU (format: SKU-NNNNN) in one warehouse."""
     return query_internal_inventory_api(sku=sku, warehouse=warehouse)
 ```
 
@@ -146,7 +152,8 @@ def check_sku_stock(sku: str, warehouse: str) -> dict:
 - Use when a single application needs a lightweight function wrapper around an internal service and no other apps need to share it.
 
 ### Claude Skills (`SKILL.md`)
-- Use to package reusable domain instructions, checklists, and tool restrictions (`context: fork`, `allowed-tools`) that load on demand inside Claude Code.
+- Use to package reusable know-how (instructions, checklists, scripts) that loads on demand: only the name and description sit in context until the Skill is needed.
+- Portable across Claude Code, the Agent SDK, claude.ai, and the API (with code execution). Skills teach *how*; they do not connect to live systems.
 
 ### MCP Servers
 - Use when an external system integration (such as an internal inventory REST API or Jira/Postgres) must be **reusable across several Claude applications** and **maintained independently** of any single app.
@@ -161,6 +168,7 @@ def check_sku_stock(sku: str, warehouse: str) -> dict:
 | **Search a local repo for all callers of `calculateTax()`** | **Built-in `Grep` tool** | `Glob` matches filenames only; building a custom MCP server for local file search is unnecessary overhead |
 | **Run a verbose codebase security checklist on demand** | **Claude Skill (`.claude/skills/`)** with `context: fork` | Putting verbose task checklists in root `CLAUDE.md` bloats every unrelated session |
 | **Single microservice needs one helper to format currency** | **Custom in-process function tool** | Full standalone MCP server adds deployment overhead when only one app uses the helper |
+| **Teach every team the company’s report format and review steps** | **Claude Skill** (shared, or distributed in a plugin) | An MCP server adds a live connection that this static know-how does not need |
 
 ---
 

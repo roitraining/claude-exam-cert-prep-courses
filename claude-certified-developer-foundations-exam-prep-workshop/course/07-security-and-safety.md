@@ -106,21 +106,35 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Preventing Destructive Actions with Claude Hooks
 
-- **Deterministic safety net**: hooks execute outside the LLM in your application harness or Claude Code environment, providing a 100% deterministic barrier against destructive commands
-- **Common hook use cases**:
-  - Blocking dangerous shell patterns (`rm -rf`, `DROP TABLE`, `git push --force`, `curl` to unknown hosts)
-  - Blocking file edits outside the workspace directory or inside `.env` / credential files
-  - Enforcing business ceilings (such as blocking refunds above an approved threshold)
+- **Hooks run outside the model on every matching event**, so injected text cannot talk past them
+- `PreToolUse` blocks via exit `2` or `permissionDecision: "deny"`; deny rules still win
 
-```python
-DESTRUCTIVE_PATTERNS = ["rm -rf", "DROP TABLE", "TRUNCATE", "--no-preserve-root"]
+```json
+{ "hooks": { "PreToolUse": [{
+    "matcher": "Bash",
+    "hooks": [{ "type": "command",
+                "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/guard.sh" }]
+}] } }
+```
 
-def pre_tool_use_safety_hook(tool_name: str, tool_input: dict) -> dict:
-    if tool_name == "Bash":
-        cmd = tool_input.get("command", "")
-        if any(pat in cmd for pat in DESTRUCTIVE_PATTERNS):
-            return {"decision": "block", "reason": f"Blocked destructive command: {cmd}"}
-    return {"decision": "allow"}
+> [!WARNING]
+> Denylists are incomplete (`rm -fr` slips past `rm -rf`): layer with deny rules and sandboxing.
+---
+
+# A `PreToolUse` Guard Script
+
+- **Tool call arrives as JSON on stdin; the decision goes to stdout** (same format for Agent SDK callbacks)
+
+```bash
+#!/bin/bash
+# .claude/hooks/guard.sh
+CMD=$(jq -r '.tool_input.command')
+if echo "$CMD" | grep -Eq 'rm +-[a-zA-Z]*[rf]|DROP +TABLE|TRUNCATE|push +--force'; then
+  jq -n --arg cmd "$CMD" '{ hookSpecificOutput: {
+    hookEventName: "PreToolUse", permissionDecision: "deny",
+    permissionDecisionReason: ("Blocked destructive command: " + $cmd) } }'
+fi
+exit 0   # no output = no decision; normal permission rules apply
 ```
 
 ---
@@ -139,9 +153,10 @@ def pre_tool_use_safety_hook(tool_name: str, tool_input: dict) -> dict:
 # Managing Secrets, Credentials, and API Keys
 
 ### Secure Credential Practices
-- Store `ANTHROPIC_API_KEY` and MCP service tokens in a dedicated secret manager (AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault) or environment variables
-- Use environment variable expansion (`"${GITHUB_TOKEN}"`) in shared `.mcp.json` files
-- Rotate keys periodically and scope distinct API keys per environment (`dev`, `staging`, `prod`) and per service
+- Store `ANTHROPIC_API_KEY` and MCP service tokens in a secret manager (AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault) and inject them as environment variables
+- Prefer short-lived credentials: workload identity federation for the Claude API, IAM roles on Bedrock or Vertex AI, vaults in Managed Agents
+- Use `"${GITHUB_TOKEN}"` expansion in shared `.mcp.json` files
+- Scope keys per environment and service with Console workspaces (separate spend limits and keys for `dev`, `staging`, `prod`), and rotate them
 
 ### Practices to Strictly Avoid
 - **Never** commit API keys or bearer tokens into Git repositories, `CLAUDE.md`, or `.mcp.json`

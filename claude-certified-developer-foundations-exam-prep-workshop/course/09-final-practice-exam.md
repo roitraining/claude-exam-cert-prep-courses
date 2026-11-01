@@ -40,28 +40,41 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Rapid Review: Domains 1 to 4 Cheat Sheet
+# Rapid Review: Domains 1 and 2 Cheat Sheet
 
 | Domain / Scenario | Correct Developer Decision | Common Exam Distractor |
 | :--- | :--- | :--- |
-| **D1: Workflow vs Agent** | Use deterministic Workflows for fixed sequences; use Autonomous Agents for dynamic, open-ended tasks | Using unconstrained agents for predictable 3-step pipelines |
+| **D1: Workflow vs Agent** | Workflows for fixed sequences; agents for open-ended tasks | Unconstrained agents for predictable 3-step pipelines |
 | **D1: Agent Frameworks** | `PydanticAI` for type-safe schemas; `LangGraph` for stateful cyclic graphs; `Strands` for model-driven loops | Writing fragile regex parsers instead of structured validation |
-| **D2: 10,000 Docs Overnight (Cost Focus)** | Use the **Message Batches API** (up to 24-hour window, 50% cost reduction, `custom_id`) | Sending 10,000 synchronous requests in parallel or lowering `max_tokens` |
-| **D2: Production Model Stability** | Pin exact snapshot IDs (`claude-sonnet-4-20250514`) and version-control prompts/`CLAUDE.md` | Using unpinned floating model aliases in production without eval gates |
-| **D3: Claude Code in CI/CD** | Run non-interactively with `claude -p` (`--print`) + `--output-format json` + `--json-schema` | Omitting `-p` (hangs waiting for stdin) or putting team rules in `~/.claude/CLAUDE.md` |
-| **D4: Trace Analysis Isolation** | Inspect raw request/response traces first to separate **integration bugs** (`max_tokens` truncation, swallowed errors) from **model output failures** | Blindly rewriting prompts when `stop_reason == "max_tokens"` truncated the JSON |
+| **D1: Self-Hosted vs Managed** | Agent SDK or Tool Runner for private systems; Managed Agents when Anthropic should host | Assuming a hosted sandbox reaches private VPC services |
+| **D2: 10,000 Docs Overnight (Cost Focus)** | **Message Batches API** (24-hour window, 50% off, `custom_id`) | Parallel synchronous requests or lower `max_tokens` |
+| **D2: Production Model Stability** | Pin model ID, SDK, and API version; version-control prompts, `CLAUDE.md`, plugins | Upgrading without an eval gate; ignoring retirement dates |
+| **D2: Shared Team Configuration** | Project `.claude/settings.json` and `CLAUDE.md` in git; plugins for config shared across many repos | Putting team rules in `~/.claude/CLAUDE.md` or settings in `settings.local.json` |
 
 ---
 
-# Rapid Review: Domains 5 to 8 Cheat Sheet
+# Rapid Review: Domains 3 to 5 Cheat Sheet
 
 | Domain / Scenario | Correct Developer Decision | Common Exam Distractor |
 | :--- | :--- | :--- |
-| **D5: Model Selection and Thinking** | Haiku for fast routing/classification, Sonnet for core coding/agents, Opus for deep reasoning; use adaptive/extended thinking when needed | Downsizing blindly to the smallest model regardless of task quality fit |
-| **D5: Cost and Token Management** | Track `response.usage` counters and place `cache_control` checkpoints on static tools, system prompts, and history prefixes | Placing dynamic timestamps at the start of the system prompt (breaks cache) |
-| **D6: Context and Output Handling** | Prune verbose tool outputs, isolate noisy work in subagents, validate with Pydantic/Zod, and check cross-field math | Trusting confident LLM numbers without schema or arithmetic verification |
+| **D3: Claude Code in CI/CD** | Run non-interactively with `claude -p` (`--print`) + `--output-format json` + `--json-schema` | Omitting `-p` (hangs waiting for input) |
+| **D3: Fewer Prompts, Safely** | `auto` mode (classifier reviews actions) plus deny rules; `bypassPermissions` only in an isolated container | Using `bypassPermissions` on a developer laptop |
+| **D4: Trace Analysis Isolation** | Read raw traces first: **integration bugs** (truncation, swallowed errors) vs **model failures** | Rewriting prompts when `max_tokens` truncated the JSON |
+| **D5: Model Selection and Thinking** | Haiku for routing, Sonnet for coding/agents, Opus for deep reasoning; adaptive thinking + `effort` | Blind downsizing; `budget_tokens` on a current model |
+| **D5: Model Upgrade Broke Production** | Check for API-breaking changes (prefill, forced `tool_choice`, sampling params) and behavior shifts; rerun evals before switching | Rewriting prompts before reading the 400 error or the eval diff |
+| **D5: Cost and Token Management** | Track `usage`; `cache_control` on static tools, system, and history prefix | Timestamps at the top of the system prompt (breaks cache) |
+
+---
+
+# Rapid Review: Domains 6 to 8 Cheat Sheet
+
+| Domain / Scenario | Correct Developer Decision | Common Exam Distractor |
+| :--- | :--- | :--- |
+| **D6: Context and Output Handling** | Prune or clear old tool results, compact, isolate noisy work in subagents; use structured outputs, then check business rules | Trusting confident LLM numbers because the JSON is schema-valid |
 | **D7: Untrusted Web Page Prompt Injection** | Treat page content as **untrusted input** (XML-isolated), separate from trusted instructions, and enforce **guardrails/hooks** | Raising temperature, polite system-prompt warnings, or switching to a larger model |
+| **D7: Destructive Actions** | `PreToolUse` hook (exit `2` or `permissionDecision: "deny"`) layered with deny rules and least privilege | Relying on a system-prompt rule, or a hook denylist alone |
 | **D8: Reusable Internal Inventory API** | Build an **MCP Server** exposing inventory tools so multiple Claude apps can connect and share it | Hard-coding API logic into prompts, pasting live data in context, or assuming built-in tools reach internal APIs |
+| **D8: Skill vs MCP** | Skill for reusable know-how and procedures; MCP for live access to an external system | Building an MCP server just to deliver instructions |
 
 ---
 

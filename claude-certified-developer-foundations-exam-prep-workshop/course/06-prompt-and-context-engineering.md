@@ -49,11 +49,36 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - Maintain a separate, persistent `<case_facts>` block outside summarized history so critical identifiers never degrade.
 
 ### 3. Context Isolation via Subagents
-- When a step requires reading 20 files or scraping verbose web pages, delegate that step to an isolated subagent (`Task` or `context: fork` skill).
+- When a step requires reading 20 files or scraping verbose web pages, delegate it to an isolated subagent (the `Agent` tool, formerly `Task`, or a `context: fork` Skill).
 - Only the subagent’s structured summary returns to the parent agent’s context window.
 
 ### 4. Position-Aware Context Ordering
-- Mitigate the “lost in the middle” effect by placing key summaries at the top of long inputs and organizing sections with explicit headers or XML tags.
+- Put long documents at the top of the prompt and the question and instructions at the end; wrap each document in XML tags with source metadata so Claude can find and cite it.
+
+---
+
+<!-- layout: 3-column -->
+# API-Native Context Management
+
+### Context Editing
+- Clears stale tool results (`clear_tool_uses_20250919`) or old thinking blocks from the request before Claude sees it
+- Best for long tool loops where old results no longer matter
+- Removes content; does not summarize
+
+### Server-Side Compaction
+- The API summarizes earlier turns automatically when the conversation nears a token threshold
+- Always append the full `response.content` so compaction blocks are preserved
+- Best for very long conversations
+
+### Memory Tool
+- `memory_20250818`: Claude reads and writes files in a memory directory that your app stores
+- Keeps durable facts outside the context window across sessions
+- Best for agents that must remember across sessions
+
+<!-- below-columns -->
+
+> [!NOTE]
+> Pruning and compaction can be built yourself (hooks, `<case_facts>`) or with these API features.
 
 ---
 
@@ -71,7 +96,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ### Top-Level `system` Parameter
 - Place persistent role definitions, universal behavioral constraints, tone rules, and static reference policies in `system`
-- Keeps static instructions at the front of the payload so they can be reused across turns with **Prompt Caching**
+- Keeps static instructions at the front of the payload so they can be reused across turns with **Prompt Caching** (no timestamps or per-user values here)
 
 ### `user` Message Content
 - Place per-request task inputs, retrieved RAG chunks wrapped in XML tags (`<retrieved_context>`), and the specific user question in `messages`
@@ -93,14 +118,10 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 Extract all security vulnerabilities from the provided pull request diff.
 Flag an issue ONLY when code introduces an exploitable flaw; skip style preferences.
 </instructions>
-
-<examples>
-  <example>
-    <diff>+ query = f"SELECT * FROM users WHERE name = '{user_input}'"</diff>
-    <finding severity="critical" category="sql_injection">Use parameterized queries.</finding>
-  </example>
-</examples>
-
+<example>
+  <diff>+ query = f"SELECT * FROM users WHERE name = '{user_input}'"</diff>
+  <finding severity="critical" category="sql_injection">Use parameterized queries.</finding>
+</example>
 <untrusted_pr_diff>
 {{sanitized_git_diff}}
 </untrusted_pr_diff>
@@ -120,8 +141,8 @@ Flag an issue ONLY when code introduces an exploitable flaw; skip style preferen
 <!-- layout: stacked -->
 # Defensive Output Handling and Validation
 
-- **Enforce structure at generation time**: use `tool_use` with a strict JSON Schema (`tool_choice: {"type": "tool", "name": "..."}`) and nullable fields for optional data
-- **Parse defensively at runtime**: always check `stop_reason` first (to catch `"max_tokens"` truncation) and validate with Pydantic or Zod before passing data downstream
+- **Enforce structure at generation time**: use **structured outputs** (`output_config.format` with a JSON Schema, or `client.messages.parse()` with a Pydantic model) and `strict: true` on tools; forced `tool_choice` and prefill are legacy and rejected by the newest models
+- **Parse defensively at runtime**: check `stop_reason` first (`max_tokens` truncation, `refusal`), then validate business rules with Pydantic or Zod: a schema-valid answer can still be wrong
 - **Maintain skepticism toward confident output**: LLMs state hallucinated numbers or miscalculated sums with high linguistic confidence; verify cross-field math (`calculated_total == stated_total`) and source citations in code
 
 ![Defensive Output Handling Pipeline](images/ch06-defensive-output-handling.svg)
@@ -130,20 +151,21 @@ Flag an issue ONLY when code introduces an exploitable flaw; skip style preferen
 
 # Defensive Parsing and Validation-Retry Example
 
-- **Catching truncation and semantic validation errors** in Python:
+- **Structured output plus semantic validation**: the schema guarantees shape; code checks meaning
 
 ```python
-if response.stop_reason == "max_tokens":
-    raise TruncatedOutputError("Response hit max_tokens ceiling before completing JSON.")
+response = await client.messages.parse(
+    model="claude-sonnet-5-5", max_tokens=16000,
+    output_format=InvoiceExtraction,  # Pydantic model -> JSON Schema
+    messages=[{"role": "user", "content": build_prompt(doc)}])
+if response.stop_reason in ("max_tokens", "refusal"):
+    raise IncompleteOutputError(response.stop_reason)
 
-tool_block = next(b for b in response.content if b.type == "tool_use")
-try:
-    invoice = InvoiceExtraction.model_validate(tool_block.input)
-    if invoice.calculated_total != invoice.stated_total:
-        raise ValueError(f"Line item sum {invoice.calculated_total} != stated {invoice.stated_total}")
-except ValidationError as err:
-    # Retry with original document + failed JSON + exact validation error
-    return await retry_extraction_with_feedback(doc, tool_block.input, str(err))
+invoice = response.parsed_output  # schema-valid, but not necessarily correct
+line_sum = sum(item.amount for item in invoice.line_items)
+if line_sum != invoice.stated_total:
+    feedback = f"Items sum to {line_sum}, not {invoice.stated_total}"
+    return await retry_with_feedback(doc, invoice, feedback)
 ```
 
 ---
@@ -170,7 +192,7 @@ except ValidationError as err:
 - Structured prompts with XML tags, sanitization, and few-shots
 
 ### Defensive Output Handling
-- Enforced structured output via `tool_use` schemas
+- Enforced structured output with `output_config.format` and strict tools
 - Validated structured outputs and verified confident claims
 
 ---

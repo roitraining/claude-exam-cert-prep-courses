@@ -49,18 +49,30 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
+# Five Workflow Patterns to Recognize
+
+| Pattern | How It Works | Choose It When |
+| :--- | :--- | :--- |
+| **Prompt chaining** | Output of step 1 feeds step 2, with code “gates” between steps | The task splits cleanly into fixed sequential stages |
+| **Routing** | A cheap classifier call sends each input to a specialized prompt or model | Inputs fall into distinct categories (billing vs technical vs refund) |
+| **Parallelization** | Sectioning (independent subtasks) or voting (same task run several times) | Subtasks are independent, or you need higher confidence |
+| **Orchestrator-workers** | A lead model decides subtasks at runtime and delegates to workers | You cannot predict the subtasks in advance |
+| **Evaluator-optimizer** | One call generates, another critiques, then loop | Clear quality criteria exist and iteration helps |
+
+---
+
 <!-- layout: 2-column -->
 # Manager/Supervisor Hierarchies and Subagents
 
 ### Manager / Supervisor Role
 - Receives the high-level goal, decomposes it into scoped subtasks, and delegates each subtask to the appropriate specialist subagent
 - Routes all inter-agent communication, aggregates results, and evaluates whether additional iterations are needed
-- Holds the `"Task"` tool in its `allowedTools` configuration
+- Holds the `Agent` tool (formerly named `Task`) in its allowed tools so it can spawn subagents
 
 ### Role of Specialized Subagents
 - **Context isolation**: subagents execute verbose searches or file inspections in separate context windows so raw outputs do not bloat the supervisor’s history
 - **Focused tool sets**: each subagent is restricted to 4 to 5 role-specific tools, improving tool-selection accuracy
-- **Explicit context passing**: subagents never inherit supervisor history automatically; pass all required inputs in the task prompt
+- **Explicit context passing**: a standard subagent does not inherit the supervisor’s history; pass all required inputs in the task prompt (only “fork” subagents copy the parent context)
 
 ---
 
@@ -75,40 +87,56 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Constructing Custom Agent Loops and Harnesses
 
-- **Core harness loop**: send `messages` and `tools` -> check `response.stop_reason` -> if `"tool_use"`, execute requested tools and append `tool_result` blocks -> stop when `response.stop_reason == "end_turn"`
+- **Handle every `stop_reason` and cap iterations**: unhandled values loop forever
 
 ```python
-async def run_agent_loop(user_prompt: str, tools: list[dict]):
+async def run_agent_loop(user_prompt: str, tools: list[dict], max_turns: int = 20):
     messages = [{"role": "user", "content": user_prompt}]
-    while True:
-        resp = await client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=2048,
-            tools=tools,
-            messages=messages,
-        )
+    for _ in range(max_turns):
+        resp = await client.messages.create(model="claude-sonnet-5-5",
+            max_tokens=16000, tools=tools, messages=messages)
         messages.append({"role": "assistant", "content": resp.content})
-        if resp.stop_reason == "end_turn":
-            return resp
-        if resp.stop_reason == "tool_use":
-            results = await dispatch_tool_calls(resp.content)
-            messages.append({"role": "user", "content": results})
+        if resp.stop_reason == "end_turn": return resp
+        if resp.stop_reason == "tool_use":  # all results in ONE user message
+            messages.append({"role": "user", "content": await run_tools(resp.content)})
+        elif resp.stop_reason != "pause_turn":  # pause_turn: resend to resume
+            raise AgentStopError(resp.stop_reason)  # max_tokens, refusal
+    raise AgentStopError("max_turns exceeded")
+```
+---
+
+# Building with the Claude Agent SDK
+
+- **Claude Code’s harness as a library**: built-in tools, loop, permissions, subagents, hooks
+
+```python
+from claude_agent_sdk import query, ClaudeAgentOptions, AgentDefinition
+
+options = ClaudeAgentOptions(
+    allowed_tools=["Read", "Grep", "Glob", "Agent"],  # Agent = spawn subagents
+    permission_mode="default",
+    agents={"security-reviewer": AgentDefinition(
+        description="Reviews diffs for exploitable vulnerabilities",
+        prompt="Report only exploitable flaws.", tools=["Read", "Grep"])},
+)
+
+async for message in query(prompt="Audit the auth module", options=options):
+    print(message)
 ```
 
 ---
 
-<!-- layout: 2-column -->
-# Managed vs Self-Hosted Agent Deployment Models
+# Four Ways to Build a Claude Agent
 
-### Self-Hosted Agent Harness
-- Your application runs the agent loop, manages state persistence, and executes tool calls inside your own VPC or cloud infrastructure
-- **Strengths**: direct low-latency access to private internal databases/APIs, full control over custom Python/TypeScript hooks, and custom persistence stores
-- **Trade-off**: your team owns container scaling, sandbox isolation, and session storage
+| Approach | Who Runs the Loop | Who Hosts It | Choose It When |
+| :--- | :--- | :--- | :--- |
+| **Manual loop** (Messages API) | You write it | You | You need full control of every turn |
+| **Tool Runner** (`client.beta.messages.tool_runner`) | The API SDK, over tools you define | You | Custom-tool agent without hand-writing the loop |
+| **Claude Agent SDK** (`claude-agent-sdk`) | Claude Code harness with built-in tools | You (your VPC, containers) | Coding or filesystem agents on your own infrastructure |
+| **Claude Managed Agents** (beta) | Anthropic | Anthropic: per-session sandbox | Hosted, long-running, versioned agents with minimal infrastructure |
 
-### Anthropic-Hosted / Managed Execution
-- The platform manages loop orchestration, container sandboxing, and built-in server-side tool execution
-- **Strengths**: rapid deployment, built-in execution sandboxes, and reduced infrastructure maintenance
-- **Trade-off**: external private systems must be exposed securely (for example, via authenticated remote MCP servers or client-side tool callbacks)
+> [!NOTE]
+> Self-hosted: direct access to private systems, but you own scaling and sandboxing. Managed: versioned agents, hosted sandboxes, vault credentials; expose private systems via remote MCP.
 
 ---
 
@@ -116,7 +144,7 @@ async def run_agent_loop(user_prompt: str, tools: list[dict]):
 # Deterministic Actions with Agent SDK Hooks
 
 ### `PreToolUse` Interception
-- Fires deterministically before a tool call executes.
+- Fires before a tool call executes and can return `permissionDecision: "deny"`, `"ask"`, or `"allow"`.
 - Use to verify prerequisites (such as requiring `get_customer` before `process_refund`), enforce monetary thresholds, or block destructive shell commands (`rm -rf`).
 
 ### `PostToolUse` Normalization and Pruning
@@ -125,7 +153,7 @@ async def run_agent_loop(user_prompt: str, tools: list[dict]):
 
 ### Why Hooks Beat Prompt Rules
 - Prompt instructions (“Never issue a refund over $500”) are probabilistic.
-- SDK hooks execute in deterministic code and guarantee 100% policy enforcement.
+- Hooks run in deterministic code on every matching call, so the rule is enforced exactly as written: the hook is only as complete as its logic.
 
 ---
 
@@ -145,7 +173,7 @@ async def run_agent_loop(user_prompt: str, tools: list[dict]):
 - Iterative cycle where Claude emits one or more `tool_use` blocks, inspects the returned `tool_result` data, and adapts its next step until `stop_reason == "end_turn"`.
 
 ### Subagent Delegation Pattern
-- Spawning isolated worker agents (often in parallel by emitting multiple `Task` calls in a single turn) to prevent context window bloat on the main coordinator.
+- Spawning isolated worker agents (often in parallel by emitting multiple `Agent` tool calls, formerly `Task`, in a single turn) to prevent context window bloat on the main coordinator.
 
 ### Short-Term vs Long-Term Memory
 - **Short-term memory**: the active `messages` array plus a persistent in-session “case facts” block.

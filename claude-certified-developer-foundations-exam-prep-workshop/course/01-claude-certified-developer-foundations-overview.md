@@ -70,7 +70,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - Building custom agent loops and workflows with the **Claude Agent SDK** and agentic frameworks (**PydanticAI**, **LangGraph**, **Strands**)
 - Integrating the **Messages API** and **Message Batches API** across direct and cloud-provider SDKs
 - Operating **Claude Code** (`CLAUDE.md`, `settings.json`, Rules, Skills, Commands, headless mode)
-- Implementing custom tools, **MCP servers** (`stdio` and sockets/HTTP), prompt caching, and security hooks
+- Implementing custom tools, **MCP servers** (`stdio` and Streamable HTTP), prompt caching, and security hooks
 
 ---
 
@@ -106,7 +106,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - **Sending 10,000 synchronous requests in parallel** or **lowering `max_tokens`** when an overnight batch workload can use the Message Batches API
 - **Raising model temperature**, **switching to a larger model**, or **asking users politely in the system prompt** to mitigate prompt injection
 - **Hard-coding API logic into system prompts**, **pasting live inventory into every context window**, or assuming **built-in tools can reach arbitrary internal REST APIs**
-- Blaming the model when an **integration layer** bug (bad parser, unpinned model alias, or truncated payload) caused the failure
+- Blaming the model when an **integration layer** bug (bad parser, retired model ID, or truncated payload) caused the failure
 
 ### Winning Developer Habits
 - Match **synchronous vs batch APIs** to latency tolerance and cost goals

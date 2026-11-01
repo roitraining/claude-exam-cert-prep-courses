@@ -12,7 +12,7 @@
   <text x="45" y="92" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• model (pinned snapshot ID)</text>
   <text x="45" y="122" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• max_tokens (required ceiling)</text>
   <text x="45" y="152" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• system (top-level role/rules)</text>
-  <text x="45" y="182" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• tools + tool_choice</text>
+  <text x="45" y="182" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• tools + output_config</text>
   <text x="45" y="212" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• thinking (enabled / adaptive)</text>
   <text x="45" y="242" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• messages[] (full history required:</text>
   <text x="62" y="266" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">text, image/PDF, tool_use, tool_result)</text>
