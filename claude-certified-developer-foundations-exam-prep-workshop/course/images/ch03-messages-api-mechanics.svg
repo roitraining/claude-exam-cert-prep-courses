@@ -20,18 +20,19 @@
   <line x1="380" y1="170" x2="425" y2="170" stroke="#1e71d6" stroke-width="4" marker-end="url(#arr-m1)"/>
 
   <!-- Box 2: Delivery Modes -->
-  <rect x="435" y="15" width="330" height="310" rx="14" fill="#082445"/>
-  <text x="600" y="52" text-anchor="middle" fill="#9eb6d4" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="1.4">2. INVOCATION MODES</text>
-  <rect x="455" y="72" width="290" height="74" rx="10" fill="#1e3a8a"/>
-  <text x="600" y="100" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Realtime Synchronous / SSE</text>
-  <text x="600" y="126" text-anchor="middle" fill="#bfdbfe" font-family="Inter, system-ui, sans-serif" font-size="13">message_start -&gt; content_block_delta</text>
+  <rect x="435" y="15" width="330" height="310" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="435" y="15" width="330" height="48" rx="14" fill="#6a55e4"/>
+  <text x="600" y="46" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">2. Invocation Modes</text>
+  <rect x="455" y="80" width="290" height="72" rx="10" fill="#f0f7ff" stroke="#93c5fd" stroke-width="2"/>
+  <text x="600" y="108" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Realtime Synchronous / SSE</text>
+  <text x="600" y="134" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">message_start -&gt; content_block_delta</text>
 
-  <rect x="455" y="160" width="290" height="74" rx="10" fill="#312e81"/>
-  <text x="600" y="188" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Message Batches API (Async)</text>
-  <text x="600" y="214" text-anchor="middle" fill="#c7d2fe" font-family="Inter, system-ui, sans-serif" font-size="13">Up to 24h window | 50% cost savings</text>
+  <rect x="455" y="166" width="290" height="72" rx="10" fill="#faf5ff" stroke="#d8b4fe" stroke-width="2"/>
+  <text x="600" y="194" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Message Batches API (Async)</text>
+  <text x="600" y="220" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">Up to 24h window | 50% cost savings</text>
 
-  <text x="600" y="272" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="14">Providers: Direct API, AWS Bedrock,</text>
-  <text x="600" y="294" text-anchor="middle" fill="#e2ecf7" font-family="Inter, system-ui, sans-serif" font-size="14">Google Cloud Vertex AI</text>
+  <text x="600" y="272" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600">Providers: Direct API, AWS Bedrock,</text>
+  <text x="600" y="294" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600">Google Cloud Vertex AI</text>
 
   <line x1="765" y1="170" x2="810" y2="170" stroke="#1e71d6" stroke-width="4" marker-end="url(#arr-m1)"/>
 
@@ -43,7 +44,8 @@
   <text x="862" y="120" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">- thinking (reasoning trace + signature)</text>
   <text x="862" y="144" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">- text (assistant natural language)</text>
   <text x="862" y="168" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">- tool_use (id, name, input JSON)</text>
-  <text x="845" y="206" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• stop_reason:</text>
-  <text x="862" y="230" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600">end_turn | tool_use | max_tokens | stop_sequence</text>
-  <text x="845" y="268" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• usage (input, output, cache tokens)</text>
+  <text x="845" y="202" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• stop_reason:</text>
+  <text x="862" y="226" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600">end_turn | tool_use</text>
+  <text x="862" y="248" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600">max_tokens | stop_sequence</text>
+  <text x="845" y="284" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">• usage (input, output, cache tokens)</text>
 </svg>
