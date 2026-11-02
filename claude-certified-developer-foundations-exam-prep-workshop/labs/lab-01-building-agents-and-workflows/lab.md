@@ -145,9 +145,13 @@ def run_agent(prompt: str, max_turns: int = 10) -> str:
         resp = client.messages.create(model=MODEL, max_tokens=4000, tools=TOOLS, messages=messages)
         print(f"Turn {turn}: stop_reason={resp.stop_reason} blocks={[b.type for b in resp.content]}")
         messages.append({"role": "assistant", "content": resp.content})  # always keep the full turn
+        text = " ".join(b.text for b in resp.content if b.type == "text")
 
         if resp.stop_reason == "end_turn":
-            return " ".join(b.text for b in resp.content if b.type == "text")
+            return text  # only the last turn is the answer
+
+        if text:
+            print(f"  Claude says: {text}")  # progress text from an unfinished turn, not the answer
 
         if resp.stop_reason == "tool_use":
             results = []
@@ -166,6 +170,9 @@ def run_agent(prompt: str, max_turns: int = 10) -> str:
 
     raise RuntimeError(f"Agent did not finish within {max_turns} turns")
 ```
+
+> [!NOTE]
+> The plan sentence arrives in turn 1, together with the `tool_use` request, so the reference prints it as progress and returns only the last turn's text. Text from an unfinished turn is narration, not the answer. Joining every turn's text into one result blurs exactly the distinction this task teaches.
 
 > [!IMPORTANT]
 > On the exam, a loop that stops on "the response contains text" or that never caps its iterations is always the wrong answer. Branch on `stop_reason`, keep every assistant turn, and pair each `tool_use_id` with a `tool_result` in the very next user message.
