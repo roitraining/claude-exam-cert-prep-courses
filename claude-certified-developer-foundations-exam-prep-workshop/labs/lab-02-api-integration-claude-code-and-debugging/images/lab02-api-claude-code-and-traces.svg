@@ -1,15 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 2: API debugging, Claude Code configuration, batches, and traces">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 2: Messages API tool call and streaming, Claude Code configuration, traces, and batches">
   <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
   <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
-  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 1: Debug the API Call</text>
+  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 1: Tool Call and Streaming</text>
   <rect x="42" y="92" width="290" height="100" rx="10" fill="#e0edff"/>
-  <text x="187" y="119" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Read the real error</text>
-  <text x="187" y="144" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Retired model ID</text>
-  <text x="187" y="166" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">system role in messages</text>
+  <text x="187" y="119" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Send a tool-enabled request</text>
+  <text x="187" y="144" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Top-level system parameter</text>
+  <text x="187" y="166" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Inspect stop_reason=tool_use</text>
   <rect x="42" y="208" width="290" height="100" rx="10" fill="#e0edff"/>
-  <text x="187" y="235" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Pair tool_use and tool_result</text>
-  <text x="187" y="260" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">tool_result first in next message</text>
-  <text x="187" y="282" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Then stream and read usage</text>
+  <text x="187" y="235" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Return tool_result and stream</text>
+  <text x="187" y="260" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Match tool_use_id in next turn</text>
+  <text x="187" y="282" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Stream response and read usage</text>
   <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
   <rect x="382" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
   <text x="549" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 2: Configure Claude Code</text>
@@ -23,13 +23,13 @@
   <text x="549" y="282" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">trace-doctor runs in a fork</text>
   <rect x="744" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
   <rect x="744" y="25" width="335" height="48" rx="14" fill="#7c3aed"/>
-  <text x="911" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 3: Batches and Traces</text>
+  <text x="911" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 3: Traces and Batches</text>
   <rect x="766" y="92" width="290" height="100" rx="10" fill="#f5f3ff"/>
-  <text x="911" y="119" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Message Batches API</text>
-  <text x="911" y="144" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">50% cost, async, up to 24 hours</text>
-  <text x="911" y="166" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Match results by custom_id</text>
+  <text x="911" y="119" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Diagnose four traces</text>
+  <text x="911" y="144" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Run /trace-doctor Skill</text>
+  <text x="911" y="166" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Integration vs model / tool layer</text>
   <rect x="766" y="208" width="290" height="100" rx="10" fill="#f5f3ff"/>
-  <text x="911" y="235" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Diagnose four traces</text>
-  <text x="911" y="260" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Integration layer vs</text>
-  <text x="911" y="282" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">model / tool configuration</text>
+  <text x="911" y="235" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Message Batches API</text>
+  <text x="911" y="260" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">50% cost, async, up to 24 hours</text>
+  <text x="911" y="282" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Match results by custom_id</text>
 </svg>
