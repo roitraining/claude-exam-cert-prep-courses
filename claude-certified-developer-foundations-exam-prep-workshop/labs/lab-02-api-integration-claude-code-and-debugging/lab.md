@@ -263,13 +263,14 @@ python setup_lab.py
    - `.claude/settings.json` defines shared `allow` and `deny` permission rules committed to Git.
    - `.claude/skills/trace-doctor/SKILL.md` defines an on-demand Skill with `context: fork` (runs in an isolated subagent context) and `allowed-tools: Read, Grep, Glob`.
 
-4. Start Claude Code in `lab-02` and accept the prompt to trust the folder:
+4. Make sure your terminal is inside `lab-02` (`pwd` should end with `/ccdvf-labs/lab-02`), then start Claude Code and accept the prompt to trust the folder. Claude Code loads `.claude/skills/` and `.claude/settings.json` from the directory where you launch `claude`:
 
 ```bash
+cd ~/ccdvf-labs/lab-02
 claude
 ```
 
-5. Run `/memory` and confirm that the project `CLAUDE.md` is loaded. Press Esc to close the view.
+5. Run `/memory` and confirm that `CLAUDE.md` is loaded. Press Esc to close the view.
 
 6. Test the path-scoped rule by asking Claude to update `test_amounts.py`:
 
@@ -279,13 +280,13 @@ Add a test for invalid input to test_amounts.py.
 
 7. Open `test_amounts.py` in your editor and confirm that the first line is now `# Follows tests.md rule`. That marker came from `.claude/rules/tests.md`, which loaded automatically when Claude worked on a `test_*.py` file.
 
-8. Test the permission deny rule by asking Claude to read your `.env` file in the parent directory:
+8. Test the permission deny rule by asking Claude to call the `Read` tool on the `.env` file in the parent directory:
 
 ```text
-Show me the contents of the .env file in the parent folder.
+Use the Read tool to read ../.env. If permission is denied, stop and report the denial without using Bash.
 ```
 
-9. Confirm that Claude reports the read was blocked by your permission settings. Keep Claude Code open for the start of Task 3.
+9. Confirm that Claude reports the `Read` call was blocked by your permission settings. Keep Claude Code open inside `lab-02` for Task 3.
 
 > [!NOTE]
 > The deny rule `Read(//**/.env)` starts with `//`, which anchors the glob at the filesystem root so it blocks `.env` files anywhere on disk, including `../.env`. A relative pattern like `Read(.env)` only matches the current project folder. Deny rules always take precedence over allow rules.
