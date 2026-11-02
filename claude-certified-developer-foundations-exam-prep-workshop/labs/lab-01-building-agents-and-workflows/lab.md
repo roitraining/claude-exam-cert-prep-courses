@@ -214,11 +214,13 @@ print("Created logs/app.log (3,000 lines) and tmp/ with 6 files")
 python make_lab_files.py
 ```
 
-3. Create the folders `.claude` and `.claude/agents` inside `lab-01` (in your editor, or with `mkdir .claude` and then `mkdir .claude/agents`).
+3. Create the subagent file `.claude/agents/log-investigator.md` by pasting this command into your terminal in `lab-01`. It creates the folders and the file in one step.
 
-4. Create `.claude/agents/log-investigator.md`:
+**macOS:**
 
-```markdown
+```bash
+mkdir -p .claude/agents
+cat > .claude/agents/log-investigator.md <<'EOF'
 ---
 name: log-investigator
 description: Investigates the log files in logs/ and reports the root cause of errors. Use it for any question about errors or failures in the logs.
@@ -229,7 +231,28 @@ You are a log investigator. Search the files in logs/ for WARN and ERROR lines.
 Return a short report with: the first error, its timestamp, the failing component,
 the file and line it points to, and the likely root cause.
 Never paste whole log files; quote at most three lines.
+EOF
 ```
+
+**Windows (PowerShell):**
+
+```powershell
+mkdir .claude\agents -Force
+@'
+---
+name: log-investigator
+description: Investigates the log files in logs/ and reports the root cause of errors. Use it for any question about errors or failures in the logs.
+tools: Read, Grep, Glob
+model: haiku
+---
+You are a log investigator. Search the files in logs/ for WARN and ERROR lines.
+Return a short report with: the first error, its timestamp, the failing component,
+the file and line it points to, and the likely root cause.
+Never paste whole log files; quote at most three lines.
+'@ | Set-Content .claude\agents\log-investigator.md
+```
+
+4. Open `.claude/agents/log-investigator.md` in your editor and read it. The frontmatter between the `---` lines gives the subagent its name, the description Claude uses to decide when to delegate, its tools, and its model. The text below the frontmatter is the subagent's system prompt.
 
 5. Start Claude Code in `lab-01`, and accept the prompt to trust the folder:
 
