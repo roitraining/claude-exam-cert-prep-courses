@@ -1,35 +1,53 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 3: prompt caching, context engineering, and validated structured output">
-  <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
-  <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
-  <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 1: Measure Caching</text>
-  <rect x="42" y="92" width="290" height="100" rx="10" fill="#e0edff"/>
-  <text x="187" y="119" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">usage counters</text>
-  <text x="187" y="144" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">cache_write, then cache_read</text>
-  <text x="187" y="166" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Reads cost about 0.1x input</text>
-  <rect x="42" y="208" width="290" height="100" rx="10" fill="#e0edff"/>
-  <text x="187" y="235" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Prefix rules</text>
-  <text x="187" y="260" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">A timestamp at the top</text>
-  <text x="187" y="282" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">breaks the cache every time</text>
-  <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
-  <rect x="382" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
-  <text x="549" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 2: Engineer Context</text>
-  <rect x="404" y="92" width="290" height="100" rx="10" fill="#f0fdf4"/>
-  <text x="549" y="119" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Prune tool output</text>
-  <text x="549" y="144" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">count_tokens before and after</text>
-  <text x="549" y="166" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Keep only the fields you need</text>
-  <rect x="404" y="208" width="290" height="100" rx="10" fill="#f0fdf4"/>
-  <text x="549" y="235" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Isolate untrusted data</text>
-  <text x="549" y="260" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">XML tags around the diff</text>
-  <text x="549" y="282" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Injected text is reported, not obeyed</text>
-  <rect x="744" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
-  <rect x="744" y="25" width="335" height="48" rx="14" fill="#7c3aed"/>
-  <text x="911" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 3: Validate Output</text>
-  <rect x="766" y="92" width="290" height="100" rx="10" fill="#f5f3ff"/>
-  <text x="911" y="119" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Structured outputs</text>
-  <text x="911" y="144" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">messages.parse + Pydantic</text>
-  <text x="911" y="166" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Guarantees the shape</text>
-  <rect x="766" y="208" width="290" height="100" rx="10" fill="#f5f3ff"/>
-  <text x="911" y="235" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Check the meaning</text>
-  <text x="911" y="260" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Line items must add up</text>
-  <text x="911" y="282" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Retry once, then a human</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 3: prompt caching, tool output pruning, XML isolation, and validated structured output">
+  <!-- Task 1 -->
+  <rect x="16" y="25" width="252" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="16" y="25" width="252" height="48" rx="14" fill="#1e71d6"/>
+  <text x="142" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Task 1: Measure Caching</text>
+  <rect x="32" y="92" width="220" height="100" rx="10" fill="#e0edff"/>
+  <text x="142" y="119" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">usage counters</text>
+  <text x="142" y="144" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="12">cache_write, then cache_read</text>
+  <text x="142" y="166" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="12">Reads cost about 0.1x input</text>
+  <rect x="32" y="208" width="220" height="100" rx="10" fill="#e0edff"/>
+  <text x="142" y="235" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Prefix rules</text>
+  <text x="142" y="260" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="12">A timestamp at the top</text>
+  <text x="142" y="282" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="12">breaks the cache every time</text>
+
+  <!-- Task 2 -->
+  <rect x="288" y="25" width="252" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <rect x="288" y="25" width="252" height="48" rx="14" fill="#16a34a"/>
+  <text x="414" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Task 2: Prune Tool Output</text>
+  <rect x="304" y="92" width="220" height="100" rx="10" fill="#f0fdf4"/>
+  <text x="414" y="119" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Tool-use turn</text>
+  <text x="414" y="144" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="12">Claude calls lookup_order</text>
+  <text x="414" y="166" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="12">DB returns 45-field row</text>
+  <rect x="304" y="208" width="220" height="100" rx="10" fill="#f0fdf4"/>
+  <text x="414" y="235" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Prune before Turn 2</text>
+  <text x="414" y="260" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="12">Keep only 4 required fields</text>
+  <text x="414" y="282" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="12">Cut Turn 2 input_tokens</text>
+
+  <!-- Task 3 -->
+  <rect x="560" y="25" width="252" height="310" rx="14" fill="#ffffff" stroke="#d97706" stroke-width="3"/>
+  <rect x="560" y="25" width="252" height="48" rx="14" fill="#d97706"/>
+  <text x="686" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Task 3: XML Isolation</text>
+  <rect x="576" y="92" width="220" height="100" rx="10" fill="#fffbeb"/>
+  <text x="686" y="119" text-anchor="middle" fill="#78350f" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Separate tags</text>
+  <text x="686" y="144" text-anchor="middle" fill="#92400e" font-family="Inter, system-ui, sans-serif" font-size="12">&lt;instructions&gt; vs</text>
+  <text x="686" y="166" text-anchor="middle" fill="#92400e" font-family="Inter, system-ui, sans-serif" font-size="12">&lt;untrusted_diff&gt;</text>
+  <rect x="576" y="208" width="220" height="100" rx="10" fill="#fffbeb"/>
+  <text x="686" y="235" text-anchor="middle" fill="#78350f" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Defend the review</text>
+  <text x="686" y="260" text-anchor="middle" fill="#92400e" font-family="Inter, system-ui, sans-serif" font-size="12">Report SQL injection</text>
+  <text x="686" y="282" text-anchor="middle" fill="#92400e" font-family="Inter, system-ui, sans-serif" font-size="12">Flag injected LGTM note</text>
+
+  <!-- Task 4 -->
+  <rect x="832" y="25" width="252" height="310" rx="14" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
+  <rect x="832" y="25" width="252" height="48" rx="14" fill="#7c3aed"/>
+  <text x="958" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Task 4: Validate Output</text>
+  <rect x="848" y="92" width="220" height="100" rx="10" fill="#f5f3ff"/>
+  <text x="958" y="119" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Structured outputs</text>
+  <text x="958" y="144" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="12">messages.parse + Pydantic</text>
+  <text x="958" y="166" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="12">Guarantees the shape</text>
+  <rect x="848" y="208" width="220" height="100" rx="10" fill="#f5f3ff"/>
+  <text x="958" y="235" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Check the meaning</text>
+  <text x="958" y="260" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="12">Line items must add up</text>
+  <text x="958" y="282" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="12">Retry once, then a human</text>
 </svg>
