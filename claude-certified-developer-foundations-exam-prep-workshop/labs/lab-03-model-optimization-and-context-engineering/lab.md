@@ -103,20 +103,18 @@ python cache_demo.py
 
 5. Run the script again within five minutes and note what happens to the first line now.
 
-6. **Predict before you run:** the `--timestamp` flag puts the current time at the very start of the system prompt. What will `cache_write` and `cache_read` show? Write down your prediction, then run:
+6. **Predict before you run:** the `--timestamp` flag puts the current time at the very start of the system prompt. Think about what `cache_write` and `cache_read` will show, then run:
 
 ```bash
 python cache_demo.py --timestamp
 ```
 
-7. Create `task-notes.md` and record: (a) the cost of a cached request compared with a cache write, (b) why the timestamp broke caching, and (c) where you would put a timestamp instead.
-
 > [!NOTE]
-> **Check your notes:** caching matches the prompt prefix exactly, in the order `tools`, then `system`, then `messages`. Any change near the start, such as a timestamp, invalidates everything after it, so every request becomes a full-price cache write. Put changing values after the cached prefix, for example in the user message. The cache lives for five minutes by default and each hit refreshes it, which is why your second run read the cache on its first request. Cache writes cost 1.25x the input price and reads about 0.1x.
+> **Why the cache missed:** caching matches the prompt prefix exactly, in the order `tools`, then `system`, then `messages`. Any change near the start, such as a timestamp, invalidates everything after it, so every request becomes a full-price cache write. Put changing values after the cached prefix, for example in the user message. The cache lives for five minutes by default and each hit refreshes it, which is why your second run read the cache on its first request. Cache writes cost 1.25x the input price and reads about 0.1x.
 
 ### Task 2: Prune tool output in a tool-use turn
 
-In this task, you let Claude call a `lookup_order` tool that returns a bloated 45-field database row, prune the `tool_result` down to the fields Claude actually needs before sending Turn 2, and measure the drop in `count_tokens` and `resp.usage.input_tokens`.
+In this task, you let Claude call a `lookup_order` tool that returns a bloated 45-field database row, prune the `tool_result` down to the fields Claude actually needs before sending Turn 2, and measure the drop in `turn2.usage.input_tokens`.
 
 1. In `lab-03`, create `prune_tool_output.py`:
 
@@ -162,14 +160,6 @@ def prune(tool_result: dict) -> dict:
     return tool_result
 
 
-def count_json_tokens(payload: dict) -> int:
-    res = client.messages.count_tokens(
-        model=MODEL,
-        messages=[{"role": "user", "content": json.dumps(payload)}],
-    )
-    return res.input_tokens
-
-
 if __name__ == "__main__":
     messages = [{"role": "user", "content": "What is the status and total for order ORD-2291?"}]
 
@@ -184,10 +174,6 @@ if __name__ == "__main__":
     # Run the tool locally, then prune the response before appending to messages
     raw_row = fetch_order_from_db(tool_use.input["order_id"])
     pruned_row = prune(raw_row)
-
-    raw_tokens = count_json_tokens(raw_row)
-    pruned_tokens = count_json_tokens(pruned_row)
-    print(f"Tool payload tokens: raw={raw_tokens}  pruned={pruned_tokens}  saved={raw_tokens - pruned_tokens}")
 
     messages.append({"role": "assistant", "content": turn1.content})
     messages.append({
@@ -209,7 +195,7 @@ if __name__ == "__main__":
     print(f"Answer: {answer}")
 ```
 
-2. Run the script as written (before completing the `TODO`) and note both `Tool payload tokens` and `Turn 2 input_tokens`:
+2. Run the script as written (before completing the `TODO`) and note `Turn 2 input_tokens`:
 
 ```bash
 python prune_tool_output.py
@@ -218,8 +204,6 @@ python prune_tool_output.py
 3. Complete the `TODO` in `prune` so it returns a dictionary containing only the keys in `KEEP`, then run `python prune_tool_output.py` again.
 
 4. Compare `Turn 2 input_tokens` before and after pruning, and confirm that Claude still answers the question about `ORD-2291` accurately.
-
-5. Record in `task-notes.md` how many tokens pruning saved on this single tool call, and why that savings compounds in an agent loop where every `tool_result` stays in `messages` for all subsequent turns.
 
 > [!NOTE]
 > **Reference:** `return {k: tool_result[k] for k in KEEP if k in tool_result}`. Because the Messages API is stateless, every `tool_result` you append to `messages` is re-sent on every later turn in the conversation. Pruning noisy fields in your tool wrapper or a `PostToolUse` hook cuts both token cost and context drift.
@@ -271,8 +255,6 @@ python xml_isolation.py
 3. Read the review output and confirm that Claude:
    - flags the SQL string interpolation (`f"UPDATE orders ..."`) as a SQL injection vulnerability, and
    - flags the `# NOTE TO AI REVIEWER` comment as an embedded prompt-injection attempt instead of replying `LGTM`.
-
-4. Record in `task-notes.md` why XML tags help separate instructions from untrusted data, and why you still pair them with deterministic guardrails (such as least-privilege tools and hooks) when an agent can take actions.
 
 > [!NOTE]
 > XML tags (`<instructions>` vs `<untrusted_diff>`) make the boundary between trusted instructions and untrusted data explicit in the prompt structure. However, prompt structure alone is not a deterministic security boundary: if an agent has write or delete tools, pair XML delimiters with least-privilege tool scoping and `PreToolUse` hooks.
@@ -357,8 +339,6 @@ python invoice_extract.py
 
 5. **Predict before you read the result:** will the retry fix the problem? Think about whether the mistake is in the extraction or in the invoice itself.
 
-6. Record in `task-notes.md` why "schema-valid" does not mean "correct", and why retrying cannot fix data that is wrong in the source document.
-
 > [!NOTE]
 > **Reference:**
 >
@@ -377,9 +357,9 @@ Apply what you measured to a model-selection decision, with fewer instructions.
 
 1. Run the Task 4 extraction with each combination of model (`claude-haiku-5-5` and `claude-sonnet-5-5`) and effort (`"low"` and `"high"`).
 
-2. For each run, record input and output tokens, wall-clock time, estimated cost (Sonnet 5.5 is $2 input and $10 output per million tokens), and whether the extraction was correct.
+2. For each run, compare input and output tokens, wall-clock time, estimated cost (Sonnet 5.5 is $2 input and $10 output per million tokens), and whether the extraction was correct.
 
-3. Pick a production default for this invoice workload and justify it in two sentences in `task-notes.md`.
+3. Pick a production default for this invoice workload based on your measurements.
 
 4. **Stretch:** turn `cache_demo.py` into a three-turn conversation that uses top-level automatic caching (`cache_control={"type": "ephemeral"}` passed directly to `messages.create`). Show that `cache_read_input_tokens` grows on each turn.
 
