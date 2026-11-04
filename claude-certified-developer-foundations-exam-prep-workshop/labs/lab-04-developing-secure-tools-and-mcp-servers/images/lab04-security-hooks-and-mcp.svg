@@ -1,35 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 4: guard hook, permission rules, MCP server, and customization choices">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" role="img" aria-label="Lab 4: guard hook and permission rules, inventory MCP server with error recovery, and guarded state-changing MCP tool">
   <rect x="20" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
   <rect x="20" y="25" width="335" height="48" rx="14" fill="#1e71d6"/>
   <text x="187" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 1: Hooks and Permissions</text>
   <rect x="42" y="92" width="290" height="100" rx="10" fill="#e0edff"/>
   <text x="187" y="119" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">guard.py PreToolUse hook</text>
-  <text x="187" y="144" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Blocks rm -rf, DROP TABLE</text>
-  <text x="187" y="166" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Tested on its own first</text>
+  <text x="187" y="144" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Blocks rm -rf and .env writes</text>
+  <text x="187" y="166" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Scaffolded with setup_lab.py</text>
   <rect x="42" y="208" width="290" height="100" rx="10" fill="#e0edff"/>
   <text x="187" y="235" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Defense in depth</text>
   <text x="187" y="260" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Injected page cannot pass the hook</text>
   <text x="187" y="282" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13">Deny rules block .env reads</text>
   <rect x="382" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
   <rect x="382" y="25" width="335" height="48" rx="14" fill="#16a34a"/>
-  <text x="549" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 2: Real MCP Server</text>
+  <text x="549" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 2: Inventory MCP Server</text>
   <rect x="404" y="92" width="290" height="100" rx="10" fill="#f0fdf4"/>
   <text x="549" y="119" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">MCPServer: inventory</text>
   <text x="549" y="144" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Tool, resource, and prompt</text>
   <text x="549" y="166" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Logs to stderr, never stdout</text>
   <rect x="404" y="208" width="290" height="100" rx="10" fill="#f0fdf4"/>
-  <text x="549" y="235" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Connect to Claude Code</text>
-  <text x="549" y="260" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">claude mcp add --scope project</text>
-  <text x="549" y="282" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Approve, then /mcp</text>
+  <text x="549" y="235" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Structured tool errors</text>
+  <text x="549" y="260" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">isError with SKU-NNNNN format</text>
+  <text x="549" y="282" text-anchor="middle" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13">Never a fake 0-stock result</text>
   <rect x="744" y="25" width="335" height="310" rx="14" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
   <rect x="744" y="25" width="335" height="48" rx="14" fill="#7c3aed"/>
-  <text x="911" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 3: Errors and Choices</text>
+  <text x="911" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">Task 3: Guarded MCP Tool</text>
   <rect x="766" y="92" width="290" height="100" rx="10" fill="#f5f3ff"/>
-  <text x="911" y="119" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Useful tool errors</text>
-  <text x="911" y="144" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">isError with a clear fix</text>
-  <text x="911" y="166" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Never a fake empty result</text>
+  <text x="911" y="119" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">reserve_stock MCP tool</text>
+  <text x="911" y="144" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Subtracts from warehouse stock</text>
+  <text x="911" y="166" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">permissions.ask prompts user</text>
   <rect x="766" y="208" width="290" height="100" rx="10" fill="#f5f3ff"/>
-  <text x="911" y="235" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Pick the right option</text>
-  <text x="911" y="260" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Built-in, custom tool, Skill,</text>
-  <text x="911" y="282" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">MCP server, or plugin</text>
+  <text x="911" y="235" text-anchor="middle" fill="#4c1d95" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">PreToolUse quantity cap</text>
+  <text x="911" y="260" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">guard.py checks quantity &lt;= 50</text>
+  <text x="911" y="282" text-anchor="middle" fill="#6d28d9" font-family="Inter, system-ui, sans-serif" font-size="13">Blocks 60-unit reservation</text>
 </svg>
