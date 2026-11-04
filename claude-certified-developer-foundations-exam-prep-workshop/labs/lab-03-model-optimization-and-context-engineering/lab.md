@@ -16,15 +16,15 @@ In this lab, you will measure prompt caching with real `usage` counters, prune a
 
 ## Scenario
 
-Your billing assistant re-sends a long policy manual on every request, floods its context with 40-field database rows, and writes invoice totals straight into the ledger. Costs are climbing and one bad total already reached a customer. You measure, prune, and validate.
+Your team's billing and code-review services re-send a long policy manual on every request, flood the context window with 45-field database rows, review untrusted pull request diffs that could contain prompt injections, and write extracted invoice totals straight into the ledger. In this lab, you cache the static prefix, prune tool outputs, isolate untrusted data with XML tags, and validate structured outputs before trusting the numbers.
 
-![Lab 3 architecture: caching, context engineering, and validated structured output](images/lab03-caching-thinking-and-validation.svg)
+![Lab 3 architecture: caching, tool output pruning, XML isolation, and validated structured output](images/lab03-caching-thinking-and-validation.svg)
 
 ## Lab Instructions
 
 ### Task 1: Measure prompt caching
 
-In this task, you send the same long system prompt twice and read the cache counters in `response.usage`. Then you predict, and test, what one small change does to the cache.
+In this task, you send the same long system prompt twice, inspect the cache counters in `response.usage`, and test what happens when a dynamic value is placed at the start of the cached prefix.
 
 1. Open a terminal, go to your workspace, and activate the virtual environment.
 
@@ -33,7 +33,7 @@ In this task, you send the same long system prompt twice and read the cache coun
 ```bash
 cd ~/ccdvf-labs
 source .venv/bin/activate
-mkdir lab-03
+mkdir -p lab-03
 cd lab-03
 ```
 
@@ -42,7 +42,7 @@ cd lab-03
 ```powershell
 cd $HOME\ccdvf-labs
 .venv\Scripts\Activate.ps1
-mkdir lab-03
+mkdir lab-03 -Force
 cd lab-03
 ```
 
@@ -93,24 +93,24 @@ if __name__ == "__main__":
     ask("Does a $90 refund on a 3-day-old order need approval?", add_timestamp=stamp)
 ```
 
-3. Run it:
+3. Run the script:
 
 ```bash
 python cache_demo.py
 ```
 
-4. Read the two lines. The first request writes the policy to the cache (`cache_write`), and the second reads it back (`cache_read`) even though the question changed.
+4. Compare the two output lines. The first request writes the policy manual to the cache (`cache_write`), and the second request reads it from the cache (`cache_read`) at roughly one-tenth the input token price, even though the user question changed.
 
-5. Run the script again within five minutes and note what happens to the first line now.
+5. Run `python cache_demo.py` a second time within five minutes and verify that both requests now report `cache_read` hits.
 
-6. **Predict before you run:** the `--timestamp` flag puts the current time at the very start of the system prompt. Think about what `cache_write` and `cache_read` will show, then run:
+6. Run the script with the `--timestamp` flag, which prepends the current time to the start of the system prompt, and observe what happens to `cache_write` and `cache_read`:
 
 ```bash
 python cache_demo.py --timestamp
 ```
 
 > [!NOTE]
-> **Why the cache missed:** caching matches the prompt prefix exactly, in the order `tools`, then `system`, then `messages`. Any change near the start, such as a timestamp, invalidates everything after it, so every request becomes a full-price cache write. Put changing values after the cached prefix, for example in the user message. The cache lives for five minutes by default and each hit refreshes it, which is why your second run read the cache on its first request. Cache writes cost 1.25x the input price and reads about 0.1x.
+> **Why the cache missed:** Prompt Caching matches the prompt prefix byte-for-byte in the order `tools`, then `system`, then `messages`. Any change near the start, such as a timestamp, invalidates everything after it, turning every request into a 1.25x cache write. Place dynamic values after the cached prefix (for example, in the user message). Ephemeral caches live for five minutes by default and refresh on each hit.
 
 ### Task 2: Prune tool output in a tool-use turn
 
@@ -327,17 +327,17 @@ else:
     print("Validation passed.")
 ```
 
-2. Run it as written:
+2. Run the script as written (before completing the `TODO`):
 
 ```bash
 python invoice_extract.py
 ```
 
-3. Notice that the output says `Validation passed.` The JSON matches the schema perfectly, yet $400 + $250 is not $700.
+3. Inspect the output and note that it prints `Validation passed.` even though `$400.00 + $250.00` is `$650.00`, not `$700.00`. The extracted JSON matches the `Invoice` schema, which shows that schema validation alone cannot catch arithmetic errors.
 
-4. Complete the TODO in `validate`, then run the script again.
+4. Complete the `TODO` in `validate` so it compares the rounded sum of `invoice.line_items` against `round(invoice.stated_total, 2)`, then run `python invoice_extract.py` again.
 
-5. **Predict before you read the result:** will the retry fix the problem? Think about whether the mistake is in the extraction or in the invoice itself.
+5. Inspect the output from Attempt 1 and Attempt 2. Because the arithmetic discrepancy is in the source invoice itself rather than a misread by Claude, Attempt 2 extracts the same numbers, fails validation again, and routes the invoice to human review.
 
 > [!NOTE]
 > **Reference:**
@@ -349,19 +349,17 @@ python invoice_extract.py
 > return None
 > ```
 >
-> Structured outputs guarantee the *shape* of the response. Your code must check the *meaning*: totals, dates, and cross-field rules. A retry with the exact error helps when Claude misread the document. Here, the invoice itself is inconsistent, so the right outcome is to route it to a human, not to retry forever. Also check `stop_reason` before trusting any output: `max_tokens` means truncated, and `refusal` means no answer.
+> Structured outputs guarantee the *shape* of the response. Your code must check the *meaning*: totals, dates, and cross-field rules. A retry with the exact error helps when Claude misread the document. Here, the invoice itself is inconsistent, so the right outcome is to route it to a human rather than retrying forever. Always check `stop_reason` before trusting any output: `max_tokens` means truncated, and `refusal` means no answer.
 
 ### Bonus Task 5: Choose the model and effort for production
 
-Apply what you measured to a model-selection decision, with fewer instructions.
+Apply what you measured to a model-selection decision, with fewer step-by-step instructions.
 
 1. Run the Task 4 extraction with each combination of model (`claude-haiku-5-5` and `claude-sonnet-5-5`) and effort (`"low"` and `"high"`).
 
-2. For each run, compare input and output tokens, wall-clock time, estimated cost (Sonnet 5.5 is $2 input and $10 output per million tokens), and whether the extraction was correct.
+2. Compare input and output tokens, wall-clock latency, estimated cost (Sonnet 5.5 is $2 input and $10 output per million tokens), and extraction accuracy across the four runs, then select a production default for this invoice workload.
 
-3. Pick a production default for this invoice workload based on your measurements.
-
-4. **Stretch:** turn `cache_demo.py` into a three-turn conversation that uses top-level automatic caching (`cache_control={"type": "ephemeral"}` passed directly to `messages.create`). Show that `cache_read_input_tokens` grows on each turn.
+3. **Stretch:** update `cache_demo.py` to run a three-turn conversation that passes top-level automatic caching (`cache_control={"type": "ephemeral"}`) directly to `client.messages.create(...)`, and verify that `cache_read_input_tokens` grows on each turn.
 
 ## Congratulations!
 
