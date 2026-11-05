@@ -149,6 +149,104 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
+# Demo: Using the Claude API
+
+If you already finished Lab 0, open `ccdvf-labs` with the virtual environment activated and skip to Step 6.
+
+**Step 1. Create the `ccdvf-labs` folder**
+
+**macOS:**
+
+```bash
+cd ~
+mkdir ccdvf-labs
+cd ccdvf-labs
+```
+
+**Windows (PowerShell):**
+
+```powershell
+cd $HOME
+mkdir ccdvf-labs
+cd ccdvf-labs
+```
+
+**Step 2. Create a virtual environment and activate it**
+
+**macOS:**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+**Windows (PowerShell):**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+When the environment is active, the prompt starts with `(.venv)`. If Windows says that running scripts is disabled, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer **Y**, and run the activate command again.
+
+**Step 3. Install the packages for these demos**
+
+```bash
+pip install anthropic python-dotenv
+```
+
+**Step 4. Create a file named `.env` with your API key**
+
+```text
+ANTHROPIC_API_KEY=sk-ant-paste-your-key-here
+```
+
+**Step 5. Create a file named `.gitignore`**
+
+```text
+.env
+.venv/
+```
+
+**Step 6. Create `demo_01_haiku.py` and paste this code**
+
+```python
+# demo_01_haiku.py - one Messages API call
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-haiku-5-5",
+    max_tokens=128,
+    messages=[{
+        "role": "user",
+        "content": "Write a Haiku about the Claude Developer Certification.",
+    }],
+)
+
+text = "".join(block.text for block in response.content if block.type == "text")
+print(text)
+```
+
+**Step 7. Run it**
+
+```bash
+python demo_01_haiku.py
+```
+
+**Step 8. Examine the output**
+
+- The terminal prints a haiku
+- The wording will vary, and you should see three short lines
+
+> [!NOTE]
+> You sent one prompt and printed Claude’s reply. This folder, virtual environment, and `.env` file are what every later demo uses.
+
+---
+
 # What You Learned
 
 - Reviewed the CCDV-F exam format, scoring, and domain weights

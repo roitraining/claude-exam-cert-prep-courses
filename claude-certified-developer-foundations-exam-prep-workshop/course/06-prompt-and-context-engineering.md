@@ -240,6 +240,53 @@ def build_safe_diff_prompt(raw_git_diff: str) -> str:
 
 ---
 
+# Demo: A Successful Response That Was Cut Off
+
+In `ccdvf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_05_truncated.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_05_truncated.py - a short max_tokens cuts the story off without raising
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-haiku-5-5",
+    max_tokens=30,
+    messages=[{
+        "role": "user",
+        "content": "Write a 300-word story about a lighthouse keeper.",
+    }],
+)
+
+text = "".join(block.text for block in response.content if block.type == "text")
+print("text:", text)
+print("stop_reason:", response.stop_reason)
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_05_truncated.py
+```
+
+**Step 4. Examine the output**
+
+- The script prints text. It does not raise an exception.
+- The story stops in the middle
+- `stop_reason` is `max_tokens`
+
+> [!NOTE]
+> Truncation is not an exception. The call succeeds and `stop_reason` is `max_tokens`. Reading the text without checking `stop_reason` is how a cut-off JSON value reaches a database.
+
+---
+
 # Defensive Parsing and Validation-Retry Example
 
 - **Structured output plus semantic validation**: the schema guarantees shape; application code checks meaning and retries with specific feedback

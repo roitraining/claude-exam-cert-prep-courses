@@ -238,6 +238,89 @@ async def run_agent_loop(user_prompt: str, tools: list[dict], max_turns: int = 2
 
 ---
 
+# Demo: A Loop That Stops on stop_reason
+
+In `ccdvf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_02_tool_loop.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_02_tool_loop.py - keep going only while stop_reason is tool_use
+import json
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+ORDERS = {
+    "ORD-1001": {"status": "shipped", "carrier": "UPS", "eta": "2026-11-07"},
+}
+
+def get_order(order_id):
+    record = ORDERS.get(order_id)
+    if record is None:
+        return json.dumps({"found": False})
+    return json.dumps(record)
+
+tools = [{
+    "name": "get_order",
+    "description": "Look up delivery status for an order ID such as ORD-1001.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "order_id": {"type": "string"},
+        },
+        "required": ["order_id"],
+    },
+}]
+
+messages = [{"role": "user", "content": "What is the status of order ORD-1001?"}]
+
+for turn in range(1, 4):
+    response = client.messages.create(
+        model="claude-haiku-5-5",
+        max_tokens=1024,
+        tools=tools,
+        messages=messages,
+    )
+    print(f"Turn {turn}: stop_reason={response.stop_reason}")
+    messages.append({"role": "assistant", "content": response.content})
+    if response.stop_reason != "tool_use":
+        text = "".join(block.text for block in response.content if block.type == "text")
+        print(text)
+        break
+    results = []
+    for block in response.content:
+        if block.type == "tool_use":
+            output = get_order(block.input["order_id"])
+            print(f"  ran get_order({block.input['order_id']}) -> {output}")
+            results.append({
+                "type": "tool_result",
+                "tool_use_id": block.id,
+                "content": output,
+            })
+    messages.append({"role": "user", "content": results})
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_02_tool_loop.py
+```
+
+**Step 4. Examine the output**
+
+- Turn 1 prints `stop_reason=tool_use`, then the script runs `get_order` and sends the result back
+- Turn 2 prints `stop_reason=end_turn` and a sentence about order ORD-1001
+
+> [!NOTE]
+> The loop does not look for phrases like “here is your answer.” It continues only while `stop_reason` is `tool_use`, and it stops on `end_turn`. Your code, not the API, runs the tool and sends the result back.
+
+---
+
 <!-- layout: 2-column -->
 # Using the SDK Tool Runner (`tool_runner`)
 

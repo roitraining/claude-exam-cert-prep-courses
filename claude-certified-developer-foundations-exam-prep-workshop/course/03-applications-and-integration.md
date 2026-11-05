@@ -250,6 +250,57 @@ messages.append({
 
 ---
 
+# Demo: Watching a Reply Stream
+
+In `ccdvf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_03_stream.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_03_stream.py - print each text delta, then read the finished message
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+with client.messages.stream(
+    model="claude-haiku-5-5",
+    max_tokens=200,
+    messages=[{
+        "role": "user",
+        "content": "In two sentences, explain what a stop_reason is.",
+    }],
+) as stream:
+    for text in stream.text_stream:
+        print(text, end="", flush=True)
+    print()
+    final = stream.get_final_message()
+
+print("stop_reason:", final.stop_reason)
+print("input_tokens:", final.usage.input_tokens)
+print("output_tokens:", final.usage.output_tokens)
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_03_stream.py
+```
+
+**Step 4. Examine the output**
+
+- The words appear on one line as they arrive, before the script finishes
+- After the sentence, `stop_reason` is `end_turn`
+- `input_tokens` and `output_tokens` print only after the stream completes
+
+> [!NOTE]
+> Streaming changes when the words appear. The final Message is the same kind of object you get from a normal call. You still read `stop_reason` and `usage` from that completed message.
+
+---
+
 # Streaming with `AsyncAnthropic` and Handling Dropped Streams
 
 - **Use `client.messages.stream()`** and wrap long streams in error-recovery logic so dropped connections do not leave the UI hung

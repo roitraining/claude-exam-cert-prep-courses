@@ -58,6 +58,99 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
+# Demo: An Empty Success Versus an Error Result
+
+In `ccdvf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_06_tool_error.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_06_tool_error.py - [] means nothing found; is_error means the lookup failed
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+tools = [{
+    "name": "lookup_order",
+    "description": "Look up one order by its ID. IDs look like ORD-1001.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "order_id": {"type": "string"},
+        },
+        "required": ["order_id"],
+    },
+}]
+
+def follow_up(is_error):
+    label = "Error result" if is_error else "Empty success"
+    messages = [{
+        "role": "user",
+        "content": "Look up order ORD-MISSING and tell me the status.",
+    }]
+    first = client.messages.create(
+        model="claude-haiku-5-5",
+        max_tokens=512,
+        tools=tools,
+        messages=messages,
+    )
+    tool_uses = [block for block in first.content if block.type == "tool_use"]
+    if not tool_uses:
+        print(label)
+        print("Claude answered without calling lookup_order. Run the file again.")
+        print()
+        return
+    tool_use = tool_uses[0]
+    if is_error:
+        result = {
+            "type": "tool_result",
+            "tool_use_id": tool_use.id,
+            "is_error": True,
+            "content": "No order with that ID. Check the ORD-NNNNN format.",
+        }
+    else:
+        result = {
+            "type": "tool_result",
+            "tool_use_id": tool_use.id,
+            "content": "[]",
+        }
+    messages.append({"role": "assistant", "content": first.content})
+    messages.append({"role": "user", "content": [result]})
+    second = client.messages.create(
+        model="claude-haiku-5-5",
+        max_tokens=512,
+        tools=tools,
+        messages=messages,
+    )
+    text = "".join(block.text for block in second.content if block.type == "text")
+    print(label)
+    print(text)
+    print()
+
+follow_up(is_error=False)
+follow_up(is_error=True)
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_06_tool_error.py
+```
+
+**Step 4. Examine the output**
+
+- **Empty success:** Claude treats `[]` as a finished lookup and says there is no such order
+- **Error result:** Claude treats the tool as failed and asks you to check the `ORD-NNNNN` format
+
+> [!NOTE]
+> `[]` tells Claude the lookup worked and nothing was found, so it may answer “there is no such order.” `is_error: true` tells Claude the tool failed, so it can ask for a corrected ID instead of inventing a result.
+
+---
+
 <!-- layout: 2-column -->
 # Weak vs Strong Tool Definitions (`strict: true`)
 

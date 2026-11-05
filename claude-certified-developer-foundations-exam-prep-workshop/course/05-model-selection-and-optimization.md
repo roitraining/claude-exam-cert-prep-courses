@@ -333,6 +333,67 @@ response = await client.messages.create(
 
 ---
 
+# Demo: A Cache Miss, Then a Cache Hit
+
+In `ccdvf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_04_cache.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_04_cache.py - same prompt twice, so the second call can read the cache
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+# Long enough to pass the 512-token cache minimum on Claude 5.
+policy = "\n".join(
+    f"Rule {i}: refunds over 50 dollars need a manager when the order is older than 14 days."
+    for i in range(1, 40)
+)
+
+def call_once(label):
+    response = client.messages.create(
+        model="claude-haiku-5-5",
+        max_tokens=64,
+        system=[{
+            "type": "text",
+            "text": policy,
+            "cache_control": {"type": "ephemeral"},
+        }],
+        messages=[{
+            "role": "user",
+            "content": "In one sentence, when does a refund need a manager?",
+        }],
+    )
+    usage = response.usage
+    print(label)
+    print("  cache_creation_input_tokens:", usage.cache_creation_input_tokens)
+    print("  cache_read_input_tokens:", usage.cache_read_input_tokens)
+
+call_once("Call 1")
+call_once("Call 2")
+```
+
+**Step 3. Run it once. The script sends both calls back to back.**
+
+```bash
+python demo_04_cache.py
+```
+
+**Step 4. Examine the output**
+
+- Call 1 has `cache_creation_input_tokens` above 0 and `cache_read_input_tokens` at 0
+- Call 2 has `cache_read_input_tokens` above 0
+
+> [!NOTE]
+> A cache hit is a usage field. `cache_read_input_tokens` stays 0 when the prefix differs by even one character, which is why a timestamp at the top of the system prompt breaks caching.
+
+---
+
 <!-- layout: 2-column -->
 # Worked Cost Modeling: Caching + Batching Arithmetic
 
