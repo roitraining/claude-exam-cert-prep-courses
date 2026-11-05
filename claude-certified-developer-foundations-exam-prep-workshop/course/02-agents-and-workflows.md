@@ -125,19 +125,18 @@ results = await asyncio.gather(
 
 ---
 
-<!-- layout: 2-column -->
-# Workflow Patterns 4 and 5: Orchestrator-Workers and Evaluator-Optimizer
+# Workflow Pattern 4: Orchestrator-Workers
 
-### Orchestrator-Workers
 - A central lead model analyzes an input whose subtasks cannot be hardcoded in advance (such as refactoring a symbol across an unknown set of files)
 - The orchestrator emits a dynamic task list, dispatches worker calls in parallel, and synthesizes their outputs
 - **Differs from Parallelization**: the subtasks are chosen dynamically at runtime by the lead model rather than fixed in code
 
-### Evaluator-Optimizer
+---
+
+# Workflow Pattern 5: Evaluator-Optimizer
+
 - One LLM call generates a candidate artifact (such as a complex SQL query or translated code module), and a second evaluator call grades it against explicit rubric criteria
 - If the evaluator rejects the draft, its structured critique is fed back into the generator for a bounded retry loop (for example, `max_iterations = 3`)
-
-<!-- below-columns -->
 
 > [!TIP]
 > Use **Prompt Chaining**, **Routing**, or **Parallelization** when the step structure is known in advance. Step up to **Orchestrator-Workers** or an **Agent** only when runtime discovery dictates the steps.
