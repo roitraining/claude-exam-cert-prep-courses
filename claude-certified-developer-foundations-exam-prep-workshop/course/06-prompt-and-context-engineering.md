@@ -259,6 +259,7 @@ client = anthropic.Anthropic()
 response = client.messages.create(
     model="claude-haiku-5-5",
     max_tokens=30,
+    output_config={"effort": "low"},  # spend the 30 tokens on the story, not on thinking
     messages=[{
         "role": "user",
         "content": "Write a 300-word story about a lighthouse keeper.",

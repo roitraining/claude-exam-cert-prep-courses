@@ -268,7 +268,8 @@ client = anthropic.Anthropic()
 
 with client.messages.stream(
     model="claude-haiku-5-5",
-    max_tokens=200,
+    max_tokens=1028,
+    output_config={"effort": "low"},
     messages=[{
         "role": "user",
         "content": "In two sentences, explain what a stop_reason is.",

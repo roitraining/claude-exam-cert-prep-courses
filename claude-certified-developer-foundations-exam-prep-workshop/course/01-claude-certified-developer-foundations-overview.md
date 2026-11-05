@@ -220,7 +220,8 @@ client = anthropic.Anthropic()
 
 response = client.messages.create(
     model="claude-haiku-5-5",
-    max_tokens=128,
+    max_tokens=1028,
+    output_config={"effort": "low"},  # keep this short reply from being spent on thinking
     messages=[{
         "role": "user",
         "content": "Write a Haiku about the Claude Developer Certification.",
