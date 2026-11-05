@@ -320,15 +320,22 @@ python demo_02_tool_loop.py
 
 ---
 
-<!-- layout: 2-column -->
+<!-- layout: card-layout -->
 # Using the SDK Tool Runner (`tool_runner`)
 
-### Why Use `tool_runner`
-- When you want custom Python or TypeScript tools without hand-writing the `while` loop
-- `client.beta.messages.tool_runner` executes decorated functions, formats `tool_result` blocks, and loops until `end_turn`
-- Supports client-side SDK compaction in TypeScript and Ruby for long loops
+### No Hand-Written Loop
+- Use it when you want custom Python or TypeScript tools without writing the `while` loop yourself.
 
-### Decorated Tool + Runner Call
+### The Runner Owns the Cycle
+- `client.beta.messages.tool_runner` executes decorated functions, formats `tool_result` blocks, and loops until `end_turn`.
+
+### Long Loops
+- TypeScript and Ruby support client-side SDK compaction for long loops.
+
+---
+
+# Code: A Decorated Tool and `tool_runner`
+
 ```python
 from anthropic import AsyncAnthropic, beta_async_tool
 
@@ -350,6 +357,69 @@ async def handle_customer_query(question: str) -> str:
     final_message = await runner.until_done()
     return next(b.text for b in final_message.content if b.type == "text")
 ```
+
+---
+
+# Demo: Letting `tool_runner` Call the Tool
+
+In `ccdvf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_tool_runner.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_tool_runner.py - the runner calls the tool and stops on end_turn
+import json
+from dotenv import load_dotenv
+from anthropic import Anthropic, beta_tool
+
+load_dotenv()
+client = Anthropic()
+
+ORDERS = {
+    "ORD-1001": {"status": "shipped", "carrier": "UPS", "eta": "2026-11-07"},
+}
+
+@beta_tool
+def get_order_status(order_id: str) -> str:
+    """Look up delivery status for an order ID such as ORD-1001.
+
+    Args:
+        order_id: The order ID, for example ORD-1001.
+    """
+    record = ORDERS.get(order_id, {"found": False})
+    print(f"  ran get_order_status({order_id}) -> {json.dumps(record)}")
+    return json.dumps(record)
+
+runner = client.beta.messages.tool_runner(
+    model="claude-haiku-5-5",
+    max_tokens=4096,
+    output_config={"effort": "low"},
+    tools=[get_order_status],
+    messages=[{"role": "user", "content": "What is the status of order ORD-1001?"}],
+)
+
+for message in runner:
+    print("stop_reason:", message.stop_reason)
+    if message.stop_reason == "end_turn":
+        text = "".join(block.text for block in message.content if block.type == "text")
+        print(text)
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_tool_runner.py
+```
+
+**Step 4. Examine the output**
+
+- The first `stop_reason` is `tool_use`, then a line from inside `get_order_status`
+- The next `stop_reason` is `end_turn`, followed by a sentence about order ORD-1001
+
+> [!NOTE]
+> You did not write a loop. `tool_runner` called `get_order_status`, sent the result back, and stopped when `stop_reason` was `end_turn`.
 
 ---
 
