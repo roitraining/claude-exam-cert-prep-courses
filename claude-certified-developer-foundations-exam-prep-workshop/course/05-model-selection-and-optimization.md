@@ -48,11 +48,11 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - Current models use a newer tokenizer (introduced with Opus 4.7) that produces up to ~35% more tokens for the same text than older generations: always measure with `client.messages.count_tokens()`.
 - The **1M token context window** bounds **input + thinking + output (`max_tokens`)** within a single request.
 
-### Next-Token Generation and Non-Determinism
+### Token Generation and Non-Determinism
 - LLMs generate responses autoregressively one token at a time by sampling from probability distributions.
 - Identical requests can return slightly different wording across calls: design production systems around structured outputs, schema validation, and eval suites rather than expecting byte-identical strings.
 
-### Sampling Parameters (`temperature`, `top_p`, `top_k`)
+### Sampling Parameters 
 - Concept: sampling parameters shape the probability distribution (`temperature` scales logit sharpness; `top_p` and `top_k` truncate the tail).
 - Current API rule: the Claude 5 model family and API version `2026-10-21` **reject non-default sampling values with HTTP 400**. Steer output consistency with prompts, few-shot examples, structured outputs, and `effort` instead.
 
@@ -81,19 +81,20 @@ if token_estimate.input_tokens > 850_000:
 
 ---
 
-<!-- layout: 2-column -->
-# Extended Thinking, Adaptive Thinking, Effort, and Fast Mode
+# Extended Thinking and Adaptive Thinking
 
-### Thinking: Concept vs Current API
 - **Extended thinking** (concept): Claude reasons step by step in `thinking` blocks before answering or calling a tool
 - **Adaptive thinking** (`thinking: {"type": "adaptive"}`): Claude dynamically decides when and how much to think based on task complexity; it is always on for Opus 5.5 / Fable 5.1 and the standard mode across the Claude 5 family
 - Fixed `thinking.budget_tokens` is legacy: rejected (HTTP 400) on the Claude 5 family; still used only on older models such as Haiku 4.5
 - **`between_tools` mode** (`thinking: {"type": "between_tools"}`): supported on models like Sonnet 5.5 to skip up-front thinking on turn 1 while still thinking between tool calls
 
-### Effort Levels and Fast Mode
+---
+
+# Effort Levels and Fast Mode
+
 - **Effort** (`output_config: {"effort": ...}`): `low`, `medium`, `high`, `xhigh`, `max`
-  - Default is `high` on Sonnet 5.5 and Fable 5.1; `medium` on Opus 5.5 and Haiku 5.5
-  - Lower `effort` (`low` / `medium`) cuts thinking token spend and latency on simple queries; higher `effort` (`high` / `xhigh` / `max`) deepens reasoning on hard debugging or architecture tasks
+- Default effort is `high` on Sonnet 5.5 and Fable 5.1, and `medium` on Opus 5.5 and Haiku 5.5
+- Lower effort (`low` or `medium`) cuts thinking token spend and latency on simple queries. Higher effort (`high`, `xhigh`, or `max`) deepens reasoning on hard debugging or architecture tasks
 - **Fast mode** (research preview, Claude API only, Opus only): runs the **exact same Opus model weights** at up to **2.5x faster output speed** for premium pricing (does not switch to a smaller model)
 
 ---
@@ -174,17 +175,17 @@ const message = await client.messages.create({
 <!-- layout: 3-column -->
 # Selecting Between Opus, Sonnet, and Haiku
 
-### Claude Opus (`claude-opus-5-5`)
+### Claude Opus
 - **Deep reasoning and long-horizon coding**: complex architecture, subtle root-causing, multi-agent coordinator synthesis
 - **$4 / $20** per million input / output tokens (1M context, 128K max output; default effort `medium`)
 - **Fable 5.1** (`claude-fable-5-1`, $10 / $50) sits above Opus 5.5 for the hardest reasoning tasks
 
-### Claude Sonnet (`claude-sonnet-5-5`)
+### Claude Sonnet
 - **Best balance of speed and intelligence**: production coding, multi-step tool-use agents, customer-facing workflows
 - **$2 / $10** per million input / output tokens (1M context, 128K max output; default effort `high`)
 - Strong default workhorse for interactive agents
 
-### Claude Haiku (`claude-haiku-5-5`)
+### Claude Haiku
 - **Fastest and lowest cost**: **$0.10 / $0.50** per million tokens (for prompts up to 100K; 1M context, 128K max output; default effort `medium`)
 - High-volume classification, ticket routing, input guardrails, entity extraction, and lightweight subagents
 - Supports adaptive thinking; trade-off is shallower multi-hop reasoning on ambiguous problems
@@ -256,7 +257,7 @@ resp = await client.messages.parse(
 
 ---
 
-# Querying Model Capabilities Programmatically (`models.list`)
+# Querying Model Capabilities Programmatically
 
 - **Avoid hardcoding assumptions across model generations**: query the **Models API** (`client.models.list()`) to inspect `max_input_tokens`, `max_tokens`, model `line`, and supported `thinking` or `server_tools` capabilities at startup
 
@@ -296,7 +297,7 @@ for m in models_page.data:
 
 ---
 
-# Code: Explicit 1-Hour Prefix Cache + Automatic Turn Caching
+# Explicit 1-Hour Prefix Cache + Automatic Turn Caching
 
 - **Combine a 1-hour TTL on static tools/system with a 5-minute rolling cache on conversation turns**: remember that `1h` cache entries must appear **before** `5m` entries
 
@@ -394,25 +395,22 @@ python demo_04_cache.py
 
 ---
 
-<!-- layout: 2-column -->
-# Worked Cost Modeling: Caching + Batching Arithmetic
+# Worked Cost: Caching a Live Support Agent
 
-### Workload Assumptions
-- **Live support agent on `claude-sonnet-5-5`** ($2 / MTok input, $10 / MTok output):
-  - 10,000 requests/day sharing an identical **10,000-token** system + tool prefix, plus **500** unique user input tokens and **300** output tokens per call
-- **Nightly analytics job on `claude-sonnet-5-5`**:
-  - 20,000 archived transcripts/night, **2,000** input tokens and **500** output tokens each
+- **Live support agent on `claude-sonnet-5-5`** ($2 / MTok input, $10 / MTok output): 10,000 requests/day sharing an identical **10,000-token** system and tool prefix, plus **500** unique user input tokens and **300** output tokens per call
+- **Uncached input**: 10,000 × 10,500 = 105 MTok × $2 = $210/day
+- **Cached** (99.9% hit rate at 0.05×, which is $0.10/MTok on Sonnet 5.5):
+  - Prefix reads: 10,000 × 10,000 = 100 MTok × $0.10 = $10/day
+  - Unique input: 10,000 × 500 = 5 MTok × $2 = $10/day
+- **Input cost drops from $210/day to about $20/day (90% reduction)**
 
-### Daily Cost Before vs After Optimization
-- **1. Live Support (Uncached vs Cached)**:
-  - Uncached input: $10{,}000 \times 10{,}500 = 105\text{ MTok} \times \$2 = \$210/\text{day}$
-  - Cached (99.9% hit rate at $0.05\times = \$0.10/\text{MTok}$ on Sonnet 5.5):
-    - Prefix reads: $10{,}000 \times 10{,}000 = 100\text{ MTok} \times \$0.10 = \$10/\text{day}$
-    - Unique input: $10{,}000 \times 500 = 5\text{ MTok} \times \$2 = \$10/\text{day}$
-    - **Input cost drops from $210/day to ~$20/day (90% reduction)**
-- **2. Nightly Job (Realtime vs Message Batches API)**:
-  - Realtime: $(40\text{ MTok} \times \$2) + (10\text{ MTok} \times \$10) = \$80 + \$100 = \$180/\text{night}$
-  - **Message Batches API (50% off)**: **$90/night** (and stacks with prompt caching if transcripts share a policy prefix)
+---
+
+# Worked Cost: Batching a Nightly Analytics Job
+
+- **Nightly analytics job on `claude-sonnet-5-5`**: 20,000 archived transcripts/night, **2,000** input tokens and **500** output tokens each
+- **Realtime**: (40 MTok × $2) + (10 MTok × $10) = $80 + $100 = $180/night
+- **Message Batches API (50% off)**: **$90/night**, and the discount stacks with prompt caching when the transcripts share a policy prefix
 
 ---
 

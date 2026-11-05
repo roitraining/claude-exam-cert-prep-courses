@@ -61,24 +61,21 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 <!-- layout: 3-column -->
 # API-Native Context Management
 
-### Context Editing (Server-Side)
-- Clears stale tool results (`clear_tool_uses_20250919`) or earlier thinking blocks (`clear_thinking_20251015`) before the prompt reaches Claude
-- Replaces cleared tool outputs with a lightweight placeholder while your client keeps its full local `messages` array
-- Use `clear_at_least` so cache invalidation only happens when substantial tokens are freed
+### Context Editing
+- Clears stale tool results (`clear_tool_uses_20250919`) and earlier thinking blocks (`clear_thinking_20251015`) before the prompt reaches Claude.
+- Set `clear_at_least` so the cache breaks only when enough tokens are freed.
 
 ### Server-Side Compaction
-- The API summarizes earlier turns automatically when the conversation nears a configured token threshold
-- Always append the full `response.content` so compaction blocks are preserved across turns
-- Best for very long multi-turn conversations
+- The API summarizes earlier turns when the conversation nears a token threshold.
+- Append the full `response.content` so compaction blocks stay in the next request.
 
-### Memory Tool (`memory_20250818`)
-- Claude reads and writes structured notes in a scoped memory directory that your application persists
-- Keeps durable cross-session facts outside the active context window
-- Best for agents that must remember user or project state across sessions
+### Memory Tool
+- Claude reads and writes notes in a directory your application keeps between sessions.
+- Those notes stay out of the active context window until Claude asks for them.
 
 ---
 
-# Code: Server-Side Context Editing and Long-Document Ordering
+# Code: Context Editing and Long-Document Ordering
 
 - **Enable `clear_tool_uses_20250919`** to clear old tool outputs automatically, and **place long `<documents>` before the query**:
 
@@ -149,9 +146,9 @@ response = await client.beta.messages.create(
 ---
 
 <!-- layout: 2-column -->
-# Before and After: Rewriting Vague Prompts into Explicit Criteria
+# Rewriting Vague Prompts into Explicit Criteria
 
-### Weak Prompt (Vague Confidence Rule)
+### Weak Prompt
 ```xml
 <instructions>
 Review this pull request diff.
@@ -161,7 +158,7 @@ issues. Do not flag minor things.
 ```
 - **Why it fails**: “be conservative” and “high-confidence” are subjective; false-positive style nits still flood the output, eroding developer trust in real security findings.
 
-### Strong Prompt (Categorical Criteria + Few-Shot)
+### Strong Prompt
 ```xml
 <instructions>
 Report a finding ONLY if the diff introduces:
@@ -214,7 +211,7 @@ def build_safe_diff_prompt(raw_git_diff: str) -> str:
 ### 3. Targeted Prompt Edit + Regression Check
 - Change **one** prompt section or add 2 to 4 edge-case few-shot examples, then re-run the full evaluation suite to verify the fix did not regress previously passing cases.
 
-### 4. Prompt Constraints vs Schema Enforcement
+### 4. Constraints vs Schema Enforcement
 - Use prose constraints (`“Respond in 3 bullet points under 100 words”`) for human-facing text length and tone.
 - Use **structured outputs** (`output_config.format` / `messages.parse()`) whenever downstream code parses the response.
 
@@ -309,14 +306,13 @@ if line_sum != invoice.stated_total:
 
 ---
 
-<!-- layout: 2-column -->
-# Raw JSON Schema via `output_config.format`
+# Pass the JSON Schema Yourself
 
-### When You Don’t Use a Pydantic Helper
-- In REST calls, TypeScript services without Zod/Pydantic wrappers, or polyglot pipelines, pass the JSON Schema directly in `output_config.format`
-- Requires `"additionalProperties": false` on every object and constrained decoding guarantees the response text matches the schema
+`messages.parse()` on the previous slide builds the schema from a Pydantic model. A REST call, or any client without that helper, sends the same schema in `output_config.format`. Claude’s reply is then constrained to that shape.
 
-### Request Snippet
+- Put `"additionalProperties": false` on every object
+- List every field in `required`
+
 ```json
 {
   "model": "claude-sonnet-5-5",
@@ -328,30 +324,31 @@ if line_sum != invoice.stated_total:
         "type": "object",
         "properties": {
           "vendor": {"type": "string"},
-          "stated_total": {"type": "number"},
-          "conflict_detected": {"type": "boolean"}
+          "stated_total": {"type": "number"}
         },
-        "required": ["vendor", "stated_total", "conflict_detected"],
+        "required": ["vendor", "stated_total"],
         "additionalProperties": false
       }
     }
   },
-  "messages": [{"role": "user", "content": "Extract invoice fields..."}]
+  "messages": [{"role": "user", "content": "Extract the vendor and stated total."}]
 }
 ```
 
+> [!NOTE]
+> The helper is optional. The guarantee is the JSON Schema in `output_config.format`. The schema fixes the shape. Your code still has to check that the numbers are right.
+
 ---
 
-<!-- layout: 2-column -->
-# Handling Multi-Source Conflicts and Escalation Calibration
+# When Two Sources Disagree, Keep Both Figures
 
-### Multi-Source Conflict Resolution
-- When two retrieved documents state conflicting figures (for example, a government report says `12% growth` while an industry whitepaper says `18% growth`), instructing Claude to “pick the most authoritative figure” or “average them” destroys provenance
-- **Correct pattern**: require subagents and synthesis prompts to **surface both figures annotated with their source attribution and methodology context**
+A government report says `12% growth`. An industry paper says `18% growth`.
 
-### Calibrating Human Escalation Triggers
-- **Unreliable proxies**: self-reported model confidence scores (`confidence: 0.95`) and customer sentiment analysis (escalating every frustrated-sounding message even when the request is trivial)
-- **Reliable triggers**: explicit escalation criteria in the prompt (customer asks for a human, true policy gap/exception, or tool threshold blocked by a hook), backed by few-shot examples
+- A prompt that says “pick the most authoritative figure” or “average them” hides which source said which number
+- The synthesis step should return **both** figures, each labeled with its source and how that source measured growth
+
+> [!NOTE]
+> Keep both figures and name the source of each. One blended number cannot be checked against either document.
 
 ---
 

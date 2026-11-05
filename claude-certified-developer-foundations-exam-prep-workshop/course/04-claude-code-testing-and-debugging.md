@@ -95,10 +95,10 @@ paths:
 
 ---
 
-<!-- layout: 2-column -->
-# Authoring Project Skills (`SKILL.md`) and Subagents (`.claude/agents/`)
+# Authoring Project Skills (`SKILL.md`)
 
-### `.claude/skills/codebase-explainer/SKILL.md`
+Place a Skill at `.claude/skills/codebase-explainer/SKILL.md`.
+
 - Use `context: fork` so verbose multi-file exploration runs in an isolated subagent context and returns only a summary
 - Use `allowed-tools` to restrict the Skill to read-only operations
 
@@ -112,8 +112,11 @@ argument-hint: "[module-path]"
 # Prompt body: Trace all entrypoints in $ARGUMENTS and return a 1-page summary.
 ```
 
-### `.claude/agents/security-auditor.md`
-- Custom subagents declare their own `model`, scoped `tools`, and optional persistent `memory` scope
+---
+
+# Authoring Subagents (`.claude/agents/`)
+
+Custom subagents declare their own `model`, scoped `tools`, and optional persistent `memory` scope.
 
 ```yaml
 # .claude/agents/security-auditor.md frontmatter
@@ -172,7 +175,7 @@ memory: project
 
 ---
 
-# Running Headless `claude -p` in CI/CD with `--json-schema`
+# Running Headless `claude -p` in CI/CD 
 
 - **Automating PR review or release notes in GitHub Actions**: pass `-p` so Claude Code never blocks waiting for interactive stdin, and enforce a JSON Schema on the output
 
@@ -193,16 +196,17 @@ git diff origin/main...HEAD | claude -p \
 
 ---
 
-<!-- layout: 2-column -->
-# Session Management Commands and Workflows
+# Resuming, Forking, and Reconciling Sessions
 
-### Resuming, Forking, and Reconciling Changes
 - **`claude --continue` (`-c`)**: resumes the most recent conversation in the current directory
 - **`claude --resume <session-name>` (`-r`)**: resumes a specific named investigation session across workdays
 - **`claude --resume <id> --fork-session`** (Agent SDK: `fork_session=True`): branches a new session ID from a shared investigation baseline so you can test two competing refactors without polluting each other
 - **External file edits**: resuming a session does **not** automatically re-read files modified outside Claude Code overnight; tell the agent which files changed so it re-reads them
 
-### Managing Context Health Mid-Session
+---
+
+# Managing Context Health Mid-Session
+
 - **`/compact`**: summarizes verbose tool history into a concise state summary when the context window fills up during long debugging sessions (you can pass focus instructions: `/compact keep all database migration filenames`)
 - **`/clear`**: resets conversation history completely when switching to an unrelated task so old file context does not bleed over
 
@@ -323,13 +327,13 @@ except anthropic.APIStatusError as err:           # HTTP 500 / 529 transient ser
 - Run **deterministic code graders first** (JSON schema valid, exact ID match, tool name match), then **LLM-as-judge** with an explicit written rubric for tone and completeness
 - Gate CI/CD pull requests on the eval suite: prompt, model, or tool changes must not regress the baseline
 
-### Online Monitoring and A/B Isolation (After You Ship)
+### Online Monitoring (After You Ship)
 - Trace every request with OpenTelemetry: prompt version, model ID, `stop_reason`, latency, and all four `usage` token counters
 - When production quality shifts after a release, isolate the cause with a **controlled A/B test** that changes **one variable at a time** (prompt vs model vs retrieval pipeline)
 
 ---
 
-# Code: Two-Stage Evaluation Harness (Code Grader + LLM-as-Judge)
+# Two-Stage Evaluation (Code Grader + LLM-as-Judge)
 
 - **Combine fast deterministic assertions with rubric-scored LLM judging**:
 
