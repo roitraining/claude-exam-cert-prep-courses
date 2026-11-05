@@ -15,7 +15,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - Review the CCDV-F exam format, scoring, and domain weights
 - Evaluate the Minimally Qualified Candidate developer profile
 - Analyze canonical CCDV-F sample question patterns
-- Apply an engineering-focused exam-day strategy
+- Deconstruct multi-constraint exam scenarios and apply a weighted study plan
 
 ---
 
@@ -116,6 +116,31 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
+<!-- layout: card-layout -->
+# How to Dissect a Scenario Question on Exam Day
+
+### 1. Highlight the Hard Constraint
+- Look for words like *“guaranteed”*, *“deterministic”*, *“real-time”*, *“overnight”*, *“shared across 4 applications”*, or *“inside the customer’s AWS VPC”*.
+
+### 2. Identify the Architectural Layer
+- If the stem says *“guaranteed enforcement regardless of model reasoning”*, eliminate every prompt-only, few-shot, or model-tier option and look for **`PreToolUse` hooks** or **`settings.json` `deny` rules**.
+- If the trace shows *“valid tool output returned, wrong number in final answer”*, eliminate network/auth/schema fixes and look for **model-layer prompt or validation** fixes.
+
+### 3. Check Paired-Claim Options Carefully
+- On multi-part options, verify **both** halves of the statement: distractors frequently pair one true best practice with one subtle anti-pattern.
+
+---
+
+# Weighted Study Plan Across the Eight Domains
+
+| Priority Tier | Domains Covered | Share of Exam (~Items) | High-Yield Focus Areas |
+| :--- | :--- | :--- | :--- |
+| **Tier 1 (Core ~65%)** | **D2: Applications and Integration (33.1%)**, **D5: Model Selection and Optimization (16.8%)**, **D1: Agents and Workflows (14.7%)** | ~34 of 53 items | Messages API vs Batches (`custom_id`), SSE streaming, Files API + citations, Prompt Caching (`tools` -> `system` -> `messages`), Opus/Sonnet/Haiku + `effort`, Workflow vs Agent vs Subagent, `PreToolUse` / `PostToolUse` |
+| **Tier 2 (Core ~30%)** | **D6: Prompt and Context (11.0%)**, **D8: Tools and MCPs (10.6%)**, **D7: Security and Safety (8.1%)** | ~16 of 53 items | Context editing + `<case_facts>`, structured outputs + `stop_reason` checks, `strict: true` tools + `is_error: true`, MCP Tools vs Resources vs Prompts (`stdio` vs Streamable HTTP), prompt injection + least privilege |
+| **Tier 3 (Targeted ~6%)** | **D3: Claude Code (3.1%)**, **D4: Eval, Testing, and Debugging (2.6%)** | ~3 of 53 items | `CLAUDE.md` hierarchy, `.claude/rules/` globs, `settings.json` `deny` precedence, `claude -p`, trace isolation, two-stage eval suites |
+
+---
+
 # Exam-Day Pacing and Logistics
 
 - **Generous time per question**: 53 items in 120 minutes gives you roughly **2 minutes 15 seconds per item**
@@ -129,7 +154,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - Reviewed the CCDV-F exam format, scoring, and domain weights
 - Evaluated the Minimally Qualified Candidate developer profile
 - Analyzed canonical CCDV-F sample question patterns
-- Applied an engineering-focused exam-day strategy
+- Deconstructed multi-constraint exam scenarios and applied a weighted study plan
 
 ---
 

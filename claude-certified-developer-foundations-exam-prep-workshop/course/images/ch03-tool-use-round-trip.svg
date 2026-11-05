@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-label="Multi-Turn Tool Use Round Trip and Parallel Tool Result Pairing">
+  <defs>
+    <marker id="arr-tr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1e71d6"/>
+    </marker>
+    <marker id="arr-tr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <!-- Step 1: Request with Tools -->
+  <rect x="18" y="18" width="265" height="304" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="18" y="18" width="265" height="46" rx="14" fill="#1e71d6"/>
+  <text x="150" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">1. Request + Tools Schema</text>
+  <text x="36" y="92" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">tools: [strict: true]</text>
+  <text x="36" y="118" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">" get_order (ORD-NNNNN)</text>
+  <text x="36" y="142" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">" get_shipment (SHP-NNNNN)</text>
+  <rect x="34" y="168" width="233" height="132" rx="10" fill="#f0f7ff" stroke="#93c5fd"/>
+  <text x="48" y="196" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">messages[0] (role: "user")</text>
+  <text x="48" y="222" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">"Check status and carrier</text>
+  <text x="48" y="242" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">ETA for ORD-44210 and</text>
+  <text x="48" y="262" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">SHP-88102."</text>
+
+  <line x1="283" y1="170" x2="315" y2="170" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-tr)"/>
+
+  <!-- Step 2: Assistant tool_use turn -->
+  <rect x="323" y="18" width="275" height="304" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="323" y="18" width="275" height="46" rx="14" fill="#6a55e4"/>
+  <text x="460" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">2. Assistant Turn (tool_use)</text>
+  <text x="341" y="90" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">stop_reason: "tool_use"</text>
+  <rect x="339" y="106" width="243" height="52" rx="8" fill="#faf5ff" stroke="#d8b4fe"/>
+  <text x="351" y="128" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">thinking block + signature</text>
+  <text x="351" y="148" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="12">(Must be preserved unmodified)</text>
+
+  <rect x="339" y="168" width="243" height="60" rx="8" fill="#f3e8ff" stroke="#6a55e4"/>
+  <text x="351" y="191" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">tool_use id: "toolu_01"</text>
+  <text x="351" y="213" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="12">get_order({"order_id": "ORD-44210"})</text>
+
+  <rect x="339" y="238" width="243" height="60" rx="8" fill="#f3e8ff" stroke="#6a55e4"/>
+  <text x="351" y="261" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">tool_use id: "toolu_02"</text>
+  <text x="351" y="283" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="12">get_shipment({"id": "SHP-88102"})</text>
+
+  <line x1="598" y1="170" x2="630" y2="170" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-tr)"/>
+
+  <!-- Step 3: ONE user message with ALL tool_results -->
+  <rect x="638" y="18" width="275" height="304" rx="14" fill="#ffffff" stroke="#d97706" stroke-width="3"/>
+  <rect x="638" y="18" width="275" height="46" rx="14" fill="#d97706"/>
+  <text x="775" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">3. ONE User Message</text>
+  <text x="656" y="90" fill="#92400e" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">role: "user" (Paired IDs)</text>
+
+  <rect x="654" y="106" width="243" height="68" rx="8" fill="#fffbeb" stroke="#f59e0b"/>
+  <text x="666" y="129" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">tool_result (toolu_01)</text>
+  <text x="666" y="151" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="12">content: '{"status": "shipped"}'</text>
+
+  <rect x="654" y="184" width="243" height="68" rx="8" fill="#fffbeb" stroke="#f59e0b"/>
+  <text x="666" y="207" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">tool_result (toolu_02)</text>
+  <text x="666" y="229" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="12">content: '{"eta": "2026-11-07"}'</text>
+
+  <text x="775" y="282" text-anchor="middle" fill="#b45309" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="700">Splitting into 2 user messages</text>
+  <text x="775" y="300" text-anchor="middle" fill="#b45309" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="700">triggers HTTP 400!</text>
+
+  <line x1="913" y1="170" x2="945" y2="170" stroke="#16a34a" stroke-width="3" marker-end="url(#arr-tr2)"/>
+
+  <!-- Step 4: Final Answer -->
+  <rect x="953" y="18" width="229" height="304" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <rect x="953" y="18" width="229" height="46" rx="14" fill="#16a34a"/>
+  <text x="1067" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">4. Final Synthesis</text>
+  <text x="971" y="92" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">stop_reason: "end_turn"</text>
+  <rect x="969" y="114" width="197" height="176" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="981" y="144" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">content: [text block]</text>
+  <text x="981" y="172" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">"Order ORD-44210 has</text>
+  <text x="981" y="194" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">shipped via SHP-88102</text>
+  <text x="981" y="216" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">and is scheduled to</text>
+  <text x="981" y="238" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">arrive on Nov 7."</text>
+</svg>

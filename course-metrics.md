@@ -51,18 +51,18 @@ Slide counts below include **content slides where the instructor talks** (includ
 | Chapter # | Slide Count | Lecture Time | Activity Time | Quiz Time |
 | :--- | :---: | :---: | :---: | :---: |
 | **00: Introduction** | 7 | 21 min | 20 min | 0 min |
-| **01: Developer Foundations Overview** | 9 | 27 min | 0 min | 0 min |
-| **02: Agents and Workflows** | 13 | 39 min | 45 min | 15 min |
-| **03: Applications and Integration** | 16 | 48 min | 0 min | 15 min |
-| **04: Claude Code, Testing, and Debugging** | 13 | 39 min | 45 min | 15 min |
-| **05: Model Selection and Optimization** | 12 | 36 min | 0 min | 15 min |
-| **06: Prompt and Context Engineering** | 10 | 30 min | 45 min | 15 min |
-| **07: Security and Safety** | 11 | 33 min | 0 min | 15 min |
-| **08: Tools and MCPs** | 11 | 33 min | 45 min | 15 min |
+| **01: Developer Foundations Overview** | 11 | 33 min | 0 min | 0 min |
+| **02: Agents and Workflows** | 23 | 69 min | 45 min | 15 min |
+| **03: Applications and Integration** | 27 | 81 min | 0 min | 15 min |
+| **04: Claude Code, Testing, and Debugging** | 19 | 57 min | 45 min | 15 min |
+| **05: Model Selection and Optimization** | 18 | 54 min | 0 min | 15 min |
+| **06: Prompt and Context Engineering** | 16 | 48 min | 45 min | 15 min |
+| **07: Security and Safety** | 15 | 45 min | 0 min | 15 min |
+| **08: Tools and MCPs** | 15 | 45 min | 45 min | 15 min |
 | **09: Final Practice Exam** | 7 | 21 min | 0 min | 30 min |
-| **Total** | **109** | **327 min (5.5 hrs)** | **200 min (3.3 hrs)** | **135 min (2.3 hrs)** |
+| **Total** | **158** | **474 min (7.9 hrs)** | **200 min (3.3 hrs)** | **135 min (2.3 hrs)** |
 
-**Combined Classroom Time (Lecture + Activity + Quiz):** `662 min` (`11.0 hours`)
+**Combined Classroom Time (Lecture + Activity + Quiz):** `809 min` (`13.5 hours`)
 
 ---
 

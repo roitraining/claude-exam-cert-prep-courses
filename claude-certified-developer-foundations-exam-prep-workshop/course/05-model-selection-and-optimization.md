@@ -12,14 +12,14 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 5: Objectives
 
-- Apply tokenization, sampling, adaptive thinking, and effort
-- Integrate client SDKs with REST, SSE streaming, and WebSockets
-- Select models and manage breaking changes across releases
-- Optimize token costs with Prompt Caching checkpoints
+- Apply tokenization, `count_tokens`, non-determinism, adaptive thinking, effort, and fast mode
+- Integrate client SDKs with REST, SSE streaming, and full-duplex WebSockets
+- Select and route across Opus, Sonnet, and Haiku tiers and manage breaking model upgrades
+- Model workload costs and configure Prompt Caching checkpoints and TTLs
 
 ---
 
-# Domain 5: Model Selection and Optimization
+# Domain 5: Model Selection and Optimization (16.8% of Exam)
 
 | Task # | Task Statement |
 | :--- | :--- |
@@ -44,19 +44,40 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 # Core LLM Mechanics for Developers
 
 ### Tokenization and Context Windows
-- Claude processes text in sub-word **tokens** (roughly 3 to 4 English characters); code, JSON keys, and images also consume tokens. Newer models use a newer tokenizer (up to about 35% more tokens for the same text): measure with the `count_tokens` endpoint.
-- The context window (1M tokens on current models) covers **input + thinking + output (`max_tokens`)**.
+- Claude processes text in sub-word **tokens** (roughly 3 to 4 English characters); code, JSON keys, tool schemas, and images also consume tokens.
+- Current models use a newer tokenizer (introduced with Opus 4.7) that produces up to ~35% more tokens for the same text than older generations: always measure with `client.messages.count_tokens()`.
+- The **1M token context window** bounds **input + thinking + output (`max_tokens`)** within a single request.
 
 ### Next-Token Generation and Non-Determinism
-- LLMs generate responses autoregressively one token at a time based on probability distributions.
-- The same request can return different outputs, even at the lowest-variance settings: design for variance with schema validation, evals, and retries instead of expecting identical responses.
+- LLMs generate responses autoregressively one token at a time by sampling from probability distributions.
+- Identical requests can return slightly different wording across calls: design production systems around structured outputs, schema validation, and eval suites rather than expecting byte-identical strings.
 
 ### Sampling Parameters (`temperature`, `top_p`, `top_k`)
-- Concept: sampling picks each token from a probability distribution; lower `temperature` concentrates on likely tokens, higher adds diversity.
-- Current API: the newest models reject non-default sampling values, and API version `2026-10-21` rejects them on every model. Steer with prompts, examples, structured outputs, and effort instead.
+- Concept: sampling parameters shape the probability distribution (`temperature` scales logit sharpness; `top_p` and `top_k` truncate the tail).
+- Current API rule: the Claude 5 model family and API version `2026-10-21` **reject non-default sampling values with HTTP 400**. Steer output consistency with prompts, few-shot examples, structured outputs, and `effort` instead.
 
 ### Zero-Shot, Single-Shot, and Multi-Shot
-- **Zero-shot** relies on instructions alone; **single-shot** provides 1 format example; **multi-shot (few-shot)** provides 2 to 5 examples to calibrate edge-case judgment.
+- **Zero-shot** relies on instructions alone; **single-shot** provides 1 format example; **multi-shot (few-shot)** provides 2 to 5 labeled examples to calibrate ambiguous edge-case judgment.
+
+---
+
+# Measuring Exact Token Budgets with `count_tokens()`
+
+- **Preflight token accounting**: call `client.messages.count_tokens()` with the exact same `model`, `system`, `tools`, `thinking`, and `messages` before sending a large request to verify it fits your context budget or meets the 512-token cache minimum
+
+```python
+token_estimate = await client.messages.count_tokens(
+    model="claude-sonnet-5-5",
+    system=SYSTEM_POLICY,
+    tools=REGISTERED_TOOLS,
+    thinking={"type": "adaptive"},
+    messages=conversation_history,
+)
+
+print(f"Preflight input tokens: {token_estimate.input_tokens}")
+if token_estimate.input_tokens > 850_000:
+    conversation_history = await compact_history(conversation_history)
+```
 
 ---
 
@@ -64,14 +85,30 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 # Extended Thinking, Adaptive Thinking, Effort, and Fast Mode
 
 ### Thinking: Concept vs Current API
-- **Extended thinking** (concept): Claude reasons in `thinking` blocks before answering or calling a tool
-- **Adaptive thinking** (`thinking: {"type": "adaptive"}`): Claude decides when and how much to think; it is the only mode on current models (Claude 4.6 and later)
-- Fixed `budget_tokens` budgets are legacy: removed (HTTP 400) on the Claude 5 family; still used by Haiku 4.5
+- **Extended thinking** (concept): Claude reasons step by step in `thinking` blocks before answering or calling a tool
+- **Adaptive thinking** (`thinking: {"type": "adaptive"}`): Claude dynamically decides when and how much to think based on task complexity; it is always on for Opus 5.5 / Fable 5.1 and the standard mode across the Claude 5 family
+- Fixed `thinking.budget_tokens` is legacy: rejected (HTTP 400) on the Claude 5 family; still used only on older models such as Haiku 4.5
+- **`between_tools` mode** (`thinking: {"type": "between_tools"}`): supported on models like Sonnet 5.5 to skip up-front thinking on turn 1 while still thinking between tool calls
 
-### Effort and Fast Mode
-- **Effort** (`output_config: {"effort": ...}`): `low`, `medium`, `high`, `xhigh`, `max`; trades thoroughness for tokens and latency (default `high`; `medium` on Opus 5.5 and Haiku 5.5)
-- Use `low` for subagents and simple routes, `high` or `xhigh` for hard coding and agentic work
-- **Fast mode** (research preview, Claude API only, Opus only): same model at up to 2.5x output speed for premium pricing
+### Effort Levels and Fast Mode
+- **Effort** (`output_config: {"effort": ...}`): `low`, `medium`, `high`, `xhigh`, `max`
+  - Default is `high` on Sonnet 5.5 and Fable 5.1; `medium` on Opus 5.5 and Haiku 5.5
+  - Lower `effort` (`low` / `medium`) cuts thinking token spend and latency on simple queries; higher `effort` (`high` / `xhigh` / `max`) deepens reasoning on hard debugging or architecture tasks
+- **Fast mode** (research preview, Claude API only, Opus only): runs the **exact same Opus model weights** at up to **2.5x faster output speed** for premium pricing (does not switch to a smaller model)
+
+---
+
+# Choosing the Right `effort` Level by Workload
+
+| `output_config.effort` | Thinking Token Spend and Latency | Best-Fit Developer Workloads |
+| :--- | :--- | :--- |
+| **`"low"`** | Minimal or zero thinking tokens; lowest latency | High-volume classification, routing, simple FAQ answers, lightweight extraction subagents |
+| **`"medium"`** | Balanced reasoning for multi-step tasks (default on Opus 5.5 and Haiku 5.5) | Standard tool-use turns, doc summarization, routine code edits where speed matters |
+| **`"high"`** | Thorough step-by-step reasoning (default on Sonnet 5.5 and Fable 5.1) | Complex coding, multi-file debugging, root-cause trace analysis, synthesis across tools |
+| **`"xhigh"` / `"max"`** | Maximum reasoning depth; highest latency and output token consumption | Hardest architectural migrations, subtle security vulnerability audits, ambiguous legal/financial proofs |
+
+> [!TIP]
+> You do not need to switch models for every query: a single `claude-sonnet-5-5` endpoint can serve fast syntax answers at `effort: "low"` and deep multi-step debugging at `effort: "high"` or `"xhigh"`.
 
 ---
 
@@ -87,7 +124,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Integrating with Official Client SDKs
 
-- **Use the official SDKs** (`anthropic`, `@anthropic-ai/sdk`) over raw HTTP: connection pooling, automatic retries on `429`/`5xx`, typed models, and stream helpers
+- **Use the official SDKs** (`anthropic` in Python, `@anthropic-ai/sdk` in TypeScript) over raw HTTP: connection pooling, automatic retries on `429`/`5xx`, typed models, and stream helpers
 
 ```typescript
 import Anthropic from "@anthropic-ai/sdk";
@@ -114,8 +151,13 @@ const message = await client.messages.create({
 - Ideal for standard chat UIs, code generation streaming, and single-turn tool calls
 
 ### WebSockets in Agent Architectures
-- Persistent, full-duplex bi-directional connection between client applications and your backend agent server
-- Ideal when your agent harness needs to push live intermediate status updates, accept mid-flight user cancellations, or coordinate interactive client-side tool approvals
+- Persistent, full-duplex bi-directional connection between client applications (browser/IDE) and **your backend agent harness**
+- Ideal when users need to push mid-flight tool cancellations, respond to interactive tool-approval prompts, and receive live intermediate status updates while your backend calls the Claude API via the SDK
+
+<!-- below-columns -->
+
+> [!IMPORTANT]
+> Never call the Claude API directly from a browser over SSE or WebSockets with a bundled API key. Terminate the client’s WebSocket or HTTP connection on **your authenticated backend**, which holds the API credentials server-side.
 
 ---
 
@@ -133,35 +175,102 @@ const message = await client.messages.create({
 # Selecting Between Opus, Sonnet, and Haiku
 
 ### Claude Opus (`claude-opus-5-5`)
-- **Highest capability**: complex architecture, subtle root-causing, long-horizon agents
-- $4 / $20 per million input / output tokens
-- Planning, coordinator synthesis, hard reasoning (Fable 5.1 sits above, at higher cost)
+- **Deep reasoning and long-horizon coding**: complex architecture, subtle root-causing, multi-agent coordinator synthesis
+- **$4 / $20** per million input / output tokens (1M context, 128K max output; default effort `medium`)
+- **Fable 5.1** (`claude-fable-5-1`, $10 / $50) sits above Opus 5.5 for the hardest reasoning tasks
 
 ### Claude Sonnet (`claude-sonnet-5-5`)
-- **Balance** of coding, agentic tool use, and speed
-- $2 / $10 per million tokens
-- Strong default for production coding and agents
+- **Best balance of speed and intelligence**: production coding, multi-step tool-use agents, customer-facing workflows
+- **$2 / $10** per million input / output tokens (1M context, 128K max output; default effort `high`)
+- Strong default workhorse for interactive agents
 
 ### Claude Haiku (`claude-haiku-5-5`)
-- **Fastest and lowest cost**: $0.10 / $0.50 per million tokens (prompts up to 100K)
-- Classification, routing, guardrails, extraction, subagents
-- Supports adaptive thinking; weaker on ambiguous multi-hop reasoning
+- **Fastest and lowest cost**: **$0.10 / $0.50** per million tokens (for prompts up to 100K; 1M context, 128K max output; default effort `medium`)
+- High-volume classification, ticket routing, input guardrails, entity extraction, and lightweight subagents
+- Supports adaptive thinking; trade-off is shallower multi-hop reasoning on ambiguous problems
+
+---
+
+# Tiered Model Routing and Cascade Pattern
+
+- **Optimize cost and latency across mixed traffic**: use **Haiku 5.5** at `low` effort to classify or handle simple FAQ queries in milliseconds, and route complex debugging or multi-step policy disputes to **Sonnet 5.5** or **Opus 5.5**
+
+```python
+class TriageDecision(BaseModel):
+    complexity: Literal["simple_faq", "standard_agent", "deep_escalation"]
+    direct_answer: str | None = None
+
+async def route_and_answer(user_query: str) -> str:
+    triage = (await client.messages.parse(
+        model="claude-haiku-5-5", max_tokens=512,
+        output_config={"effort": "low"},
+        output_format=TriageDecision,
+        messages=[{"role": "user", "content": user_query}],
+    )).parsed_output
+    if triage.complexity == "simple_faq" and triage.direct_answer:
+        return triage.direct_answer  # 80% of traffic resolved at $0.10 / MTok
+    target_model = "claude-opus-5-5" if triage.complexity == "deep_escalation" else "claude-sonnet-5-5"
+    return await run_specialist_agent(model=target_model, query=user_query)
+```
 
 ---
 
 <!-- layout: 2-column -->
 # Managing Breaking Changes Across Model Releases
 
-### API-Breaking Changes (HTTP 400)
-- `thinking.budget_tokens` removed: use adaptive thinking plus effort
-- Assistant-message **prefill** removed: use structured outputs
-- Forced `tool_choice` (`any` / `tool`) removed on the newest models: use `auto` with `strict: true` tools or structured outputs
-- `temperature` / `top_p` / `top_k` rejected on current models
+### Legacy Code That Fails with HTTP 400
+```python
+# Fails on claude-sonnet-5-5 (API 2026-10-21)
+resp = await client.messages.create(
+    model="claude-sonnet-5-5",
+    max_tokens=4096,
+    temperature=0.2,                  # 400: rejected
+    thinking={
+        "type": "enabled",
+        "budget_tokens": 4096,        # 400: rejected
+    },
+    tool_choice={"type": "any"},      # 400: rejected
+    messages=[
+        {"role": "user", "content": prompt},
+        {"role": "assistant", "content": "{"}, # 400: no prefill
+    ],
+)
+```
 
-### Behavior Changes (Same Schema)
-- New tokenizer changes token counts and cost
-- New `refusal` stop reason from safety classifiers (HTTP 200)
-- **Upgrade workflow**: pin the model ID, run evals on the new model, compare tool selection, schema compliance, latency, and cost, then shift traffic
+### Migrated Claude 5 Code
+```python
+# Succeeds on claude-sonnet-5-5
+resp = await client.messages.parse(
+    model="claude-sonnet-5-5",
+    max_tokens=4096,
+    thinking={"type": "adaptive"},
+    output_config={"effort": "medium"},
+    output_format=ExtractedReport,    # replaces prefill
+    messages=[
+        {"role": "user", "content": prompt},
+    ],
+)
+# Also verify: new tokenizer (+~35% tokens)
+# and check resp.stop_reason == "refusal"
+```
+
+---
+
+# Querying Model Capabilities Programmatically (`models.list`)
+
+- **Avoid hardcoding assumptions across model generations**: query the **Models API** (`client.models.list()`) to inspect `max_input_tokens`, `max_tokens`, model `line`, and supported `thinking` or `server_tools` capabilities at startup
+
+```python
+models_page = await client.models.list()
+for m in models_page.data:
+    print(
+        m.id,
+        "line=", m.line,
+        "max_in=", m.max_input_tokens,
+        "can_disable_thinking=", m.capabilities.thinking.types.disabled.supported,
+        "between_tools=", m.capabilities.thinking.types.between_tools.supported,
+    )
+```
 
 ---
 
@@ -179,10 +288,35 @@ const message = await client.messages.create({
 # Token Budgeting and Cache Checkpointing
 
 - **Track all four token counters** in `response.usage`: `input_tokens`, `output_tokens`, `cache_creation_input_tokens`, and `cache_read_input_tokens`
-- **Cache checkpoints**: up to 4 `cache_control: {"type": "ephemeral"}` breakpoints on the stable prefix (render order `tools` -> `system` -> `messages`), or one top-level `cache_control` that moves forward automatically as the conversation grows
-- **Advancing the conversation checkpoint**: in long agent loops, caching earlier turns means you pay full price only for the newest turn
+- **Two ways to cache**:
+  - **Automatic caching**: set top-level `cache_control: {"type": "ephemeral"}` on the request; the API automatically moves the breakpoint forward as a multi-turn conversation grows
+  - **Explicit cache breakpoints**: place up to **4** `cache_control` markers on individual `tools`, `system`, or `messages` blocks (evaluated in exact order `tools` -> `system` -> `messages`)
 
 ![Prompt Caching Checkpoints and Token Accounting](images/ch05-token-caching-checkpoints.svg)
+
+---
+
+# Code: Explicit 1-Hour Prefix Cache + Automatic Turn Caching
+
+- **Combine a 1-hour TTL on static tools/system with a 5-minute rolling cache on conversation turns**: remember that `1h` cache entries must appear **before** `5m` entries
+
+```python
+response = await client.messages.create(
+    model="claude-sonnet-5-5",
+    max_tokens=4096,
+    cache_control={"type": "ephemeral"},  # 5m rolling breakpoint on latest conversation turn
+    tools=[
+        {**TOOL_SCHEMA_A},
+        {**TOOL_SCHEMA_B, "cache_control": {"type": "ephemeral", "ttl": "1h"}},  # Bp 1: tools (1h)
+    ],
+    system=[{
+        "type": "text",
+        "text": STATIC_COMPANY_POLICY_20K_TOKENS,
+        "cache_control": {"type": "ephemeral", "ttl": "1h"},  # Bp 2: system policy (1h)
+    }],
+    messages=conversation_history,
+)
+```
 
 ---
 
@@ -190,12 +324,34 @@ const message = await client.messages.create({
 
 | Rule | Detail | Exam Implication |
 | :--- | :--- | :--- |
-| **Exact prefix match** | Any byte change invalidates everything after it | A timestamp at the top of `system` kills the cache |
-| **TTL** | 5 minutes by default (refreshed on each hit); 1 hour optional | Use 1 hour only when requests on the same prefix are 5 to 60 minutes apart |
-| **Pricing** | Writes 1.25x base input (2x for 1-hour); reads about 0.1x | Pays off from the second request on a 5-minute cache |
-| **Minimum length** | 512 to 4,096 tokens depending on model | Short prompts silently do not cache |
-| **Scope** | Caches are per model and per organization | Switching models mid-conversation starts a new cache |
-| **Verification** | `cache_read_input_tokens` stays 0 | A silent invalidator (dynamic text, unsorted JSON, changing tool list) |
+| **Render order and prefix match** | Prefix renders in exact order: **`tools` -> `system` -> `messages`** | Reordering keys in `tools` or putting a timestamp at the top of `system` invalidates everything after it |
+| **TTL options** | **5 minutes** by default (refreshed on every hit); **1 hour** (`"ttl": "1h"`) optional | Use 5-min TTL when turns arrive every few minutes; use 1-hour TTL when calls are 5 to 60 minutes apart |
+| **TTL ordering** | When mixing TTLs in one request, **1-hour breakpoints must appear before 5-minute breakpoints** | Put `1h` on static `tools`/`system` and `5m` on growing `messages` history |
+| **Pricing multipliers** | 5m write = **1.25x** base input; 1h write = **2.0x**; cache read = **0.1x** (0.05x on Opus 5.5 / Sonnet 5.5; 0.025x on Fable 5.1) | Pays off from the second request on a 5-minute cache |
+| **Minimum length** | **512 tokens** on Claude 5 / 5.5 models (1,024 to 4,096 on older 4.x models) | Prompts shorter than the minimum silently do not cache (`cache_creation_input_tokens == 0`, no error) |
+| **Isolation scope** | Caches are isolated per **model** and per **organization/workspace** | Switching from Sonnet to Haiku mid-session starts a separate cache |
+
+---
+
+<!-- layout: 2-column -->
+# Worked Cost Modeling: Caching + Batching Arithmetic
+
+### Workload Assumptions
+- **Live support agent on `claude-sonnet-5-5`** ($2 / MTok input, $10 / MTok output):
+  - 10,000 requests/day sharing an identical **10,000-token** system + tool prefix, plus **500** unique user input tokens and **300** output tokens per call
+- **Nightly analytics job on `claude-sonnet-5-5`**:
+  - 20,000 archived transcripts/night, **2,000** input tokens and **500** output tokens each
+
+### Daily Cost Before vs After Optimization
+- **1. Live Support (Uncached vs Cached)**:
+  - Uncached input: $10{,}000 \times 10{,}500 = 105\text{ MTok} \times \$2 = \$210/\text{day}$
+  - Cached (99.9% hit rate at $0.05\times = \$0.10/\text{MTok}$ on Sonnet 5.5):
+    - Prefix reads: $10{,}000 \times 10{,}000 = 100\text{ MTok} \times \$0.10 = \$10/\text{day}$
+    - Unique input: $10{,}000 \times 500 = 5\text{ MTok} \times \$2 = \$10/\text{day}$
+    - **Input cost drops from $210/day to ~$20/day (90% reduction)**
+- **2. Nightly Job (Realtime vs Message Batches API)**:
+  - Realtime: $(40\text{ MTok} \times \$2) + (10\text{ MTok} \times \$10) = \$80 + \$100 = \$180/\text{night}$
+  - **Message Batches API (50% off)**: **$90/night** (and stacks with prompt caching if transcripts share a policy prefix)
 
 ---
 
@@ -207,10 +363,10 @@ const message = await client.messages.create({
 
 # What You Learned
 
-- Applied tokenization, sampling, adaptive thinking, and effort
-- Integrated client SDKs with REST, SSE streaming, and WebSockets
-- Selected models and managed breaking changes across releases
-- Optimized token costs with Prompt Caching checkpoints
+- Applied tokenization, `count_tokens`, non-determinism, adaptive thinking, effort, and fast mode
+- Integrated client SDKs with REST, SSE streaming, and full-duplex WebSockets
+- Selected and routed across Opus, Sonnet, and Haiku tiers and managed breaking model upgrades
+- Modeled workload costs and configured Prompt Caching checkpoints and TTLs
 
 ---
 

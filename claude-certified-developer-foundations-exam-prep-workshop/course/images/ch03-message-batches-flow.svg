@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" role="img" aria-label="Message Batches API Asynchronous Lifecycle and custom_id Correlation">
+  <defs>
+    <marker id="arr-mb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1e71d6"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="18" width="350" height="284" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
+  <rect x="20" y="18" width="350" height="46" rx="14" fill="#1e71d6"/>
+  <text x="195" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">1. Submit Batch (Up to 100K Items)</text>
+  <text x="42" y="92" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">POST /v1/messages/batches</text>
+  <rect x="40" y="108" width="310" height="50" rx="8" fill="#f0f7ff" stroke="#93c5fd"/>
+  <text x="54" y="138" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">{"custom_id": "sku-101", "params": {...}}</text>
+  <rect x="40" y="168" width="310" height="50" rx="8" fill="#f0f7ff" stroke="#93c5fd"/>
+  <text x="54" y="198" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">{"custom_id": "sku-102", "params": {...}}</text>
+  <text x="195" y="254" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">Each item carries a unique custom_id</text>
+  <text x="195" y="276" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">keyed to your database record</text>
+
+  <line x1="370" y1="160" x2="412" y2="160" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-mb)"/>
+
+  <rect x="420" y="18" width="350" height="284" rx="14" fill="#ffffff" stroke="#6a55e4" stroke-width="3"/>
+  <rect x="420" y="18" width="350" height="46" rx="14" fill="#6a55e4"/>
+  <text x="595" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">2. Async Processing (50% Discount)</text>
+  <text x="595" y="96" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Completes within 24 hours</text>
+  <rect x="445" y="116" width="300" height="90" rx="10" fill="#faf5ff" stroke="#d8b4fe"/>
+  <text x="595" y="146" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Poll processing_status:</text>
+  <text x="595" y="172" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">"in_progress" -&gt; "ended"</text>
+  <text x="595" y="194" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="12">(Stacks with Prompt Caching discounts)</text>
+  <text x="595" y="248" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">Ideal for nightly analytics, bulk</text>
+  <text x="595" y="270" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">evaluations, and catalog backfills</text>
+
+  <line x1="770" y1="160" x2="812" y2="160" stroke="#1e71d6" stroke-width="3" marker-end="url(#arr-mb)"/>
+
+  <rect x="820" y="18" width="360" height="284" rx="14" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+  <rect x="820" y="18" width="360" height="46" rx="14" fill="#16a34a"/>
+  <text x="1000" y="47" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">3. Correlate Results by custom_id</text>
+  <text x="842" y="90" fill="#b45309" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">Returned out of submission order!</text>
+  <rect x="840" y="106" width="320" height="48" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="854" y="135" fill="#047857" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">{"custom_id": "sku-102", "result": {"type": "succeeded"}}</text>
+  <rect x="840" y="164" width="320" height="48" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="854" y="193" fill="#b91c1c" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">{"custom_id": "sku-101", "result": {"type": "errored"}}</text>
+  <text x="1000" y="246" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700">Join on item.custom_id + check</text>
+  <text x="1000" y="268" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="13">succeeded | errored | canceled | expired</text>
+</svg>
