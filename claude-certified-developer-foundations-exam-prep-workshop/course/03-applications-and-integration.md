@@ -44,20 +44,31 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-<!-- layout: card-layout -->
-# Translating Requirements Across the Systems Life Cycle
+<!-- layout: 2-column -->
+# Functional and Non-Functional Requirements
 
 ### Functional Requirements
 - Define **what** the AI application must accomplish: supported input formats (text, images, PDFs), tool integrations, output schemas, citation rules, and human escalation triggers.
 
-### Infrastructure and Non-Functional Requirements
-- Define **how** the system must perform and operate: latency SLAs (time-to-first-token vs end-to-end completion), concurrency/rate-limit capacity, VPC egress rules, data residency, and secret storage.
+### Non-Functional Requirements
+- Define **how** the system must perform and operate: latency SLAs (time-to-first-token vs end-to-end completion), concurrency and rate-limit capacity, VPC egress rules, data residency, and secret storage.
 
-### Systems Life Cycle (SDLC) Phases
-- **Planning and Discovery**: clarify measurable SLAs and build the initial golden evaluation dataset.
-- **Development and Integration**: implement stateless API handlers, typed schemas, and deterministic hooks.
-- **Testing and Deployment**: gate CI/CD merges on automated evaluations and roll out via feature flags or canary stages.
-- **Operations and Maintenance**: monitor token usage, cache hit rates, latency p95, drift, and model deprecation timelines.
+---
+
+<!-- layout: card-layout -->
+# Systems Life Cycle (SDLC) Phases
+
+### Planning and Discovery
+- Clarify measurable SLAs and build the initial golden evaluation dataset.
+
+### Development and Integration
+- Implement stateless API handlers, typed schemas, and deterministic hooks.
+
+### Testing and Deployment
+- Gate CI/CD merges on automated evaluations and roll out via feature flags or canary stages.
+
+### Operations and Maintenance
+- Monitor token usage, cache hit rates, latency p95, drift, and model deprecation timelines.
 
 ---
 
@@ -302,7 +313,7 @@ python demo_03_stream.py
 
 ---
 
-# Streaming with `AsyncAnthropic` and Handling Dropped Streams
+# `AsyncAnthropic` and Handling Dropped Streams
 
 - **Use `client.messages.stream()`** and wrap long streams in error-recovery logic so dropped connections do not leave the UI hung
 
@@ -346,7 +357,7 @@ except anthropic.APIConnectionError:
 
 ---
 
-# Code: Uploading Once with the Files API and Enabling Citations
+# Code: Uploading with Files API and Enabling Citations
 
 - **Upload a regulatory PDF once, query it 30 times with verifiable page citations**:
 
@@ -407,7 +418,7 @@ response = await client.messages.create(
 
 ---
 
-# Code: Creating, Polling, and Joining a Message Batch by `custom_id`
+# Code: Creating, Polling, and Joining a Message Batch
 
 - **Never map batch results by array index**: always match `item.custom_id` and inspect `item.result.type` (`"succeeded"`, `"errored"`, `"canceled"`, `"expired"`)
 
@@ -463,7 +474,7 @@ async for item in await client.messages.batches.results(batch.id):
 
 ---
 
-# Code: Bounded Async Concurrency and Idempotent Tool Calls
+# Code: Async Concurrency and Idempotent Tool Calls
 
 - **Bound concurrent in-flight requests with a semaphore** and **guard side effects with an idempotency key**:
 
@@ -488,10 +499,13 @@ async def issue_ledger_credit(ticket_id: str, amount_cents: int) -> dict:
                                    headers={"Idempotency-Key": idem_key})
 ```
 
+> [!NOTE]
+> A semaphore is a counter with a fixed number of permits. `asyncio.Semaphore(25)` starts with 25 permits, so at most 25 calls run at the same time. Call 26 waits at `async with sem` until one running call finishes and hands its permit back. That keeps a burst of tickets from firing hundreds of API requests at once.
+
 ---
 
 <!-- layout: 2-column -->
-# Version Control, Code Review, and Refactoring with Claude
+# Version Control, Code Review, and Refactoring
 
 ### Version Control and Code Review
 - Roll out new Claude integrations on **feature branches** behind **feature flags** so a regression can be disabled or reverted without redeploying the monolith
@@ -534,7 +548,7 @@ async def issue_ledger_credit(ticket_id: str, amount_cents: int) -> dict:
 
 ---
 
-# Per-Tenant Session Hygiene and Mid-Conversation Steering
+# Session Hygiene and Mid-Conversation Steering
 
 - **Never share a mutable `messages` list across requests or tenants**: load and persist conversation history keyed by `(tenant_id, session_id)`
 - **Mid-conversation operator steering**: when your backend needs to inject a runtime policy reminder on turn 8 without altering the top-level `system` prefix (which would invalidate the prompt cache), insert a `{"role": "system"}` message inside `messages` after `messages[0]`
@@ -567,31 +581,95 @@ messages.append({"role": "user", "content": f"<user_query>{req.text}</user_query
 
 ---
 
+# What a Plugin Is, and Where It Comes From
+
+- A **plugin** is a versioned bundle of Skills, subagents, hooks, MCP servers, and slash commands, described by one manifest: `.claude-plugin/plugin.json`
+- It is installed from a **marketplace**, a catalog of plugins. Add the catalog with `/plugin marketplace add <repo-or-url>`, then install one plugin with `/plugin install <name>@<marketplace>`
+- Use a plugin when the same bundle must be shared across many repositories. Keep ordinary `.claude/` files in the repo when the configuration belongs to that one project
+
+---
+
 <!-- layout: 2-column -->
-# Claude Code Plugins and Plugin Management
+# Public Plugins and Internal Plugins
 
-### What a Plugin Bundles and Why
-- A plugin packages **Skills, subagents, hooks, MCP servers, and commands** behind one manifest (`.claude-plugin/plugin.json`)
-- Add a catalog with `/plugin marketplace add <repo-or-url>`, then install with `/plugin install <name>@<marketplace>`
-- **Use a plugin** when a standardized set of Skills, hooks, and MCP servers must be versioned and shared across dozens of repositories; use `.claude/` files when config belongs to a single repo
+### Public Plugins
+- Come from Anthropic’s official marketplace, or from any public Git repository someone publishes as a marketplace
+- Fit general Skills and commands that contain no company secrets, internal URLs, or private credentials
+- Anyone who adds that marketplace can install the plugin
 
-### Manifest and Project Requirement
+### Internal Plugins
+- Come from a private marketplace, usually a private Git repository your company controls
+- Carry house Skills, security hooks, and MCP servers that talk to systems inside your network
+- A repository still opts in. Listing the plugin in `.claude/settings.json` is what turns it on for that project
+
+---
+
+# Example: An Internal Security Plugin
+
+The security team publishes `corp-sec-baseline` to the private marketplace. Each application repo installs it and records that requirement in Git.
+
+```text
+/plugin marketplace add git@github.com:acme/claude-marketplace.git
+/plugin install corp-sec-baseline@internal-marketplace
+```
+
 ```json
-// .claude-plugin/plugin.json
+// .claude-plugin/plugin.json inside the plugin repository
 {
   "name": "corp-sec-baseline",
   "version": "2.4.0",
   "description": "Shared security hooks, PR review skill, and SAST MCP server"
 }
 ```
+
 ```json
-// Repository .claude/settings.json
+// Application repository: .claude/settings.json
 {
   "enabledPlugins": {
     "corp-sec-baseline@internal-marketplace": true
   }
 }
 ```
+
+> [!NOTE]
+> The string in `enabledPlugins` is `name@marketplace`, the same pair you passed to `/plugin install`. That entry is how a repository declares the plugin it depends on, so every teammate who opens the repo gets the same hooks, Skill, and MCP server.
+
+---
+
+# Demo: Exploring a Public Plugin
+
+**Step 1. Open Anthropic’s example plugin**
+
+[plugins/example-plugin](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/example-plugin)
+
+**Step 2. Read the folder list before opening any file**
+
+Look for `.claude-plugin/`, `skills/`, `commands/`, and `.mcp.json`.
+
+**Step 3. Open these files**
+
+- `.claude-plugin/plugin.json`
+- `skills/example-skill/SKILL.md`
+- `skills/example-command/SKILL.md`
+- `commands/example-command.md`
+- `.mcp.json`
+
+**Step 4. Examine what each file is for**
+
+- `plugin.json` names the plugin `example-plugin` and describes what it bundles
+- `skills/example-skill/SKILL.md` is a Skill the model can invoke from the task
+- `skills/example-command/SKILL.md` is a Skill the user invokes as a slash command
+- `commands/example-command.md` is the older slash-command file for that same command
+- `.mcp.json` names an MCP server, `example-server`, and gives it a URL
+
+**Step 5. Go up to the repository root**
+
+[claude-plugins-official](https://github.com/anthropics/claude-plugins-official)
+
+`plugins/` holds the plugins Anthropic maintains. `external_plugins/` holds partner and community plugins. Both folders are public.
+
+> [!NOTE]
+> A plugin is a folder, and a marketplace is a Git repository full of those folders. The manifest, Skills, commands, and MCP config travel together, so one install can add all of them.
 
 ---
 

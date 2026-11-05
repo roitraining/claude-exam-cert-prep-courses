@@ -7,9 +7,7 @@
 Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 
 # Chapter 2: Agents and Workflows
-
 ---
-
 # Chapter 2: Objectives
 
 - Choose between deterministic workflows and autonomous agents
@@ -18,9 +16,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - Build custom agent loops, Tool Runner harnesses, and Claude Agent SDK systems
 - Intercept tool execution deterministically with `PreToolUse` and `PostToolUse` hooks
 - Select between `PydanticAI`, `LangGraph`, and `Strands` for production agents
-
 ---
-
 # Domain 1: Agents and Workflows
 
 | Task # | Task Statement |
@@ -28,18 +24,14 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 | **1.1** | Agent Architecture: Principles, patterns, and trade-offs of workflow vs agent architecture, manager/supervisor hierarchies, and subagents |
 | **1.2** | Agent Construction with Claude: Claude Agent SDK, custom agent loops and harnesses, managed vs self-hosted deployment, and deterministic hooks |
 | **1.3** | Agent Patterns and Frameworks: Tool-use loops, subagents, memory, context-window management, and frameworks (`Strands`, `LangGraph`, `PydanticAI`) |
-
 ---
-
 <!-- layout: navigation -->
 # Chapter 2
 
 - **Agent Architecture**
 - Agent Construction with Claude
 - Agent Patterns and Frameworks
-
 ---
-
 <!-- layout: stacked -->
 # Decision Criteria: Workflow vs Agent
 
@@ -48,9 +40,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - **Hybrid reliability**: wrap autonomous agent loops inside deterministic guardrails and prerequisite hooks
 
 ![Workflow vs Agent Architecture](images/ch02-workflow-vs-agent-architecture.svg)
-
 ---
-
 # Workflow Pattern 1: Prompt Chaining with Code Gates
 
 - **Mechanism**: break a fixed multi-stage task into sequential LLM calls, with deterministic validation code (“gates”) between every stage
@@ -69,9 +59,7 @@ async def process_claim_workflow(raw_email: str) -> str:
     # Step 2: Draft tailored response only after gate passes
     return await draft_claim_decision_letter(claim, policy)
 ```
-
 ---
-
 <!-- layout: 2-column -->
 # Workflow Pattern 2: Routing and Classification
 
@@ -100,9 +88,7 @@ handler = {
 }[route.category]
 return await handler(ticket)
 ```
-
 ---
-
 <!-- layout: 2-column -->
 # Workflow Pattern 3: Parallelization (Sectioning vs Voting)
 
@@ -122,17 +108,13 @@ results = await asyncio.gather(
     check_migration_safety(diff),
 )
 ```
-
 ---
-
 # Workflow Pattern 4: Orchestrator-Workers
 
 - A central lead model analyzes an input whose subtasks cannot be hardcoded in advance (such as refactoring a symbol across an unknown set of files)
 - The orchestrator emits a dynamic task list, dispatches worker calls in parallel, and synthesizes their outputs
 - **Differs from Parallelization**: the subtasks are chosen dynamically at runtime by the lead model rather than fixed in code
-
 ---
-
 # Workflow Pattern 5: Evaluator-Optimizer
 
 - One LLM call generates a candidate artifact (such as a complex SQL query or translated code module), and a second evaluator call grades it against explicit rubric criteria
@@ -140,9 +122,7 @@ results = await asyncio.gather(
 
 > [!TIP]
 > Use **Prompt Chaining**, **Routing**, or **Parallelization** when the step structure is known in advance. Step up to **Orchestrator-Workers** or an **Agent** only when runtime discovery dictates the steps.
-
 ---
-
 # Five Workflow Patterns: Summary Decision Matrix
 
 | Pattern | How It Works | Choose It When | Avoid It When |
@@ -152,9 +132,7 @@ results = await asyncio.gather(
 | **Parallelization** | Sectioning (independent subtasks) or voting (same task run several times) | Subtasks are independent, or you need consensus confidence | Step B depends on the output of Step A |
 | **Orchestrator-workers** | A lead model decides subtasks at runtime and delegates to workers | Subtasks depend on the input and cannot be predicted upfront | The subtask list is always identical |
 | **Evaluator-optimizer** | One call generates, another critiques against a rubric, then loop | Clear pass/fail criteria exist and iterative refinement measurably helps | Single-pass generation already meets quality SLAs |
-
 ---
-
 <!-- layout: 2-column -->
 # Manager/Supervisor Hierarchies and Subagents
 
@@ -167,9 +145,7 @@ results = await asyncio.gather(
 - **Context isolation**: subagents execute verbose searches or file inspections in separate context windows so raw outputs do not bloat the supervisor’s history
 - **Focused tool sets**: each subagent is restricted to 4 to 5 role-specific tools, improving tool-selection accuracy
 - **Explicit context passing**: a standard subagent does not inherit the supervisor’s history; pass all required inputs in the task prompt (only “fork” subagents copy the parent context)
-
 ---
-
 <!-- layout: card-layout -->
 # Subagent Trade-Offs and Failure Modes
 
@@ -188,18 +164,14 @@ results = await asyncio.gather(
 ### 4. Over-Fragmented Tool Handoffs
 - Splitting tightly coupled steps across separate subagents forces constant serialization of intermediate state.
 - Keep tightly coupled read-and-edit loops inside one agent when the intermediate context is small.
-
 ---
-
 <!-- layout: navigation -->
 # Chapter 2
 
 - Agent Architecture
 - **Agent Construction with Claude**
 - Agent Patterns and Frameworks
-
 ---
-
 # Constructing Custom Agent Loops and Harnesses
 
 - **Handle every `stop_reason` and cap iterations**: unhandled values cause infinite loops or silent truncation
@@ -218,9 +190,7 @@ async def run_agent_loop(user_prompt: str, tools: list[dict], max_turns: int = 2
             raise AgentStopError(resp.stop_reason)  # max_tokens, refusal
     raise AgentStopError("max_turns exceeded")
 ```
-
 ---
-
 # Every `stop_reason` Value Your Loop Must Handle
 
 | `stop_reason` | Why It Happened | Required Action in Your Agent Loop |
@@ -234,9 +204,7 @@ async def run_agent_loop(user_prompt: str, tools: list[dict], max_turns: int = 2
 
 > [!WARNING]
 > Never terminate an agent loop by regex-matching phrases like `"Based on my analysis"` or checking whether a `text` block exists alongside `tool_use`. Claude frequently emits explanatory text in the same turn as `tool_use` blocks; **only** `stop_reason` tells you whether the loop is done.
-
 ---
-
 # Demo: A Loop That Stops on stop_reason
 
 In `ccdvf-labs`, with the virtual environment still active:
@@ -317,9 +285,7 @@ python demo_02_tool_loop.py
 
 > [!NOTE]
 > The loop does not look for phrases like “here is your answer.” It continues only while `stop_reason` is `tool_use`, and it stops on `end_turn`. Your code, not the API, runs the tool and sends the result back.
-
 ---
-
 <!-- layout: card-layout -->
 # Using the SDK Tool Runner (`tool_runner`)
 
@@ -331,9 +297,7 @@ python demo_02_tool_loop.py
 
 ### Long Loops
 - TypeScript and Ruby support client-side SDK compaction for long loops.
-
 ---
-
 # Code: A Decorated Tool and `tool_runner`
 
 ```python
@@ -357,9 +321,7 @@ async def handle_customer_query(question: str) -> str:
     final_message = await runner.until_done()
     return next(b.text for b in final_message.content if b.type == "text")
 ```
-
 ---
-
 # Demo: Letting `tool_runner` Call the Tool
 
 In `ccdvf-labs`, with the virtual environment still active:
@@ -420,9 +382,7 @@ python demo_tool_runner.py
 
 > [!NOTE]
 > You did not write a loop. `tool_runner` called `get_order_status`, sent the result back, and stopped when `stop_reason` was `end_turn`.
-
 ---
-
 # Building with the Claude Agent SDK
 
 - **Claude Code’s harness as a library**: built-in tools (`Read`, `Write`, `Edit`, `Bash`, `Grep`, `Glob`), subagent spawning (`Agent`), permission modes, and hooks
@@ -441,9 +401,7 @@ options = ClaudeAgentOptions(
 async for message in query(prompt="Audit the auth module", options=options):
     print(message)
 ```
-
 ---
-
 # Four Ways to Build and Deploy a Claude Agent
 
 | Approach | Loop Owner | Host Environment |
@@ -452,9 +410,7 @@ async for message in query(prompt="Audit the auth module", options=options):
 | **Tool Runner** (`tool_runner`) | Client SDK | Your VPC / containers |
 | **Claude Agent SDK** | Agent SDK harness | Your VPC / containers |
 | **Claude Managed Agents** | Anthropic | Anthropic-managed sandbox |
-
 ---
-
 <!-- layout: 2-column -->
 # Self-Hosted vs Managed Deployment
 
@@ -465,9 +421,7 @@ async for message in query(prompt="Audit the auth module", options=options):
 ### Anthropic-Hosted (Claude Managed Agents)
 - Anthropic manages per-session container sandboxes, versioned agent configs, automatic prompt caching, and credential vaults
 - Reaches private VPC services only through a secured remote MCP server
-
 ---
-
 <!-- layout: card-layout -->
 # Deterministic Actions with Agent SDK Hooks
 
@@ -486,9 +440,7 @@ async for message in query(prompt="Audit the auth module", options=options):
 ### Other Lifecycle Hook Points
 - `UserPromptSubmit` screens or enriches user prompts before the turn starts.
 - `Stop` and `SubagentStop` run cleanup, audit logging, or completion checks when an agent turn finishes.
-
 ---
-
 # Programmatic Hook Callbacks in the Agent SDK
 
 - **Enforcing business rules in Python**: block refunds above `$500` and strip noisy fields from tool results before they enter context
@@ -509,18 +461,14 @@ async def enforce_refund_limit(input_data: dict, tool_use_id: str, context: dict
 
 > [!IMPORTANT]
 > When a `PreToolUse` hook returns `permissionDecision: "deny"`, the harness blocks the tool call and sends `permissionDecisionReason` back to Claude so the agent can adapt (for example, by invoking `escalate_to_human`).
-
 ---
-
 <!-- layout: navigation -->
 # Chapter 2
 
 - Agent Architecture
 - Agent Construction with Claude
 - **Agent Patterns and Frameworks**
-
 ---
-
 <!-- layout: card-layout -->
 # Core Agent Design Patterns
 
@@ -536,9 +484,7 @@ async def enforce_refund_limit(input_data: dict, tool_use_id: str, context: dict
 
 ### Context-Window Compaction
 - Pruning verbose tool outputs and summarizing older turns so multi-step agents do not hit context drift or token ceilings.
-
 ---
-
 <!-- layout: 2-column -->
 # Implementing Short-Term and Long-Term Agent Memory
 
@@ -562,9 +508,7 @@ system_prompt = (
 - **File-backed memory (`memory_20250818` / scratchpads)**: Claude reads and writes structured notes in a scoped directory that persists across sessions
 - **`CLAUDE.md` and `MEMORY.md`**: repository conventions and auto-learned project notes loaded at session startup
 - **External stores (Postgres / vector DB)**: application-queried customer history or semantic knowledge retrieved per turn
-
 ---
-
 <!-- layout: 3-column -->
 # Selecting Agentic Abstraction Frameworks
 
@@ -582,38 +526,38 @@ system_prompt = (
 - Lightweight, **model-driven** agent framework emphasizing simple `@tool` registration, native MCP integration, and letting Claude’s reasoning drive the loop
 - Minimal boilerplate compared to explicit graph DSLs
 - **Best when**: building clean, model-centric tool-use agents and supervisor workflows rapidly
-
 ---
-
 # Framework Code Comparison on the Same Task
 
-- **Look up how each framework expresses the same customer-support agent**:
-  - **PydanticAI**: `Agent("anthropic:claude-sonnet-5-5", output_type=SupportDecision, deps_type=SupportDeps)`: centers on typed `deps` and validated `output_type`
-  - **LangGraph**: `StateGraph(AgentState)` with `add_node("triage", ...)`, `add_conditional_edges(...)`, and `compile(checkpointer=PostgresSaver(...))`: centers on explicit graph state, cycles, and durable checkpoints
-  - **Strands**: `Agent(model=AnthropicModel(...), tools=[lookup_order, issue_refund])`: centers on lightweight `@tool` functions and MCP servers driven by the model loop
+Each line is the same customer-support agent, written in that framework:
+
+- **PydanticAI**: <br/>
+`Agent("anthropic:claude-sonnet-5-5", output_type=SupportDecision, deps_type=SupportDeps)` 
+   - Centers on typed `deps` and validated `output_type`
+- **LangGraph**: <br/>
+`StateGraph(AgentState)` with `add_node("triage", ...)`, `add_conditional_edges(...)`, and `compile(checkpointer=PostgresSaver(...))` 
+  - Centers on explicit graph state, cycles, and durable checkpoints
+- **Strands**: <br/> `Agent(model=AnthropicModel(...), tools=[lookup_order, issue_refund])`
+  - Centers on lightweight `@tool` functions and MCP servers driven by the model loop
+---
+# Which Framework the Scenario Is Pointing At
 
 | Requirement Signal in an Exam Scenario | Choose |
 | :--- | :--- |
 | **Strict Pydantic schema validation with automatic validation-error retry feedback to Claude** | **PydanticAI** |
 | **Cyclic state machine, durable checkpointing across restarts, human-in-the-loop pause/resume interrupts** | **LangGraph** |
 | **Lightweight model-driven tool loop with minimal boilerplate and direct MCP tool integration** | **Strands** |
-
 ---
-
 # Domain 1 Quiz: Agents and Workflows
 
 - [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-12-10-ccdv-f-realistic-instructor.json)
-
 ---
-
 # Lab 1: Building Agents and Workflows
 
 **Time:** 45 minutes
 
 - [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-developer-foundations-exam-prep-workshop/labs/lab-01-building-agents-and-workflows)
-
 ---
-
 # What You Learned
 
 - Chose between deterministic workflows and autonomous agents
@@ -622,9 +566,7 @@ system_prompt = (
 - Built custom agent loops, Tool Runner harnesses, and Claude Agent SDK systems
 - Intercepted tool execution deterministically with `PreToolUse` and `PostToolUse` hooks
 - Selected between `PydanticAI`, `LangGraph`, and `Strands` for production agents
-
 ---
-
 <!-- layout: stacked -->
 # Questions and Answers
 
