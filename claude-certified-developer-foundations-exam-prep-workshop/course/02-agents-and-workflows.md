@@ -444,10 +444,8 @@ async for message in query(prompt="Audit the auth module", options=options):
 
 ---
 
-<!-- layout: 2-column -->
 # Four Ways to Build and Deploy a Claude Agent
 
-### Comparing the Four Approaches
 | Approach | Loop Owner | Host Environment |
 | :--- | :--- | :--- |
 | **Manual loop** (Messages API) | Your code | Your VPC / containers |
@@ -455,13 +453,18 @@ async for message in query(prompt="Audit the auth module", options=options):
 | **Claude Agent SDK** | Agent SDK harness | Your VPC / containers |
 | **Claude Managed Agents** | Anthropic | Anthropic-managed sandbox |
 
-### Self-Hosted vs Managed Deployment Trade-Offs
-- **Self-hosted (Agent SDK / Tool Runner / Manual)**:
-  - Runs inside your own VPC with direct network access to private databases, internal REST APIs, and strict data-residency boundaries
-  - Your team owns container sandboxing, autoscaling, and runtime patching
-- **Anthropic-hosted (Claude Managed Agents)**:
-  - Anthropic manages per-session container sandboxes, versioned agent configs, automatic prompt caching, and credential vaults
-  - Cannot reach private VPC services directly unless exposed through a secured remote MCP server
+---
+
+<!-- layout: 2-column -->
+# Self-Hosted vs Managed Deployment
+
+### Self-Hosted (Agent SDK, Tool Runner, Manual)
+- Runs inside your own VPC with direct network access to private databases, internal REST APIs, and strict data-residency boundaries
+- Your team owns container sandboxing, autoscaling, and runtime patching
+
+### Anthropic-Hosted (Claude Managed Agents)
+- Anthropic manages per-session container sandboxes, versioned agent configs, automatic prompt caching, and credential vaults
+- Reaches private VPC services only through a secured remote MCP server
 
 ---
 
