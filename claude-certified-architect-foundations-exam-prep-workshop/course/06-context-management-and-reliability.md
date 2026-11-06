@@ -247,6 +247,7 @@ Film: ...
 - The model falls back on general knowledge instead of what it discovered
 
 <!-- below-columns -->
+
 > [!TIP]
 > When an exam scenario describes answers drifting from specific to generic over a long session, the answer is a context management remedy (the next slides), not a larger model or a longer system prompt.
 
@@ -388,6 +389,7 @@ Example: "Price-match Competitor X"
 - Escalate if the customer then says they want a human
 
 <!-- below-columns -->
+
 > [!WARNING]
 > Frustration is not the same as complexity. Escalating every upset customer overloads human agents with problems the agent could have solved in one turn.
 
@@ -482,6 +484,7 @@ get_customer(name="John Smith") ->
 - The coordinator decides: try an alternative source, re-scope, or continue with a gap
 
 <!-- below-columns -->
+
 > [!NOTE]
 > Handling each failure at the lowest level that can fix it keeps the coordinator’s context free of retry noise and keeps decisions where the information is.
 
@@ -501,6 +504,7 @@ get_customer(name="John Smith") ->
 - The user gets nothing, when a report with one marked gap would have been useful
 
 <!-- below-columns -->
+
 > [!IMPORTANT]
 > The correct path is between the two: recover locally where possible, propagate structured context when not, and **continue with partial results that are clearly annotated**.
 
@@ -668,6 +672,7 @@ programs are counted.
 - Readers scan and check items off
 
 <!-- below-columns -->
+
 > [!TIP]
 > Forcing every finding into one uniform format, such as all bullets or all tables, hurts readability. Synthesis should choose the format for each content type.
 

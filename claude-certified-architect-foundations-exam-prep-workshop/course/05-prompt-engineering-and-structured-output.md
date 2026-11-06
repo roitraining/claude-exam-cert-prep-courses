@@ -85,6 +85,7 @@ but not wrong.
 - Keep high-precision categories (injection, auth bypass) running the whole time
 
 <!-- below-columns -->
+
 > [!TIP]
 > “Lower the overall confidence threshold” or “tell the model to be more careful” are distractors. The exam answer isolates the noisy category and fixes it with explicit criteria.
 
@@ -246,6 +247,7 @@ invoice = next(b.input for b in response.content if b.type == "tool_use")  # alr
 - These need **validation code** or a review step after extraction
 
 <!-- below-columns -->
+
 > [!IMPORTANT]
 > A valid schema proves the data has the right **shape**, not that it is **right**. The next demo shows a schema-perfect extraction with an impossible total.
 
@@ -343,6 +345,7 @@ python demo_08_semantic_check.py
 - Use when the document type is known, or when one extraction must run before any enrichment
 
 <!-- below-columns -->
+
 > [!NOTE]
 > On the exam, `"any"` and forced selection are correct answers. In current releases, they return a 400 error on Opus 5.5, Sonnet 5.5, Fable 5.1, and Mythos 5.1; use Claude Haiku 5.5 or Opus 5, or rely on `"auto"` with a system prompt that requires the tool call.
 
@@ -775,6 +778,7 @@ for entry in client.messages.batches.results(batch.id):
 - Set the threshold where posted findings meet your precision target
 
 <!-- below-columns -->
+
 > [!NOTE]
 > This routes **review attention** for findings. It is not an escalation trigger for live customers; the exam treats self-reported confidence as an unreliable escalation signal.
 
