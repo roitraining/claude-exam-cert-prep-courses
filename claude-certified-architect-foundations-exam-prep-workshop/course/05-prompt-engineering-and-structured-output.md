@@ -148,7 +148,7 @@ suggested_fix: Use a parameterized query
 ---
 
 <!-- layout: 2-column -->
-# Few-Shot to Separate Acceptable Patterns from Real Issues
+# Few-Shot to Separate Acceptable Patterns from Issues
 
 ### The Problem
 - The repo intentionally uses `except Exception: log_and_reraise()` in its job runner
@@ -277,11 +277,14 @@ TOTAL DUE: $1,450.00"""
 tool = {
     "name": "record_invoice",
     "description": "Record an invoice exactly as written.",
+    "strict": True,  # guarantees the shape; the numbers can still disagree
     "input_schema": {
         "type": "object",
+        "additionalProperties": False,
         "properties": {
             "line_items": {"type": "array", "items": {
                 "type": "object",
+                "additionalProperties": False,
                 "properties": {
                     "description": {"type": "string"},
                     "quantity": {"type": "integer"},
@@ -383,7 +386,7 @@ In `ccarf-labs`, with the virtual environment still active:
 **Step 2. Paste this code**
 
 ```python
-# demo_09_nullable.py - a required field invents a value; a nullable field does not
+# demo_09_nullable.py - a required string invents a PO number; null can say "missing"
 from dotenv import load_dotenv
 import anthropic
 
@@ -392,37 +395,53 @@ client = anthropic.Anthropic()
 
 DOCUMENT = """Purchase order from Lakeside Dental.
 Ship 40 boxes of nitrile gloves to 12 Harbor Rd, Portland.
-Deliver by Nov 20. Contact: Priya Shah."""
+Deliver by Nov 20. Contact: Priya Shah.
+There is no PO number on this document."""
 
-def extract(po_type):
-    tool = {
-        "name": "record_order",
-        "description": "Record the fields of a purchase order.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "customer": {"type": "string"},
-                "po_number": {"type": po_type, "description": "The purchase order number."},
-            },
-            "required": ["customer", "po_number"],
+# Same tool twice. The only difference is whether po_number may be null.
+required_string = {
+    "name": "record_order",
+    "description": "Record the fields of a purchase order.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "customer": {"type": "string"},
+            "po_number": {"type": "string", "description": "The purchase order number."},
         },
-    }
+        "required": ["customer", "po_number"],
+    },
+}
+
+string_or_null = {
+    "name": "record_order",
+    "description": "Record the fields of a purchase order.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "customer": {"type": "string"},
+            "po_number": {
+                "type": ["string", "null"],
+                "description": "The PO number printed on the document, or null if there is none.",
+            },
+        },
+        "required": ["customer", "po_number"],
+    },
+}
+
+def po_number_for(tool):
     response = client.messages.create(
         model="claude-haiku-5-5",
         max_tokens=1028,
         output_config={"effort": "low"},
-        system="You are a batch extraction job. Always call record_order. Never ask questions.",
+        system="Always call record_order. Do not ask questions.",
         tools=[tool],
-        messages=[{"role": "user",
-                   "content": f"Call record_order for this document.\n\n{DOCUMENT}"}],
+        messages=[{"role": "user", "content": f"Record this purchase order.\n\n{DOCUMENT}"}],
     )
-    calls = [b for b in response.content if b.type == "tool_use"]
-    if not calls:
-        return "(no tool call) " + "".join(b.text for b in response.content if b.type == "text")
-    return calls[0].input.get("po_number")
+    call = next(b for b in response.content if b.type == "tool_use")
+    return call.input["po_number"]
 
-print("po_number as string:         ", repr(extract("string")))
-print("po_number as string or null: ", repr(extract(["string", "null"])))
+print("Required string:", repr(po_number_for(required_string)))
+print("String or null: ", repr(po_number_for(string_or_null)))
 ```
 
 **Step 3. Run it**
@@ -433,9 +452,9 @@ python demo_09_nullable.py
 
 **Step 4. Examine the output**
 
-- The document has no PO number
-- With `"string"`, Claude should fill the field anyway, typically with a placeholder such as `'NOT_PROVIDED'`
-- With `["string", "null"]`, Claude should return `None`
+- The document says there is no PO number
+- **Required string** prints a made-up string, such as `'NOT PROVIDED (no PO number on source document)'`
+- **String or null** prints `None`
 
 > [!NOTE]
 > A placeholder string looks like real data to every system downstream. Making the field nullable gives Claude an honest way to say the value is missing, and lets your code test for `None`.
