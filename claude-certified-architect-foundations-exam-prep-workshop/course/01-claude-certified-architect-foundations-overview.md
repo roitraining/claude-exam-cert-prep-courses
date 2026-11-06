@@ -34,6 +34,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 ### Format and Timing
 - The CCAR-F exam contains 60 multiple-choice and multiple-response items in 120 minutes.
 - Each question is anchored in one of 4 production scenarios randomly drawn from a pool of 6.
+- The exam fee is $125 USD, delivered by Pearson VUE online or at a test center.
 
 ### Scoring Standard
 - Criterion-referenced scoring uses a scaled range of 100 to 1,000 with a passing cut score of 720.
@@ -87,11 +88,13 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ### Never Tested (Out of Scope)
 - Fine-tuning Claude models, RLHF, or Constitutional AI training
+- Claude’s internal architecture, training process, or model weights
 - Embedding models or vector database implementation details
 - Computer use (browser automation) or vision/image analysis
 - Streaming API / Server-Sent Events (SSE) implementation details
 - OAuth internals, API key rotation, billing, or rate-limit math
-- Deploying or hosting MCP servers (containers, networking, cloud IAM)
+- Deploying or hosting MCP servers, or cloud provider (AWS, GCP, Azure) configuration
+- Prompt caching details (beyond knowing it exists), tokenization, and model benchmarks
 
 <!-- below-columns -->
 
@@ -227,9 +230,108 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 # Exam-Day Pacing and Logistics
 
 - **Budget 30 minutes per scenario**: with 60 questions across 4 scenarios in 120 minutes, aim for roughly 2 minutes per question
-- **Flag and move forward**: unanswered questions score the same as wrong answers (no penalty for guessing), so never leave an item blank
+- **Flag and move forward**: your score counts correct answers, so answer every item before time runs out, even if you have to guess
 - **Check response count**: multiple-response items state explicitly how many options to select
 - **Environment check**: online proctoring via Pearson VUE requires a clear desk, no secondary monitors, and government ID matching registration
+
+---
+
+# Demo: Using the Claude API
+
+If you already finished Lab 0, open `ccarf-labs` with the virtual environment activated and skip to Step 6.
+
+**Step 1. Create the `ccarf-labs` folder**
+
+**macOS:**
+
+```bash
+cd ~
+mkdir ccarf-labs
+cd ccarf-labs
+```
+
+**Windows (PowerShell):**
+
+```powershell
+cd $HOME
+mkdir ccarf-labs
+cd ccarf-labs
+```
+
+**Step 2. Create a virtual environment and activate it**
+
+**macOS:**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+**Windows (PowerShell):**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+When the environment is active, the prompt starts with `(.venv)`. If Windows says that running scripts is disabled, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer **Y**, and run the activate command again.
+
+**Step 3. Install the packages for these demos**
+
+```bash
+pip install anthropic python-dotenv mcp claude-agent-sdk
+```
+
+**Step 4. Create a file named `.env` with your API key**
+
+```text
+ANTHROPIC_API_KEY=sk-ant-paste-your-key-here
+```
+
+**Step 5. Create a file named `.gitignore`**
+
+```text
+.env
+.venv/
+```
+
+**Step 6. Create `demo_01_haiku.py` and paste this code**
+
+```python
+# demo_01_haiku.py - one Messages API call
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-haiku-5-5",
+    max_tokens=1028,
+    output_config={"effort": "low"},  # keep this short reply from being spent on thinking
+    messages=[{
+        "role": "user",
+        "content": "Write a Haiku about the Claude Certified Architect exam.",
+    }],
+)
+
+text = "".join(block.text for block in response.content if block.type == "text")
+print(text)
+```
+
+**Step 7. Run it**
+
+```bash
+python demo_01_haiku.py
+```
+
+**Step 8. Examine the output**
+
+- The terminal prints a haiku
+- The wording will vary, and you should see three short lines
+
+> [!NOTE]
+> You sent one prompt and printed Claude’s reply. This folder, virtual environment, and `.env` file are what every later demo uses. Demos that run Claude Code use your Claude subscription instead of the key.
 
 ---
 

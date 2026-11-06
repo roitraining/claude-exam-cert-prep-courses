@@ -117,6 +117,11 @@ paths:
 - Available only to that individual user across their local projects
 - Note: `.claude/config.json` with a `commands` array does **not** exist in Claude Code (common exam distractor)
 
+<!-- below-columns -->
+
+> [!NOTE]
+> On the exam, `.claude/commands/` is the answer for shared commands. In current releases, commands are merged into skills: `.claude/commands/review.md` and `.claude/skills/review/SKILL.md` both create `/review`. Command files still work; skills are preferred for new work.
+
 ---
 
 <!-- layout: card-layout -->
@@ -127,8 +132,8 @@ paths:
 - Prevents verbose codebase analysis, log dumps, or exploratory brainstorming from polluting the main conversation history.
 
 ### `allowed-tools`
-- Restricts which tools Claude can invoke while executing the skill (for example, `allowed-tools: ["Read", "Grep", "Glob"]` or read-only inspection).
-- Prevents destructive actions during diagnostic or review skills.
+- On the exam, `allowed-tools` restricts which tools Claude can invoke while executing the skill (for example, `allowed-tools: ["Read", "Grep", "Glob"]` for read-only inspection).
+- In current releases, it pre-approves the listed tools without restricting the rest; use `disallowed-tools` to remove tools during a skill.
 
 ### `argument-hint`
 - Displays parameter guidance when a developer types the skill name without required arguments (for example, `argument-hint: "<migration-name> <target-schema>"`).
@@ -184,6 +189,60 @@ Analyze the target module for injection risks and return a summarized report.
 
 > [!TIP]
 > For multi-phase tasks with verbose discovery, delegate exploration to the **`Explore` subagent** so discovery output is summarized and does not exhaust the main conversation context window.
+
+---
+
+# Demo: Plan Mode Reads but Does Not Write
+
+In `ccarf-labs`, with the virtual environment still active. This demo runs Claude Code, so it uses your Claude subscription.
+
+**Step 1. Create `pricing.py` and paste this code**
+
+```python
+def apply_discount(price, percent):
+    return price - price * percent / 100
+```
+
+**Step 2. Create `demo_07_plan_mode.py` and paste this code**
+
+```python
+# demo_07_plan_mode.py - plan mode reads and plans but does not edit
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
+before = Path("pricing.py").read_text()
+
+run = subprocess.run(
+    [shutil.which("claude"), "-p",
+     "Add input validation to apply_discount in pricing.py: raise ValueError "
+     "for a negative price or a percent outside 0 to 100.",
+     "--permission-mode", "plan"],
+    capture_output=True, text=True,
+    env={**os.environ, "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"},
+)
+print("Claude's plan:\n")
+print(run.stdout)
+
+after = Path("pricing.py").read_text()
+print("pricing.py changed?", before != after)
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_07_plan_mode.py
+```
+
+**Step 4. Examine the output**
+
+- Claude read `pricing.py` and describes the checks it would add and how it would test them
+- Claude says it has not edited the file because plan mode is on
+- The last line prints `pricing.py changed? False`
+
+> [!NOTE]
+> Plan mode lets Claude explore and propose without changing anything, which is what you want before a large or ambiguous change. In an interactive session, press **Shift+Tab** to switch into plan mode, then approve the plan to let Claude make the edit.
 
 ---
 

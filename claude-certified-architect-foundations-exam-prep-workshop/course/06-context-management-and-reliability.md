@@ -65,6 +65,77 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
+# Demo: A Summary That Drops the Numbers
+
+In `ccarf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_10_case_facts.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_10_case_facts.py - summaries drop facts; a case facts block keeps them
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+TRANSCRIPT = """Customer: My espresso machine arrived with a cracked water tank. Order ORD-58213.
+Agent: Sorry about that. I see you paid $899.00 for it.
+Customer: I want to keep it if you can send a new tank, but I want money back too.
+Agent: I can send a replacement tank on order ORD-58290 and refund $847.50 to your card.
+Customer: What about the $51.50 shipping charge?
+Agent: Shipping is not refundable on partial refunds, so that stays.
+Customer: Fine. When will the refund show up?
+Agent: The refund will post by Nov 14."""
+
+CASE_FACTS = """<case_facts>
+order_id: ORD-58213
+replacement_order: ORD-58290
+refund_amount: $847.50
+shipping_refunded: no ($51.50 kept)
+refund_due_by: Nov 14
+</case_facts>"""
+
+QUESTION = "What exact amount are we refunding, on which order, and by what date?"
+
+def ask(content):
+    response = client.messages.create(
+        model="claude-haiku-5-5",
+        max_tokens=1028,
+        output_config={"effort": "low"},
+        messages=[{"role": "user", "content": content}],
+    )
+    return "".join(b.text for b in response.content if b.type == "text")
+
+summary = ask("Summarize this support chat for a shift handoff in 12 words or fewer. "
+              f"Reply with only the summary.\n\n{TRANSCRIPT}")
+print("Shift 1 summary:", summary)
+summary = ask(f"Shorten these handoff notes to 8 words or fewer. Reply with only the notes.\n\n{summary}")
+print("Shift 2 summary:", summary, "\n")
+
+print("Summary only:\n", ask(f"Handoff notes: {summary}\n\n{QUESTION}"), "\n")
+print("Summary plus case facts:\n", ask(f"{CASE_FACTS}\n\nHandoff notes: {summary}\n\n{QUESTION}"))
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_10_case_facts.py
+```
+
+**Step 4. Examine the output**
+
+- Each shift shortens the notes, and the original order `ORD-58213` should drop out
+- With the summary only, Claude should be unsure of the order or name the replacement order `ORD-58290` instead
+- With the case facts block, Claude should answer `$847.50` on `ORD-58213` by Nov 14
+
+> [!NOTE]
+> Each summary looked reasonable, but two rounds of compression lost the one ID the refund depends on. Keeping transactional facts in a separate block that is never summarized means every turn starts with the exact values.
+
+---
+
 <!-- layout: 2-column -->
 # Managing Context in Large Codebase Exploration
 
@@ -74,7 +145,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ### Four Architectural Remedies
 - **Scratchpad files**: have agents record verified findings in a persistent markdown or JSON scratchpad file and reference it across turns
-- **Subagent isolation**: spawn subagents for verbose searches (`"trace refund flow dependencies"`) and return only concise summaries to the main agent
+- **Subagent isolation**: spawn subagents for verbose searches (`"trace refund flow dependencies"`) and return only concise summaries to the main agent; summarize each exploration phase and inject that summary into the next phase’s subagent prompts
 - **`/compact` command**: run `/compact` to compress verbose discovery history during extended interactive sessions
 - **Crash recovery manifests**: export structured agent state to a known manifest file on disk so a resumed coordinator can reload verified state after a crash
 
@@ -94,6 +165,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 - **Calibrate with explicit criteria + few-shot examples**: define exact boundaries between autonomous resolution (standard damage replacement with photo) and human escalation
 - **Honor explicit human requests immediately**: if a customer asks for a human agent, escalate right away without investigating first
+- **Acknowledge frustration, then offer to resolve**: when a frustrated customer’s issue is within the agent’s ability, acknowledge the frustration and offer a resolution; escalate only if the customer reiterates that they want a human
 - **Never guess across multiple matches**: when `get_customer` returns multiple records for `"John Smith"`, ask the user for an additional identifier (email or order ID) rather than picking the most recent account heuristically
 
 ![Escalation Decision Matrix](images/ch06-escalation-decision-tree.svg)

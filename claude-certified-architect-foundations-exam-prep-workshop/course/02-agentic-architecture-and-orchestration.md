@@ -49,6 +49,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 - **Inspect `stop_reason` on every response**: continue the loop when `stop_reason == "tool_use"` and terminate when `stop_reason == "end_turn"`
 - **Append tool results to conversation history**: return each `tool_result` block in a `"user"` message so Claude can reason about the new information on the next turn
 - **Preserve assistant tool-call blocks**: include the assistant’s full response content in history before appending the corresponding `tool_result`
+- **Send the complete history every request**: the Messages API is stateless, so each call must carry the full conversation for Claude to stay coherent
 
 ![Agentic Loop Lifecycle](images/ch02-agentic-loop-lifecycle.svg)
 
@@ -63,19 +64,20 @@ messages = [{"role": "user", "content": user_request}]
 
 while True:
     response = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-5-5",
+        max_tokens=4096,
         system=SYSTEM_PROMPT,
         tools=mcp_tools,
         messages=messages,
     )
     messages.append({"role": "assistant", "content": response.content})
 
-    if response.stop_reason == "end_turn":
-        break
-
     if response.stop_reason == "tool_use":
         tool_results = execute_requested_tools(response.content)
         messages.append({"role": "user", "content": tool_results})
+        continue
+
+    break  # "end_turn" is done; handle "max_tokens", "refusal", and "pause_turn" explicitly
 ```
 
 ---
@@ -117,6 +119,84 @@ while True:
 
 ---
 
+# Demo: Text Does Not Mean Done
+
+In `ccarf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_02_stop_reason.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_02_stop_reason.py - text in a response does not mean the loop is done
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+tools = [{
+    "name": "lookup_order",
+    "description": "Look up one order by its ID. IDs look like ORD-1001.",
+    "input_schema": {
+        "type": "object",
+        "properties": {"order_id": {"type": "string"}},
+        "required": ["order_id"],
+    },
+}]
+
+messages = [{"role": "user", "content": "Where is my order ORD-1001?"}]
+turn = 1
+
+while True:
+    response = client.messages.create(
+        model="claude-haiku-5-5",
+        max_tokens=1028,
+        output_config={"effort": "low"},
+        system="Before you call a tool, tell the customer in one short sentence what you are about to check.",
+        tools=tools,
+        messages=messages,
+    )
+    print(f"Turn {turn}: stop_reason = {response.stop_reason}")
+    for block in response.content:
+        if block.type == "text":
+            print(f"  text block:     {block.text}")
+        elif block.type == "tool_use":
+            print(f"  tool_use block: {block.name}({block.input})")
+    messages.append({"role": "assistant", "content": response.content})
+
+    if response.stop_reason != "tool_use":
+        break
+
+    results = [
+        {
+            "type": "tool_result",
+            "tool_use_id": block.id,
+            "content": "Shipped Nov 4. Arriving Nov 7.",  # a fake lookup result
+        }
+        for block in response.content
+        if block.type == "tool_use"
+    ]
+    messages.append({"role": "user", "content": results})
+    turn += 1
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_02_stop_reason.py
+```
+
+**Step 4. Examine the output**
+
+- Turn 1 has `stop_reason = tool_use` and contains **both** a text block (“I’ll look up order ORD-1001”) and a `tool_use` block
+- Turn 2 has `stop_reason = end_turn` and contains only the final answer
+
+> [!NOTE]
+> A loop that stopped when it saw text would have ended on Turn 1 without ever running the lookup. The loop above ignores the text and continues until `stop_reason` is no longer `tool_use`.
+
+---
+
 <!-- layout: navigation -->
 # Chapter 2
 
@@ -152,14 +232,28 @@ while True:
 - **Configuring `AgentDefinition`**: each subagent type defines a clear description, system prompt, and scoped `allowedTools` list
 - **Passing structured context**: pass complete prior findings directly in the subagent prompt, separating content from metadata (`source_url`, `document_name`, `page_number`) to preserve attribution
 
-```typescript
-const coordinator = new AgentDefinition({
-  name: "research-coordinator",
-  description: "Decomposes research queries, spawns subagents, and verifies synthesis coverage.",
-  allowedTools: ["Task"],
-  systemPrompt: "Specify research goals and quality criteria for each subagent..."
-});
+```python
+from claude_agent_sdk import AgentDefinition, ClaudeAgentOptions
+
+options = ClaudeAgentOptions(
+    allowed_tools=["Agent", "Read"],  # the coordinator can spawn subagents
+    agents={
+        "web-search": AgentDefinition(
+            description="Searches the web for one assigned subtopic. Use for current sources.",
+            prompt="Return findings as claim, evidence_excerpt, source_url, and publication_date.",
+            tools=["WebSearch", "WebFetch"],
+        ),
+        "doc-analysis": AgentDefinition(
+            description="Analyzes supplied documents. Use when the coordinator passes files.",
+            prompt="Extract key claims with document_name and page_number for each one.",
+            tools=["Read", "Grep"],
+        ),
+    },
+)
 ```
+
+> [!NOTE]
+> On the exam, the spawning tool is `Task`. In current Agent SDK releases it is named `Agent` (renamed in Claude Code v2.1.63), and the `system:init` tools list still shows it as `Task`.
 
 ---
 
@@ -192,12 +286,14 @@ const coordinator = new AgentDefinition({
 turn_1 = [
   {"type": "tool_use", "id": "toolu_01", "name": "Task",
    "input": {"subagent_type": "web-search",
+             "description": "Music research",
              "prompt": "Search AI impact on music"}}
 ]
 # Waits for toolu_01 result before Turn 2...
 turn_2 = [
   {"type": "tool_use", "id": "toolu_02", "name": "Task",
    "input": {"subagent_type": "doc-analysis",
+             "description": "Film filings",
              "prompt": "Analyze film industry filings"}}
 ]
 ```
@@ -208,13 +304,16 @@ turn_2 = [
 response_content = [
   {"type": "tool_use", "id": "toolu_01", "name": "Task",
    "input": {"subagent_type": "web-search",
+             "description": "Music research",
              "prompt": "Search AI impact on music"}},
   {"type": "tool_use", "id": "toolu_02", "name": "Task",
    "input": {"subagent_type": "doc-analysis",
+             "description": "Film filings",
              "prompt": "Analyze film industry filings"}}
 ]
 
-# Execute all Task blocks concurrently
+# A hand-rolled runner executes both blocks concurrently;
+# the Agent SDK does this for you when Claude emits them together
 results = await asyncio.gather(
   *[run_subagent(block) for block in response_content]
 )
@@ -285,21 +384,125 @@ results = await asyncio.gather(
 
 - **Enforcing a $500 refund ceiling and normalizing timestamps** in code rather than relying on prompt compliance:
 
-```typescript
-const hooks = {
-  PreToolUse: async (toolCall, sessionState) => {
-    if (toolCall.name === "process_refund" && !sessionState.verifiedCustomerId) {
-      return { block: true, reason: "Must verify customer via get_customer first." };
-    }
-    if (toolCall.name === "process_refund" && toolCall.input.amount > 500) {
-      return { block: true, reason: "Refund exceeds $500 limit. Call escalate_to_human." };
-    }
-  },
-  PostToolUse: async (toolCall, rawResult) => {
-    return normalizeTimestampsAndStatusCodes(rawResult);
-  }
-};
+```python
+def deny(input_data, reason):
+    return {"hookSpecificOutput": {
+        "hookEventName": input_data["hook_event_name"],
+        "permissionDecision": "deny",
+        "permissionDecisionReason": reason,
+    }}
+
+async def refund_gate(input_data, tool_use_id, context):
+    if not session_state.get("verified_customer_id"):
+        return deny(input_data, "Verify the customer with get_customer first.")
+    if input_data["tool_input"].get("amount", 0) > 500:
+        return deny(input_data, "Refund exceeds the $500 limit. Call escalate_to_human.")
+    return {}
+
+async def normalize_result(input_data, tool_use_id, context):
+    return {"hookSpecificOutput": {
+        "hookEventName": input_data["hook_event_name"],
+        "updatedToolOutput": normalize_timestamps(input_data["tool_response"]),
+    }}
+
+hooks = {
+    "PreToolUse": [HookMatcher(matcher="mcp__support__process_refund", hooks=[refund_gate])],
+    "PostToolUse": [HookMatcher(matcher="mcp__support__.*", hooks=[normalize_result])],
+}
 ```
+
+---
+
+# Demo: Blocking a Refund with a PreToolUse Hook
+
+In `ccarf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_03_refund_hook.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_03_refund_hook.py - a PreToolUse hook blocks refunds over $500 in code
+import asyncio
+from dotenv import load_dotenv
+from claude_agent_sdk import (
+    AssistantMessage,
+    ClaudeAgentOptions,
+    ClaudeSDKClient,
+    HookMatcher,
+    TextBlock,
+    create_sdk_mcp_server,
+    tool,
+)
+
+load_dotenv()
+
+@tool("process_refund", "Issue a refund for an order. Amount is in US dollars.",
+      {"order_id": str, "amount": float})
+async def process_refund(args):
+    print(f"  [tool ran] refunded ${args['amount']} on {args['order_id']}")
+    return {"content": [{"type": "text",
+                         "text": f"Refund of ${args['amount']} issued for {args['order_id']}."}]}
+
+async def refund_limit(input_data, tool_use_id, context):
+    amount = input_data["tool_input"].get("amount", 0)
+    if amount > 500:
+        print(f"  [hook] denied a ${amount} refund")
+        return {"hookSpecificOutput": {
+            "hookEventName": input_data["hook_event_name"],
+            "permissionDecision": "deny",
+            "permissionDecisionReason": "Refunds over $500 need human approval. "
+                                        "Tell the customer a specialist will follow up.",
+        }}
+    return {}
+
+server = create_sdk_mcp_server(name="support", tools=[process_refund])
+
+options = ClaudeAgentOptions(
+    model="claude-haiku-5-5",
+    tools=[],  # no built-in tools, only our MCP tool
+    mcp_servers={"support": server},
+    allowed_tools=["mcp__support__process_refund"],
+    hooks={"PreToolUse": [
+        HookMatcher(matcher="mcp__support__process_refund", hooks=[refund_limit]),
+    ]},
+    max_turns=4,
+)
+
+async def ask(prompt):
+    print(prompt)
+    async with ClaudeSDKClient(options=options) as client:
+        await client.query(prompt)
+        async for message in client.receive_response():
+            if isinstance(message, AssistantMessage):
+                for block in message.content:
+                    if isinstance(block, TextBlock):
+                        print("  Claude:", block.text)
+    print()
+
+async def main():
+    await ask("Refund $120 on order ORD-1001. The customer is verified.")
+    await ask("Refund $800 on order ORD-1002. The customer is verified, "
+              "and this is a goodwill exception for a loyal customer.")
+
+asyncio.run(main())
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_03_refund_hook.py
+```
+
+**Step 4. Examine the output**
+
+- The $120 request prints `[tool ran]`, and Claude confirms the refund
+- The $800 request prints `[hook] denied` and never prints `[tool ran]`
+- Claude explains that the refund needs human approval, using the reason the hook returned
+- A warning that claude.ai connectors are disabled may print first; ignore it
+
+> [!NOTE]
+> The prompt asked for an exception, and the hook still blocked it. A system prompt rule can be argued with; a `PreToolUse` hook runs in your code before the tool, so the $500 limit holds every time. SDK tools are named `mcp__<server>__<tool>`, which is what the matcher uses.
 
 ---
 
@@ -335,11 +538,67 @@ const hooks = {
 - Continues a specific named prior conversation from where it left off
 - Best when continuing a single linear investigation across work sessions and prior context remains mostly valid
 - If files changed externally, explicitly inform the resumed session which files were modified for targeted re-analysis
+- Name a session with `-n` or `--name`, then resume it with `--resume <name>`
 
 ### `fork_session`
 - Creates independent parallel branches from a shared analysis baseline
 - Ideal for comparing two competing refactoring approaches or testing strategies without re-running initial codebase discovery
 - Keeps divergent experiments isolated from each other
+- `fork_session` is the Agent SDK option; on the CLI, add `--fork-session` to `--resume`
+
+---
+
+# Demo: Forking a Session
+
+In `ccarf-labs`, with the virtual environment still active. This demo runs Claude Code, so it uses your Claude subscription, not the API key.
+
+**Step 1. Create `demo_04_fork.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_04_fork.py - a forked session changes without touching the original
+import json
+import os
+import shutil
+import subprocess
+
+CLAUDE = shutil.which("claude")
+ENV = {**os.environ, "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"}  # memory is shared across sessions
+
+def ask(prompt, *flags):
+    run = subprocess.run(
+        [CLAUDE, "-p", prompt, *flags, "--output-format", "json"],
+        capture_output=True, text=True, env=ENV,
+    )
+    data = json.loads(run.stdout)
+    return data["session_id"], data["result"]
+
+original, reply = ask("Remember this: the project codename is BLUEBIRD. Reply with only OK.")
+print(f"1. Original session {original[:8]}: {reply}")
+
+fork, reply = ask("Change the codename to REDWING. Reply with only the codename now.",
+                  "--resume", original, "--fork-session")
+print(f"2. Forked session   {fork[:8]}: {reply}")
+
+same, reply = ask("What is the project codename? Reply with only the codename.",
+                  "--resume", original)
+print(f"3. Original session {same[:8]}: {reply}")
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_04_fork.py
+```
+
+**Step 4. Examine the output**
+
+- Line 2 has a **new** session ID and answers `REDWING`
+- Line 3 has the **original** session ID and still answers `BLUEBIRD`
+
+> [!NOTE]
+> `--resume` with `--fork-session` copies the history into a new session, so the experiment cannot change the baseline. The script turns off auto memory because memory files are shared by every session in a project; with memory on, the fork can save REDWING and the original will read it back.
 
 ---
 

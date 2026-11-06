@@ -88,10 +88,86 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 # Enforcing Structured Output via `tool_use`
 
 - **Most reliable mechanism**: defining an extraction tool with a JSON Schema and reading the `tool_use` input guarantees **zero JSON syntax errors**
+- **Strict mode**: add `"strict": true` to the tool definition so the input is also guaranteed to match the schema, not just parse as JSON
 - **Syntax vs semantic correctness**: strict JSON schemas via `tool_use` eliminate malformed JSON syntax, but **do not prevent semantic errors** (such as line items that do not sum to the stated invoice total, or values placed in the wrong field)
 - **Selecting `tool_choice` for extraction**:
   - `tool_choice: "any"` when multiple document extraction schemas exist and the document type is unknown upfront
   - `tool_choice: {"type": "tool", "name": "extract_invoice"}` when forcing a specific extraction tool to run first
+
+---
+
+# Demo: Valid JSON, Wrong Total
+
+In `ccarf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_08_semantic_check.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_08_semantic_check.py - the schema is valid, but the numbers disagree
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+INVOICE = """INVOICE 7781 - Harbor Office Supply
+3 x Standing desk      @ $200.00
+2 x Ergonomic chair    @ $320.00
+TOTAL DUE: $1,450.00"""
+
+tool = {
+    "name": "record_invoice",
+    "description": "Record an invoice exactly as written.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "line_items": {"type": "array", "items": {
+                "type": "object",
+                "properties": {
+                    "description": {"type": "string"},
+                    "quantity": {"type": "integer"},
+                    "unit_price": {"type": "number"},
+                },
+                "required": ["description", "quantity", "unit_price"],
+            }},
+            "stated_total": {"type": "number"},
+        },
+        "required": ["line_items", "stated_total"],
+    },
+}
+
+response = client.messages.create(
+    model="claude-haiku-5-5",
+    max_tokens=1028,
+    output_config={"effort": "low"},
+    tools=[tool],
+    messages=[{"role": "user", "content": f"Call record_invoice for this invoice.\n\n{INVOICE}"}],
+)
+data = next(b for b in response.content if b.type == "tool_use").input
+
+calculated = sum(i["quantity"] * i["unit_price"] for i in data["line_items"])
+print("Extracted:", data)
+print(f"stated_total:     ${data['stated_total']:,.2f}")
+print(f"calculated_total: ${calculated:,.2f}")
+print("conflict_detected:", abs(calculated - data["stated_total"]) > 0.01)
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_08_semantic_check.py
+```
+
+**Step 4. Examine the output**
+
+- The extracted data matches the schema: two line items and a `stated_total` of `1450.0`
+- The line items add up to `$1,240.00`
+- The last line prints `conflict_detected: True`
+
+> [!NOTE]
+> The schema guaranteed the shape of the data, not that it makes sense. Extracting the stated total and calculating your own lets code catch the mismatch and send the document to review.
 
 ---
 
@@ -110,6 +186,74 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ### Prompt Normalization Rules
 - Pair strict output schemas with prompt-level normalization rules (for example, converting `"Oct 30, 2026"` and `"30/10/26"` into ISO `YYYY-MM-DD`).
+
+---
+
+# Demo: A Required Field Invents a Value
+
+In `ccarf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_09_nullable.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_09_nullable.py - a required field invents a value; a nullable field does not
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+DOCUMENT = """Purchase order from Lakeside Dental.
+Ship 40 boxes of nitrile gloves to 12 Harbor Rd, Portland.
+Deliver by Nov 20. Contact: Priya Shah."""
+
+def extract(po_type):
+    tool = {
+        "name": "record_order",
+        "description": "Record the fields of a purchase order.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "customer": {"type": "string"},
+                "po_number": {"type": po_type, "description": "The purchase order number."},
+            },
+            "required": ["customer", "po_number"],
+        },
+    }
+    response = client.messages.create(
+        model="claude-haiku-5-5",
+        max_tokens=1028,
+        output_config={"effort": "low"},
+        system="You are a batch extraction job. Always call record_order. Never ask questions.",
+        tools=[tool],
+        messages=[{"role": "user",
+                   "content": f"Call record_order for this document.\n\n{DOCUMENT}"}],
+    )
+    calls = [b for b in response.content if b.type == "tool_use"]
+    if not calls:
+        return "(no tool call) " + "".join(b.text for b in response.content if b.type == "text")
+    return calls[0].input.get("po_number")
+
+print("po_number as string:         ", repr(extract("string")))
+print("po_number as string or null: ", repr(extract(["string", "null"])))
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_09_nullable.py
+```
+
+**Step 4. Examine the output**
+
+- The document has no PO number
+- With `"string"`, Claude should fill the field anyway, typically with a placeholder such as `'NOT_PROVIDED'`
+- With `["string", "null"]`, Claude should return `None`
+
+> [!NOTE]
+> A placeholder string looks like real data to every system downstream. Making the field nullable gives Claude an honest way to say the value is missing, and lets your code test for `None`.
 
 ---
 
@@ -217,6 +361,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 - **Why same-session self-review fails**: a model in the same session retains its generation reasoning context and rarely questions its own implementation choices; always use a **second independent Claude instance** for verification
 - **Overcoming attention dilution on large PRs**: reviewing 14 modified files in one single pass causes superficial comments and contradictory feedback
 - **Two-stage multi-pass review**: run focused **per-file local analysis passes** first, followed by a separate **cross-file integration pass** examining data flow across modules
+- **Confidence-scored verification pass**: have the reviewer report a confidence level alongside each finding, then calibrate thresholds to route low-confidence findings to human review (this routes review attention; it is not an escalation trigger for live customers)
 
 ![Multi-Pass Code Review Architecture](images/ch05-multi-pass-review.svg)
 

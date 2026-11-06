@@ -54,7 +54,7 @@
 # Schedule
 
 ### Day One
-- **9:00** - Overview
+- **9:00** - Overview and Lab 0 Setup
 - **9:45** - Agentic Architecture and Orchestration
 - **11:15** - Lab: Building a Multi-Agent System with the Claude Agent SDK
 - **12:00** - Lunch
@@ -92,6 +92,14 @@
 - Hands-on experience with Claude Code
 - Familiarity with Model Context Protocol (MCP)
 - Understanding of LLM capabilities, context management, and structured outputs
-- **To complete the labs you need access to Claude, Claude Code installed and authenticated, and a code or text editor such as VS Code**
+- For the labs and demos: a paid Claude plan with Claude Code installed, a Claude Console API key with a few dollars of credit (created in Lab 0), Python 3.10 or newer, and a code editor such as VS Code
 
 ![Prerequisites](images/prerequisites.png)
+
+---
+
+# Lab 0: Validating Lab Prerequisites
+
+**Time:** 20 minutes
+
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-architect-foundations-exam-prep-workshop/labs/lab-00-validating-lab-prerequisites)

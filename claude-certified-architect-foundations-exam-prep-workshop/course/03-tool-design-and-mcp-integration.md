@@ -154,6 +154,88 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
+# Demo: A Policy Error Versus a Transient Error
+
+In `ccarf-labs`, with the virtual environment still active:
+
+**Step 1. Create `demo_05_error_category.py`**
+
+**Step 2. Paste this code**
+
+```python
+# demo_05_error_category.py - the same tool failure, two different error categories
+import json
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+tools = [{
+    "name": "process_refund",
+    "description": "Issue a refund for a delivered order.",
+    "input_schema": {
+        "type": "object",
+        "properties": {"order_id": {"type": "string"}, "amount": {"type": "number"}},
+        "required": ["order_id", "amount"],
+    },
+}]
+
+FAILURES = {
+    "transient": {"errorCategory": "transient", "isRetryable": True,
+                  "message": "Payment service timed out."},
+    "business_rule": {"errorCategory": "business_rule", "isRetryable": False,
+                      "code": "RETURN_WINDOW_EXPIRED",
+                      "userMessage": "Orders delivered more than 30 days ago cannot be refunded online."},
+}
+
+def run(failure):
+    messages = [{"role": "user", "content": "Please refund $45 on order ORD-2001."}]
+    for _ in range(2):
+        response = client.messages.create(
+            model="claude-haiku-5-5",
+            max_tokens=1028,
+            output_config={"effort": "low"},
+            system="You are a support agent. Read tool error metadata before you decide what to do next.",
+            tools=tools,
+            messages=messages,
+        )
+        calls = [b for b in response.content if b.type == "tool_use"]
+        if not calls:
+            break
+        messages.append({"role": "assistant", "content": response.content})
+        messages.append({"role": "user", "content": [{
+            "type": "tool_result", "tool_use_id": calls[0].id,
+            "is_error": True, "content": json.dumps(failure),
+        }]})
+    if calls:
+        print("  Claude called process_refund again (a retry).")
+    else:
+        text = "".join(b.text for b in response.content if b.type == "text")
+        print("  Claude:", text)
+
+for name, failure in FAILURES.items():
+    print(f"Error category: {name}")
+    run(failure)
+    print()
+```
+
+**Step 3. Run it**
+
+```bash
+python demo_05_error_category.py
+```
+
+**Step 4. Examine the output**
+
+- For `transient`, Claude should call `process_refund` again
+- For `business_rule`, Claude should stop, explain the 30-day window to the customer, and offer an escalation instead of retrying
+
+> [!NOTE]
+> The tool failed both times; only the metadata changed. `errorCategory` and `isRetryable` are what let the agent choose between a retry and an explanation. A bare `"Operation failed"` string gives it nothing to choose with.
+
+---
+
 <!-- layout: 2-column -->
 # Access Failures vs Valid Empty Results
 
@@ -209,6 +291,11 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 ### `{"type": "tool", "name": "..."}`
 - Forces the model to call **one specific named tool** on the current turn
 - Use to guarantee `extract_metadata` runs on turn 1 before enrichment tools run on follow-up turns
+
+<!-- below-columns -->
+
+> [!NOTE]
+> On the exam, `"any"` and forced selection are correct answers. In current releases, they work on Claude Haiku 5.5 and Opus 5 but return a 400 error on Opus 5.5, Sonnet 5.5, Fable 5.1, and Mythos 5.1, and a forced call skips thinking. There is also a fourth option, `"none"`, which prevents tool calls.
 
 ---
 
@@ -272,13 +359,10 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 ```json
 {
   "mcpServers": {
-    "github-enterprise": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}",
-        "GITHUB_API_URL": "https://github.example.com/api/v3"
-      }
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer ${GITHUB_TOKEN}" }
     }
   }
 }
@@ -300,6 +384,78 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 ### Community vs Custom MCP Servers
 - Choose vetted community or official MCP servers for standard platforms like Jira, GitHub, or Postgres.
 - Reserve custom MCP server development for proprietary internal workflows and domain-specific business logic.
+
+---
+
+# Demo: An MCP Server with a Tool and a Resource
+
+In `ccarf-labs`, with the virtual environment still active. This demo runs Claude Code, so it uses your Claude subscription.
+
+**Step 1. Create `runbook_server.py` and paste this code**
+
+```python
+# runbook_server.py - one resource (the catalog) and one tool (fetch a runbook)
+from mcp.server.mcpserver import MCPServer
+
+mcp = MCPServer("runbooks")
+
+RUNBOOKS = {
+    "db-failover": "1. Page the on-call DBA. 2. Promote the read replica. 3. Update the app connection string.",
+    "cache-flush": "1. Announce in #ops. 2. Run the flush job. 3. Watch the hit rate for 10 minutes.",
+    "cert-renewal": "1. Request the new certificate. 2. Upload it to the load balancer. 3. Verify the expiry date.",
+}
+
+@mcp.resource("runbooks://catalog")
+def catalog() -> str:
+    """The names of all available runbooks, one per line."""
+    return "\n".join(RUNBOOKS)
+
+@mcp.tool()
+def get_runbook(name: str) -> str:
+    """Return the steps for one runbook. Use a name from the runbooks://catalog resource."""
+    return RUNBOOKS.get(name, f"No runbook named {name}.")
+
+if __name__ == "__main__":
+    mcp.run()
+```
+
+**Step 2. Create `.mcp.json` in the same folder**
+
+```json
+{
+  "mcpServers": {
+    "runbooks": {
+      "command": "python",
+      "args": ["runbook_server.py"]
+    }
+  }
+}
+```
+
+**Step 3. Start Claude Code from the same terminal**
+
+```bash
+claude
+```
+
+When Claude Code asks whether to use the MCP server in `.mcp.json`, approve `runbooks`.
+
+**Step 4. Run `/mcp` and confirm that `runbooks` is connected, then press Esc**
+
+**Step 5. Ask Claude**
+
+```text
+Using the runbooks MCP server, which runbooks exist, and what are the steps for db-failover? Say which MCP tools or resources you used.
+```
+
+**Step 6. Examine the output**
+
+- Claude reads the `runbooks://catalog` resource to list the three runbook names
+- Claude calls the `get_runbook` tool (shown as `mcp__runbooks__get_runbook`) for the db-failover steps
+- Type `/exit` when you are done
+
+> [!NOTE]
+> The catalog is a **resource**: read-only content the agent can see without guessing. Fetching one runbook is a **tool**. Because `.mcp.json` lives in the project, everyone who clones the repository gets the same server.
 
 ---
 

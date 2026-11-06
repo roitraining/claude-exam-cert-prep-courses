@@ -43,7 +43,8 @@ def run_broken_support_agent(client, user_request, mcp_tools):
     # ANTI-PATTERN 1: Low arbitrary iteration cap as primary stopping mechanism
     for step in range(3):
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5-5",
+            max_tokens=4096,
             system="You are a customer support agent. Say FINAL_ANSWER when done.",
             tools=mcp_tools,
             messages=messages,
@@ -157,12 +158,18 @@ Run the script and show me the output.
 
 3. Inspect the output in Claude Code and verify that all four rules execute deterministically in code without relying on the LLM’s prompt compliance.
 
+> [!TIP]
+> These functions keep the rules easy to test in isolation. In a real Agent SDK app, register them with `HookMatcher` and return the SDK’s shapes instead: a `PreToolUse` hook returns `hookSpecificOutput` with `permissionDecision: "deny"` and a `permissionDecisionReason`, and a `PostToolUse` hook returns `updatedToolOutput`. The Chapter 2 demo “Blocking a Refund with a PreToolUse Hook” shows the full pattern.
+
 > [!NOTE]
 > Remember the exam decision rule: prompt instructions and few-shot examples are **probabilistic** (suitable for style or general guidance), whereas SDK hooks and programmatic prerequisite gates are **deterministic** (required whenever errors have financial, security, or identity consequences).
 
 ### Task 3: Configure a coordinator and parallel subagents with the Task tool
 
 In this task, you design a hub-and-spoke multi-agent research configuration that avoids narrow task decomposition, enables subagent spawning via `allowedTools: ["Task"]`, passes structured context explicitly, and emits parallel `Task` calls in a single turn.
+
+> [!NOTE]
+> This task uses the exam’s wording, `Task`. In current Agent SDK releases, the tool is named `Agent` (renamed in Claude Code v2.1.63), and subagents are defined in code with `agents={"web-search-agent": AgentDefinition(description=..., prompt=..., tools=[...])}`. The JSON file below is a design document, not an SDK configuration file.
 
 1. In your `ccarf-lab-01` folder, create a file named `multi_agent_research.json` that defines the coordinator and its subagents:
 
@@ -227,7 +234,7 @@ In this bonus task, you practice choosing the right session state strategy (`--r
 
 2. Verify that your `session_scenarios.md` matches the official exam rules:
    - **Scenario A**: Use `--resume auth-investigation` and explicitly tell the agent that `token_validator.py` changed so it performs targeted re-analysis instead of re-exploring all 20 files.
-   - **Scenario B**: Use `fork_session` to branch two independent explorations from the shared analysis baseline.
+   - **Scenario B**: Use `fork_session` to branch two independent explorations from the shared analysis baseline. On the CLI, that is `claude --resume <session> --fork-session`.
    - **Scenario C**: Start a **new session** and inject a concise, structured summary of verified findings rather than resuming a session polluted with stale tool results.
 
 ## Congratulations!
