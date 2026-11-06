@@ -68,6 +68,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 - Keep only personal preferences, such as editor habits, in user scope
 
 <!-- below-columns -->
+
 > [!TIP]
 > “Works for one developer, not for others” points to configuration **scope**. Rewording the instruction or adding emphasis will not reach a file the teammate never received.
 
@@ -120,16 +121,15 @@ integer cents; never use floats.
 - **Conditional rule loading**: files in `.claude/rules/*.md` use YAML frontmatter `paths` globs so conventions load **only** when Claude edits matching files
 - **Solves scattered file conventions**: when test files (`Button.test.tsx`) live next to components across dozens of directories, `.claude/rules/testing.md` with `paths: ["**/*.test.tsx"]` applies test conventions everywhere automatically
 
-```markdown
----
+```yaml
+# .claude/rules/testing.md frontmatter
 paths:
   - "**/*.test.ts"
   - "**/*.test.tsx"
   - "terraform/**/*"
----
-# Testing and Infrastructure Conventions
-- Use React Testing Library queries by accessible role, never by test ID.
-- Mock external HTTP calls using MSW fixtures from `src/test/fixtures/`.
+# Body: Testing and Infrastructure Conventions
+# - Query React Testing Library by accessible role, never by test ID.
+# - Mock external HTTP calls with MSW fixtures from src/test/fixtures/.
 ```
 
 ---
@@ -192,6 +192,7 @@ paths:
 - Use it for codebase analysis, log triage, and exploratory brainstorming
 
 <!-- below-columns -->
+
 > [!TIP]
 > If an exam scenario says a skill’s output “fills the context” or “derails the conversation,” the fix is `context: fork`, not a shorter prompt.
 
@@ -201,13 +202,12 @@ paths:
 
 - **On the exam, `allowed-tools` limits what a skill can do**: a read-only audit skill lists only inspection tools, so it cannot edit files while it runs
 
-```markdown
----
+```yaml
+# .claude/skills/dependency-audit/SKILL.md frontmatter
 name: dependency-audit
 description: Lists outdated and vulnerable dependencies without changing anything
 allowed-tools: ["Read", "Grep", "Glob"]
----
-Inspect package manifests and lock files. Report findings only.
+# Body: Inspect package manifests and lock files. Report findings only.
 ```
 
 - **Exam framing**: choose `allowed-tools` when a scenario asks how to keep a skill read-only or limit its blast radius
@@ -226,14 +226,12 @@ Inspect package manifests and lock files. Report findings only.
 - Nobody remembers the argument order
 
 ### The Fix
-```markdown
----
+```yaml
+# .claude/skills/new-migration/SKILL.md frontmatter
 name: new-migration
 description: Creates a reversible SQL migration
 argument-hint: "<migration-name> <target-schema>"
----
-Create migration $ARGUMENTS with up and
-down scripts and a rollback test.
+# Body: Create migration $ARGUMENTS with up and down scripts and a rollback test.
 ```
 - The hint shows the expected arguments as the developer types the command
 - `$ARGUMENTS` passes what they typed into the skill body
@@ -254,6 +252,7 @@ down scripts and a rollback test.
 - Your variant follows you across projects and is never committed
 
 <!-- below-columns -->
+
 > [!NOTE]
 > In current releases, a personal skill with the **same** name as a project skill takes precedence for you. A distinct name avoids silently replacing the shared workflow.
 
@@ -263,15 +262,14 @@ down scripts and a rollback test.
 
 - **A complete skill combines the fields**: an isolated context, a read-only tool set, and an argument hint
 
-```markdown
----
+```yaml
+# .claude/skills/security-audit/SKILL.md frontmatter
 name: security-audit
 description: Audits authentication and SQL modules for OWASP vulnerabilities
 context: fork
 allowed-tools: ["Read", "Grep", "Glob"]
 argument-hint: "<directory-or-module-path>"
----
-Analyze the target module for injection risks and return a summarized report.
+# Body: Analyze the target module for injection risks and return a summarized report.
 ```
 
 - Invoke it with `/security-audit src/auth`; the audit runs in a fork and returns only the summary
@@ -339,6 +337,7 @@ Analyze the target module for injection risks and return a summarized report.
 - They combine well: plan mode for the decision, with `Explore` doing the discovery so the planning context stays clean
 
 <!-- below-columns -->
+
 > [!TIP]
 > For multi-phase tasks where discovery output would exhaust the main context window, the exam answer is to delegate exploration to the **`Explore` subagent**.
 
@@ -567,6 +566,7 @@ done
 - This is the standard design for automated PR review
 
 <!-- below-columns -->
+
 > [!TIP]
 > “Ask the same session to double-check its work” and “add a self-review step to the prompt” are distractors. Independence comes from a **new context**, not from more instructions.
 

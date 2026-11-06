@@ -385,9 +385,9 @@ python demo_05_error_category.py
 <!-- layout: stacked -->
 # Scoped Cross-Role Tools for High-Frequency Needs
 
-- **Allow a narrow exception when one need dominates**: if 85% of the synthesis agent’s verification needs are simple fact checks (a date, a name, a statistic), routing each one through the coordinator adds a full round trip
-- **Grant a constrained `verify_fact` tool**, not general `web_search`: it checks one claim and returns `supported`, `contradicted`, or `not_found`
-- **Keep the 15% of complex investigations** routed back through the coordinator, so research stays coordinated
+- **Allow a narrow exception when one need dominates**: if 85% of the synthesis agent’s verification needs are simple fact checks, routing each one through the coordinator adds a full round trip
+- **Grant a constrained `verify_fact` tool**, not general `web_search`: it checks one claim 
+- **Keep the 15% of complex investigations** routed back through the coordinator
 
 ![Scoped Tool Distribution](images/ch03-scoped-tool-distribution.svg)
 
@@ -404,9 +404,9 @@ python demo_05_error_category.py
 - Forces the model to call **at least one** tool from the provided list rather than returning plain text
 - Ideal when multiple extraction schemas exist and the model must pick the matching schema tool
 
-### `{"type": "tool", "name": "..."}`
+### Named tool
 - Forces the model to call **one specific named tool** on the current turn
-- Use to guarantee `extract_metadata` runs on turn 1 before enrichment tools run on follow-up turns
+- Use to guarantee `extract_metadata` runs on turn 1 
 
 <!-- below-columns -->
 
@@ -572,6 +572,7 @@ from vendor.stripe_client import (
 - Example: `runbooks://catalog` lists every runbook name and its purpose
 
 <!-- below-columns -->
+
 > [!TIP]
 > When the exam describes an agent wasting turns calling `list_*` or search tools just to find out what data exists, the answer is to expose a **catalog as an MCP resource**.
 
@@ -650,7 +651,7 @@ Using the runbooks MCP server, which runbooks exist, and what are the steps for 
 ---
 
 <!-- layout: 2-column -->
-# Writing MCP Tool Descriptions That Compete with Built-Ins
+# MCP Tool Descriptions That Compete with Built-Ins
 
 ### Vague: Claude Uses `Grep` Instead
 ```json
@@ -683,6 +684,7 @@ Using the runbooks MCP server, which runbooks exist, and what are the steps for 
 - No vetted server exists for the system
 
 <!-- below-columns -->
+
 > [!NOTE]
 > Writing a custom GitHub MCP server when an official one exists is a classic over-engineering distractor.
 
