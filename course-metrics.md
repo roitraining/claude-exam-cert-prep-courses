@@ -1,9 +1,9 @@
 # Course Metrics
 
-Slide counts below include **content slides where the instructor talks** (including chapter title, objectives, teaching slides, Do Now debriefs, and What You Learned). Navigation slides, Quiz slides, Lab/Do Now activity slides, and Questions and Answers slides are excluded from the lecture slide count.
+Slide counts below include **content slides where the instructor talks** (objectives, teaching slides, Do Now debriefs, and What You Learned). Title slides, navigation slides, Demo slides, Lab/Do Now activity slides, Quiz slides, and Questions and Answers slides are excluded from the lecture slide count. The Associate and Architect Professional tables have not been recounted under this rule and still include chapter title slides.
 
 - **Lecture Time** = `Slide Count × 3 min`
-- **Activity Time** = Lab time or Do Now time (`2 min` per Do Now)
+- **Activity Time** = Lab time + `2 min` per Demo + `2 min` per Do Now
 - **Quiz Time** = `15 min` per quiz, `30 min` for the Final Practice Exam
 
 ---
@@ -32,17 +32,17 @@ Slide counts below include **content slides where the instructor talks** (includ
 
 | Chapter # | Slide Count | Lecture Time | Activity Time | Quiz Time |
 | :--- | :---: | :---: | :---: | :---: |
-| **00: Introduction** | 7 | 21 min | 20 min | 0 min |
-| **01: Architect Foundations Overview** | 15 | 45 min | 0 min | 0 min |
-| **02: Agentic Architecture and Orchestration** | 23 | 69 min | 45 min | 15 min |
-| **03: Tool Design and MCP Integration** | 19 | 57 min | 0 min | 15 min |
-| **04: Claude Code Configuration and Workflows** | 20 | 60 min | 45 min | 15 min |
-| **05: Prompt Engineering and Structured Output** | 16 | 48 min | 60 min | 15 min |
-| **06: Context Management and Reliability** | 13 | 39 min | 60 min | 15 min |
-| **07: Final Practice Exam** | 6 | 18 min | 0 min | 30 min |
-| **Total** | **119** | **357 min (6.0 hrs)** | **230 min (3.8 hrs)** | **105 min (1.8 hrs)** |
+| **00: Introduction** | 6 | 18 min | 20 min | 0 min |
+| **01: Architect Foundations Overview** | 13 | 39 min | 2 min | 0 min |
+| **02: Agentic Architecture and Orchestration** | 19 | 57 min | 51 min | 15 min |
+| **03: Tool Design and MCP Integration** | 16 | 48 min | 4 min | 15 min |
+| **04: Claude Code Configuration and Workflows** | 14 | 42 min | 47 min | 15 min |
+| **05: Prompt Engineering and Structured Output** | 13 | 39 min | 64 min | 15 min |
+| **06: Context Management and Reliability** | 11 | 33 min | 62 min | 15 min |
+| **07: Final Practice Exam** | 5 | 15 min | 0 min | 30 min |
+| **Total** | **97** | **291 min (4.9 hrs)** | **250 min (4.2 hrs)** | **105 min (1.8 hrs)** |
 
-**Combined Classroom Time (Lecture + Activity + Quiz):** `692 min` (`11.5 hours`)
+**Combined Classroom Time (Lecture + Activity + Quiz):** `646 min` (`10.8 hours`)
 
 ---
 
@@ -50,19 +50,19 @@ Slide counts below include **content slides where the instructor talks** (includ
 
 | Chapter # | Slide Count | Lecture Time | Activity Time | Quiz Time |
 | :--- | :---: | :---: | :---: | :---: |
-| **00: Introduction** | 7 | 21 min | 20 min | 0 min |
-| **01: Developer Foundations Overview** | 11 | 33 min | 0 min | 0 min |
-| **02: Agents and Workflows** | 23 | 69 min | 45 min | 15 min |
-| **03: Applications and Integration** | 27 | 81 min | 0 min | 15 min |
-| **04: Claude Code, Testing, and Debugging** | 19 | 57 min | 45 min | 15 min |
-| **05: Model Selection and Optimization** | 18 | 54 min | 0 min | 15 min |
-| **06: Prompt and Context Engineering** | 16 | 48 min | 45 min | 15 min |
-| **07: Security and Safety** | 15 | 45 min | 0 min | 15 min |
-| **08: Tools and MCPs** | 15 | 45 min | 45 min | 15 min |
-| **09: Final Practice Exam** | 7 | 21 min | 0 min | 30 min |
-| **Total** | **158** | **474 min (7.9 hrs)** | **200 min (3.3 hrs)** | **135 min (2.3 hrs)** |
+| **00: Introduction** | 6 | 18 min | 20 min | 0 min |
+| **01: Developer Foundations Overview** | 10 | 30 min | 2 min | 0 min |
+| **02: Agents and Workflows** | 26 | 78 min | 49 min | 15 min |
+| **03: Applications and Integration** | 29 | 87 min | 4 min | 15 min |
+| **04: Claude Code, Testing, and Debugging** | 20 | 60 min | 45 min | 15 min |
+| **05: Model Selection and Optimization** | 19 | 57 min | 2 min | 15 min |
+| **06: Prompt and Context Engineering** | 15 | 45 min | 47 min | 15 min |
+| **07: Security and Safety** | 16 | 48 min | 2 min | 15 min |
+| **08: Tools and MCPs** | 17 | 51 min | 47 min | 15 min |
+| **09: Final Practice Exam** | 6 | 18 min | 0 min | 30 min |
+| **Total** | **164** | **492 min (8.2 hrs)** | **218 min (3.6 hrs)** | **135 min (2.3 hrs)** |
 
-**Combined Classroom Time (Lecture + Activity + Quiz):** `809 min` (`13.5 hours`)
+**Combined Classroom Time (Lecture + Activity + Quiz):** `845 min` (`14.1 hours`)
 
 ---
 
