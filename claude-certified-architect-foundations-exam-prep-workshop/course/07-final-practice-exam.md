@@ -50,6 +50,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 | **Similar tools misrouted (`get_customer` vs `lookup_order`)** | Expand tool descriptions with input formats, examples, and boundaries | Building an external keyword router or adding 8 few-shot examples first |
 | **Synthesis agent needs 85% simple fact checks** | Grant a scoped `verify_fact` tool; route 15% complex cases via coordinator | Giving the synthesis agent all 18 web search tools |
 | **Subagent hits a timeout** | Retry transient errors locally; return structured error context + partial results | Returning an empty array `[]` as success or crashing the whole pipeline |
+| **Subagent fails mid-workflow** | Recover locally, then propagate structured context; continue with annotated coverage gaps | Terminating the whole workflow or silently suppressing the error |
 
 ---
 

@@ -14,7 +14,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 - Implement agentic loops using `stop_reason` control flow
 - Orchestrate coordinator and subagent workflows
-- Enforce compliance rules with Agent SDK hooks
+- Enforce compliance rules with prerequisite gates and Agent SDK hooks
 - Manage session state, resumption, and forking
 
 ---
@@ -79,6 +79,23 @@ while True:
 
     break  # "end_turn" is done; handle "max_tokens", "refusal", and "pause_turn" explicitly
 ```
+
+---
+
+# Handling Other `stop_reason` Values
+
+- **The exam focuses on two values**: continue on `"tool_use"`, finish on `"end_turn"`; a production loop must also decide what to do with the others
+
+| `stop_reason` | What Happened | What the Loop Should Do |
+| :--- | :--- | :--- |
+| `"tool_use"` | Claude requested one or more tools | Run the tools, append `tool_result` blocks, call again |
+| `"end_turn"` | Claude finished its answer | Exit the loop and return the final response |
+| `"max_tokens"` | Output hit the `max_tokens` ceiling mid-response | Raise `max_tokens` or ask Claude to continue; never treat it as done |
+| `"pause_turn"` | A long-running server tool paused the turn | Send the response back unchanged so Claude can resume |
+| `"refusal"` | Claude declined for safety reasons | Stop, log it, and route to a human or a fallback path |
+
+> [!WARNING]
+> A loop written as `while stop_reason != "end_turn"` spins forever on `"refusal"`, and a loop that exits on anything other than `"tool_use"` silently returns truncated `"max_tokens"` output as a finished answer.
 
 ---
 
@@ -214,23 +231,127 @@ python demo_02_stop_reason.py
 
 ---
 
-# Coordinator Responsibilities and Context Isolation
+# Coordinator Responsibilities
 
-- **Single control hub**: all inter-subagent communication, error handling, and information routing flow through the coordinator agent
-- **Strict context isolation**: subagents operate in isolated context windows and **do not** inherit the coordinator’s conversation history or share memory automatically
-- **Dynamic routing over rigid pipelines**: the coordinator analyzes query complexity and invokes only the required subagents rather than forcing every request through the full pipeline
-- **Iterative synthesis refinement**: the coordinator evaluates synthesis output for coverage gaps, re-delegates targeted queries to search or analysis subagents, and re-invokes synthesis until complete
+- **The coordinator is the single control hub**: every message between subagents passes through it; subagents never talk to each other directly
+- **Routing**: it decides which subagent gets which subtask and what context goes with it
+- **Aggregation**: it collects subagent results and decides whether they are complete enough to synthesize
+- **Error handling and observability**: because everything flows through one place, failures, retries, and progress are logged and handled consistently
 
-> [!WARNING]
-> If a downstream synthesis agent is missing information that an upstream search agent found, check whether the coordinator explicitly passed those findings in the synthesis subagent’s prompt.
+> [!TIP]
+> When an exam answer proposes letting subagents “share findings directly” or “call each other,” it breaks hub-and-spoke. The coordinator loses visibility, and errors stop being handled in one place.
 
 ---
 
-# Spawning Subagents with the `Task` Tool
+<!-- layout: 2-column -->
+# Subagents Do Not Inherit Context
 
-- **Enabling subagent spawning**: the coordinator’s `allowedTools` configuration **must** include `"Task"` to spawn subagents
-- **Configuring `AgentDefinition`**: each subagent type defines a clear description, system prompt, and scoped `allowedTools` list
-- **Passing structured context**: pass complete prior findings directly in the subagent prompt, separating content from metadata (`source_url`, `document_name`, `page_number`) to preserve attribution
+### Weak Delegation Prompt
+```text
+Synthesize the findings so far into a
+report on AI in creative industries.
+```
+- The synthesis subagent starts with an **empty** conversation
+- “The findings so far” refers to history it never saw
+- Result: a vague or invented report, even though the search subagents succeeded
+
+### Strong Delegation Prompt
+```text
+Write a report on AI in creative industries
+using ONLY these findings:
+
+<findings>
+1. Claim: 38% of music labels use AI mastering
+   Source: https://example.org/music-2026
+   Date: 2026-03-14
+2. Claim: ...
+</findings>
+
+Flag any subtopic with no findings.
+```
+
+<!-- below-columns -->
+> [!WARNING]
+> If a downstream agent is missing information an upstream agent found, check whether the coordinator **passed it in the prompt**. Subagents do not share memory or history automatically.
+
+---
+
+# Dynamic Subagent Selection by Query Complexity
+
+- **Route by what the query needs, not through a fixed pipeline**: the coordinator analyzes each request and invokes only the subagents it requires
+- **Simple factual query**: “What year was the EU AI Act passed?” needs one web search subagent, then a direct answer
+- **Document-only query**: “Summarize the attached filings” needs only the document analysis subagent
+- **Broad research query**: “Impact of AI on creative industries” needs parallel search and document subagents, then synthesis
+
+> [!NOTE]
+> Forcing every request through search, analysis, and synthesis wastes tokens and latency on simple queries. The exam favors a coordinator that adapts its plan to query complexity.
+
+---
+
+<!-- layout: 2-column -->
+# Iterative Refinement: Evaluate Synthesis, Re-Delegate Gaps
+
+### The Loop
+- The coordinator reads the synthesis draft and checks it against the original research goal
+- For each gap, it sends a **targeted** query to the search or analysis subagent
+- It re-invokes synthesis with the new findings and stops when coverage criteria are met
+
+### Example Gap Check
+```text
+Goal subtopics: music, film, writing,
+                visual art, games
+Draft covers:   music, film, visual art
+
+Gaps -> re-delegate:
+  web-search: "AI use in publishing 2026"
+  web-search: "AI in game asset pipelines"
+Then re-run synthesis with all findings.
+```
+
+---
+
+<!-- layout: 2-column -->
+# Coordinator Prompts: Goals and Quality Criteria, Not Procedures
+
+### Procedural (Weak)
+```text
+Step 1: Search Google for "AI music".
+Step 2: Open the first three results.
+Step 3: Copy each summary into a list.
+Step 4: Pass the list to synthesis.
+```
+- Breaks when the first results are low quality or the topic needs other sources
+- Subagents cannot adapt because the method is fixed
+
+### Goal-Based (Strong)
+```text
+Goal: Assess AI's impact on music, film,
+writing, visual art, and games.
+Quality bar: at least two independent
+sources per subtopic, published 2025 or
+later, with source URLs and dates.
+Flag subtopics that miss the bar.
+```
+- Each subagent picks its own search strategy within its domain
+- The coordinator can check results against the stated quality bar
+
+---
+
+# The `Task` Tool and `allowedTools`
+
+- **Subagents are spawned through a tool call**: the coordinator emits a `Task` tool call with `subagent_type`, `description`, and `prompt`; the SDK runs that subagent and returns its final result as the `tool_result`
+- **No tool, no subagents**: the coordinator’s `allowedTools` **must** include `"Task"`; otherwise it has no way to delegate, however well the subagents are defined
+- **Subagents get their own tool lists**: a subagent sees only the tools in its own definition, not the coordinator’s
+- **Diagnostic clue**: “Subagents are configured but the coordinator does all the work itself” usually means `Task` is missing from `allowedTools`
+
+> [!NOTE]
+> On the exam, the spawning tool is `Task`. In current Agent SDK releases it is named `Agent` (renamed in Claude Code v2.1.63), and the `system:init` tools list still shows it as `Task`.
+
+---
+
+# Defining Subagents with `AgentDefinition`
+
+- **Each subagent type is an `AgentDefinition`**: the `description` tells the coordinator when to use it, the `prompt` is its system prompt, and `tools` scopes what it can call
 
 ```python
 from claude_agent_sdk import AgentDefinition, ClaudeAgentOptions
@@ -252,8 +373,39 @@ options = ClaudeAgentOptions(
 )
 ```
 
-> [!NOTE]
-> On the exam, the spawning tool is `Task`. In current Agent SDK releases it is named `Agent` (renamed in Claude Code v2.1.63), and the `system:init` tools list still shows it as `Task`.
+> [!TIP]
+> Write the `description` as a routing rule (“Use for current sources”). The coordinator chooses subagents the same way Claude chooses tools: by reading descriptions.
+
+---
+
+<!-- layout: 2-column -->
+# Passing Context Explicitly
+
+### What to Pass
+- **Complete prior findings**, not a pointer to them: the subagent cannot look them up
+- **Content separated from metadata**, so attribution survives the handoff
+- **The specific task and its output format**, so results come back ready to merge
+
+### Example Subagent Prompt
+```text
+Task: Verify the claims below against
+the attached filings.
+
+<prior_findings>
+- claim: "Studio revenue from AI tools
+          grew 22% in 2025"
+  source_url: https://example.org/film
+  document_name: null
+  page_number: null
+</prior_findings>
+
+Return: claim, verdict, document_name,
+        page_number for each claim.
+```
+
+<!-- below-columns -->
+> [!IMPORTANT]
+> Flattening findings into one prose paragraph loses `source_url` and `page_number`. Downstream synthesis then cannot cite anything, which the exam treats as a provenance failure.
 
 ---
 
@@ -273,7 +425,7 @@ options = ClaudeAgentOptions(
 <!-- below-columns -->
 
 > [!TIP]
-> Design coordinator prompts to specify **research goals and quality criteria** rather than step-by-step procedural instructions so each subagent can adapt within its domain.
+> If the exam describes independent subtopics running one after another, the fix is a coordinator prompt that tells it to emit **all independent `Task` calls in one response**, not a larger model or more subagents.
 
 ---
 
@@ -321,11 +473,47 @@ results = await asyncio.gather(
 
 ---
 
-# Avoiding Task Decomposition Pitfalls
+<!-- layout: 2-column -->
+# Overly Narrow Decomposition
 
-- **Overly narrow decomposition**: if a user asks for the “impact of AI on creative industries” and the coordinator only spawns tasks for digital art, graphic design, and photography, the final report will completely miss music, writing, and film
-- **Diagnostic rule**: when subagent logs show every subagent succeeded on its assigned task but the final report omits entire topic areas, the root cause is the **coordinator’s task decomposition**
-- **Scope partitioning**: assign distinct subtopics or source types to each subagent to maximize breadth and minimize duplicate searches
+### The Symptom
+- Request: “impact of AI on creative industries”
+- Coordinator spawns subtasks for **digital art**, **graphic design**, and **photography** only
+- Every subagent succeeds, and the final report never mentions music, writing, or film
+
+### The Diagnosis
+- Subagent logs show every subtask completed successfully
+- Synthesis faithfully reported what it received
+- The gap was created **before** any subagent ran: the root cause is the coordinator’s decomposition
+- Fix the coordinator prompt so it enumerates the full scope before delegating
+
+<!-- below-columns -->
+> [!TIP]
+> Distractors blame the search subagent (“improve its queries”) or synthesis (“tell it to be more comprehensive”). Neither can report on topics nobody was asked to research.
+
+---
+
+<!-- layout: 2-column -->
+# Partitioning Scope to Avoid Duplicate Work
+
+### Overlapping Assignments
+```text
+web-search-1: "AI in creative industries"
+web-search-2: "AI and artists"
+web-search-3: "generative AI creativity"
+```
+- All three return many of the same top articles
+- Tokens are spent three times on one source set, and coverage is still uneven
+
+### Partitioned Assignments
+```text
+web-search-1: music and audio
+web-search-2: film, TV, and games
+web-search-3: writing and publishing
+doc-analysis: supplied industry filings
+```
+- Each subagent owns a distinct subtopic or source type
+- Breadth increases and duplicate searches disappear
 
 ---
 
@@ -359,24 +547,107 @@ results = await asyncio.gather(
 
 ---
 
-<!-- layout: card-layout -->
-# Applying Agent SDK Hooks
+# Prerequisite Gates with Session State
 
-### Outgoing Tool Interception Hooks
-- Intercept tool calls before execution to enforce hard compliance rules, such as blocking `process_refund` when `amount > 500`.
-- Return a structured block message and redirect the agent to `escalate_to_human`.
+- **A prerequisite gate is code that refuses a tool call until an earlier step has succeeded**: the model can still choose the order, but it cannot skip the step
+- **Track the prerequisite in session state**: when `get_customer` returns a verified ID, store it; downstream tools check for it before running
+- **Block with a reason the model can act on**: the denial message tells Claude which tool to call first, so it recovers on the next turn
 
-### PostToolUse Normalization Hooks
-- Intercept raw MCP tool outputs before the model processes them.
-- Normalize heterogeneous data formats (Unix epoch timestamps, ISO 8601 dates, numeric status codes) into one canonical schema.
+```python
+session_state = {}
 
-### Multi-Concern Decomposition
-- When a customer message contains multiple distinct issues, decompose into separate items and investigate them in parallel using shared verified context.
-- Synthesize all findings into one unified resolution response.
+def on_get_customer_result(result):
+    if result.get("verified"):
+        session_state["verified_customer_id"] = result["customer_id"]
 
-### Structured Escalation Handoffs
-- Human agents often lack access to the live LLM conversation transcript.
-- Compile a structured handoff payload containing `customer_id`, `root_cause`, `refund_amount`, and `recommended_action`.
+def gate(tool_name):
+    if tool_name in {"lookup_order", "process_refund"} \
+            and "verified_customer_id" not in session_state:
+        return "Blocked: call get_customer and verify the account first."
+    return None  # allowed
+```
+
+---
+
+<!-- layout: 2-column -->
+# Decomposing Multi-Concern Requests
+
+### The Request
+```text
+"My refund for ORD-1001 never arrived,
+and I moved last week, so please update
+my shipping address for ORD-1002."
+```
+- Two independent concerns share one verified customer
+- Handling only the first concern, or answering them in two disconnected replies, fails the customer
+
+### The Pattern
+- **Verify once**: `get_customer` establishes shared context for both concerns
+- **Decompose**: refund status and address change become separate work items
+- **Investigate in parallel**: `lookup_order(ORD-1001)` and `lookup_order(ORD-1002)` in one turn
+- **Synthesize**: one reply that resolves or escalates each concern explicitly
+
+---
+
+<!-- layout: 2-column -->
+# Structured Escalation Handoffs
+
+### Why Structure Matters
+- The human agent who picks up an escalation usually **cannot see** the LLM conversation transcript
+- A free-text note (“customer upset about refund”) forces the human to re-investigate from scratch
+- A structured payload lets them act immediately and lets you route by field
+
+### Example Handoff Payload
+```json
+{
+  "customer_id": "C-48213",
+  "verified": true,
+  "issue": "Refund request above limit",
+  "root_cause": "Item damaged in transit",
+  "refund_amount": 812.40,
+  "policy_limit": 500,
+  "actions_taken": [
+    "Verified account",
+    "Confirmed carrier damage report"
+  ],
+  "recommended_action": "Approve full refund",
+  "customer_sentiment": "frustrated"
+}
+```
+
+---
+
+<!-- layout: 2-column -->
+# PreToolUse: Intercepting Outgoing Calls
+
+### How It Works
+- A `PreToolUse` hook runs in your code **after** Claude requests a tool and **before** the tool executes
+- It sees the tool name and the exact `tool_input` Claude generated
+- It can allow the call, or deny it with a reason that goes back to Claude as the result
+
+### Example: Refund Ceiling
+- Claude calls `process_refund` with `amount: 812.40`
+- The hook sees `amount > 500` and denies the call
+- The denial reason says: “Refund exceeds the $500 limit. Call `escalate_to_human`.”
+- Claude reads the reason and escalates with a structured handoff
+
+<!-- below-columns -->
+> [!IMPORTANT]
+> The tool never runs, regardless of what the prompt or the customer says. That is why the exam prefers hooks over system prompt rules for financial and compliance limits.
+
+---
+
+# PostToolUse: Normalizing Tool Results
+
+- **A `PostToolUse` hook rewrites a tool’s output before Claude sees it**: different MCP backends return the same facts in different formats, and the model reasons more reliably over one canonical shape
+
+| Field | Raw Output (Three Backends) | After Normalization |
+| :--- | :--- | :--- |
+| Order date | `1730851200` / `"2024-11-06T00:00:00Z"` / `"11/06/2024"` | `"2024-11-06"` |
+| Status | `3` / `"SHIPPED"` / `"shp"` | `"shipped"` |
+| Amount | `"81240"` (cents) / `812.4` / `"$812.40"` | `812.40` |
+
+- **Normalize in code, not in the prompt**: a prompt asking Claude to “interpret all date formats” is probabilistic; the hook is deterministic and applies to every call
 
 ---
 
@@ -521,6 +792,23 @@ python demo_03_refund_hook.py
 
 ---
 
+<!-- layout: 2-column -->
+# Adaptive Decomposition: Worked Example
+
+### Task: Add Tests to a Legacy Billing Service
+1. **Map**: list modules, entry points, and existing tests
+2. **Prioritize**: `invoice.py` and `tax.py` handle money and have no tests, so start there
+3. **Execute**: write tests for `invoice.py`
+4. **Discover**: `invoice.py` imports an undocumented `currency_cache` with global state
+5. **Revise the plan**: add a fixture for `currency_cache` before continuing to `tax.py`
+
+### Why Not a Fixed Chain?
+- A prompt chain decided up front (“test file 1, then file 2, then file 3”) cannot react to step 4
+- It would keep writing tests that fail for reasons outside the file under test
+- Use fixed chains when the stages are known in advance (per-file review, then integration); use adaptive decomposition when **discovery changes the plan**
+
+---
+
 <!-- layout: navigation -->
 # Chapter 2
 
@@ -619,6 +907,32 @@ python demo_04_fork.py
 
 ---
 
+<!-- layout: 2-column -->
+# Resuming After Code Changes
+
+### The Situation
+- Yesterday’s session `auth-review` mapped 40 files and found three issues
+- Overnight, a teammate edited `session.py` and `tokens.py`
+- The resumed session still holds tool results showing the **old** contents of those two files
+
+### The Resume Message
+```bash
+claude --resume auth-review
+```
+```text
+Since our last session, session.py and
+tokens.py were modified (commit 4f2a9c1).
+Re-read only those two files, re-check
+issues 2 and 3 against the new code, and
+keep your other findings as they are.
+```
+
+<!-- below-columns -->
+> [!TIP]
+> Targeted notification beats both extremes: silently resuming trusts stale tool results, and re-exploring all 40 files throws away work that is still valid.
+
+---
+
 # Domain 1 Quiz: Agentic Architecture and Orchestration
 
 - [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-30-14-18-ccar-f-realistic-instructor.json)
@@ -637,7 +951,7 @@ python demo_04_fork.py
 
 - Implemented agentic loops using `stop_reason` control flow
 - Orchestrated coordinator and subagent workflows
-- Enforced compliance rules with Agent SDK hooks
+- Enforced compliance rules with prerequisite gates and Agent SDK hooks
 - Managed session state, resumption, and forking
 
 ---

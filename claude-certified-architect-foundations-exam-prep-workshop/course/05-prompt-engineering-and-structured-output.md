@@ -43,35 +43,148 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
-# Explicit Criteria vs Vague Confidence Filters
+# Explicit Criteria Beat Vague Instructions
 
-### Vague Instructions (Low Precision)
-- Instructions like `"be conservative"`, `"only report high-confidence findings"`, or `"check that comments are accurate"` fail to reduce false positives
-- Models calibrate self-reported confidence poorly on subtle code review rules
-- High false-positive categories erode developer trust across the entire review system, causing engineers to ignore accurate security findings too
+### Vague (Low Precision)
+```text
+Review the comments in this diff.
+Be conservative and only report
+high-confidence findings.
+```
+- “Conservative” and “high-confidence” mean nothing measurable
+- Models calibrate self-reported confidence poorly on subtle review rules
+- False positives stay roughly where they were
 
-### Explicit Categorical Criteria (High Precision)
-- Define exact conditions to report vs skip: `"Flag comments ONLY when claimed behavior directly contradicts actual code operations; skip stylistic or incomplete comments"`
-- Provide concrete code examples for each severity level (`critical`, `error`, `warning`)
-- Temporarily disable noisy, high false-positive categories while you refine their prompts to protect developer trust
+### Explicit (High Precision)
+```text
+Flag a comment ONLY when the behavior it
+describes contradicts what the code does,
+for example: "returns None on failure"
+above code that raises ValueError.
+
+Do NOT flag: stylistic wording, missing
+comments, or comments that are incomplete
+but not wrong.
+```
+- States exactly what to report and what to skip
 
 ---
 
-<!-- layout: card-layout -->
-# Few-Shot Prompting for Consistency and Generalization
+<!-- layout: 2-column -->
+# False Positives Erode Trust: Disable Noisy Categories
 
-### Ambiguous-Case Reasoning
-- Include 2 to 4 targeted few-shot examples showing **why** one decision or tool was chosen over a plausible alternative.
-- Helps the model generalize judgment to novel edge cases rather than only matching literal rules.
+### The Damage
+- One category (say, “naming suggestions”) produces 40% false positives
+- Developers learn to skim past the bot’s comments
+- They start ignoring the **accurate** security findings too, so one noisy category damages the whole system
 
-### Strict Output Formatting
-- Demonstrate the exact target structure (`location`, `issue`, `severity`, `suggested_fix`) in few-shot examples when prose instructions alone yield inconsistent formatting.
+### The Response
+- **Temporarily disable** the high false-positive category in production
+- Refine its prompt with explicit criteria and examples on a test set
+- Re-enable it only when precision meets your bar
+- Keep high-precision categories (injection, auth bypass) running the whole time
 
-### Distinguishing Acceptable Patterns
-- Pair genuine bug examples with acceptable local code idioms so the reviewer stops flagging intentional repository conventions as defects.
+<!-- below-columns -->
+> [!TIP]
+> “Lower the overall confidence threshold” or “tell the model to be more careful” are distractors. The exam answer isolates the noisy category and fixes it with explicit criteria.
 
-### Handling Document Variety Without Hallucination
-- Show extraction examples across varied document layouts (inline citations vs bibliographies, tables vs narrative prose, informal measurements) so required fields are extracted accurately instead of returning empty or fabricated values.
+---
+
+# Defining Severity with Code Examples
+
+- **Severity labels are only consistent when each level has a concrete example**: “critical” means different things to different reviewers, including the model
+
+| Severity | Definition in the Prompt | Example Shown to the Model |
+| :--- | :--- | :--- |
+| `critical` | Exploitable now, or causes data loss | `cursor.execute(f"SELECT * FROM users WHERE id={uid}")` |
+| `error` | Wrong behavior in a reachable path | `if amount > 0 or amount < 100:` (should be `and`) |
+| `warning` | Risky but not currently wrong | `requests.get(url)` with no `timeout=` argument |
+
+- **Put the examples in the prompt**, next to the definitions, so the model anchors on them
+
+---
+
+<!-- layout: 2-column -->
+# Few-Shot for Ambiguous Cases: Show the Reasoning
+
+### Why Examples with Reasoning
+- Rules cover the clear cases; the hard cases sit between two plausible choices
+- 2 to 4 examples that explain **why** one choice beat the alternative teach the judgment, not just the label
+- The model then generalizes to edge cases no rule anticipated
+
+### Example
+```text
+Request: "Cancel my order and refund me."
+Order status: shipped.
+Choice: lookup_order, then explain the
+return process. NOT process_refund.
+Why: a shipped order cannot be cancelled;
+the refund depends on the return, so
+issuing it now would skip the policy.
+```
+
+---
+
+<!-- layout: 2-column -->
+# Few-Shot for Output Format Consistency
+
+### The Problem
+- Prose says “report location, issue, severity, and fix”
+- Outputs vary: some use line ranges, some file names only, some merge issue and fix into one sentence
+- Downstream parsing breaks on every variation
+
+### Show the Exact Shape
+```text
+Example finding:
+location: api/orders.py:88
+issue: SQL query built with an f-string
+severity: critical
+suggested_fix: Use a parameterized query
+  with cursor.execute(sql, (uid,))
+```
+- One or two examples like this fix formatting faster than more prose rules
+
+---
+
+<!-- layout: 2-column -->
+# Few-Shot to Separate Acceptable Patterns from Real Issues
+
+### The Problem
+- The repo intentionally uses `except Exception: log_and_reraise()` in its job runner
+- The reviewer flags it as “overly broad exception handling” in every PR
+- Developers dismiss the same finding dozens of times
+
+### Pair a Real Bug with an Accepted Idiom
+```text
+FLAG (real issue):
+  except Exception:
+      pass        # error silently lost
+
+DO NOT FLAG (team convention):
+  except Exception:
+      log_and_reraise()  # logged and raised
+```
+- The contrast teaches the boundary, not just the keyword
+
+---
+
+<!-- layout: 2-column -->
+# Few-Shot for Varied Document Structures
+
+### The Problem
+- Research papers cite sources inline (“Smith 2024”) in some files and in a bibliography in others
+- Measurements appear in tables, in prose, or informally (“about two kilos”)
+- With one layout in the examples, the model returns empty or invented fields for the others
+
+### Cover the Variety
+```text
+Example A (table): "| Mass | 2.1 kg |"
+  -> mass_kg: 2.1
+Example B (prose): "weighed roughly 2 kg"
+  -> mass_kg: 2.0, approximate: true
+Example C (absent): no mass given
+  -> mass_kg: null
+```
 
 ---
 
@@ -85,14 +198,56 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Enforcing Structured Output via `tool_use`
+# Extraction Through a Tool Schema
 
-- **Most reliable mechanism**: defining an extraction tool with a JSON Schema and reading the `tool_use` input guarantees **zero JSON syntax errors**
-- **Strict mode**: add `"strict": true` to the tool definition so the input is also guaranteed to match the schema, not just parse as JSON
-- **Syntax vs semantic correctness**: strict JSON schemas via `tool_use` eliminate malformed JSON syntax, but **do not prevent semantic errors** (such as line items that do not sum to the stated invoice total, or values placed in the wrong field)
-- **Selecting `tool_choice` for extraction**:
-  - `tool_choice: "any"` when multiple document extraction schemas exist and the document type is unknown upfront
-  - `tool_choice: {"type": "tool", "name": "extract_invoice"}` when forcing a specific extraction tool to run first
+- **Define the output as a tool, then read the tool call’s input**: the API returns the arguments as parsed JSON, so there is no text to parse and **no JSON syntax errors**
+- **Strict mode**: add `"strict": true` so the input is also guaranteed to match the schema, not just parse as JSON
+
+```python
+extract_invoice = {
+    "name": "extract_invoice",
+    "description": "Record the invoice fields exactly as written in the document.",
+    "strict": True,
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "vendor": {"type": "string"},
+            "invoice_number": {"type": "string"},
+            "stated_total": {"type": "number"},
+        },
+        "required": ["vendor", "invoice_number", "stated_total"],
+        "additionalProperties": False,
+    },
+}
+
+response = client.messages.create(model="claude-haiku-5-5", max_tokens=1024,
+                                  tools=[extract_invoice], messages=messages)
+invoice = next(b.input for b in response.content if b.type == "tool_use")  # already a dict
+```
+
+> [!TIP]
+> “Ask for JSON in the prompt and parse the text with a regex” is the classic distractor. The tool schema is the reliable mechanism.
+
+---
+
+<!-- layout: 2-column -->
+# Syntax Errors vs Semantic Errors
+
+### Syntax Errors: Solved by the Schema
+- Missing braces, trailing commas, unquoted keys
+- A string where a number belongs
+- A required field left out
+- `tool_use` with a schema (and strict mode) eliminates these
+
+### Semantic Errors: Not Solved by the Schema
+- Line items that do not add up to the stated total
+- A ship-to address placed in the bill-to field
+- A date that is valid ISO 8601 but is the wrong date
+- These need **validation code** or a review step after extraction
+
+<!-- below-columns -->
+> [!IMPORTANT]
+> A valid schema proves the data has the right **shape**, not that it is **right**. The next demo shows a schema-perfect extraction with an impossible total.
 
 ---
 
@@ -171,21 +326,48 @@ python demo_08_semantic_check.py
 
 ---
 
-<!-- layout: card-layout -->
-# Schema Design Patterns That Prevent Hallucination
+<!-- layout: 3-column -->
+# Choosing `tool_choice` for Extraction
 
-### Nullable / Optional Fields
-- When source documents may not contain a piece of information (such as `discount_code` or `expiration_date`), mark the field optional or nullable (`["string", "null"]`).
-- Making absent fields strictly required forces the model to fabricate values to satisfy the schema.
+### `"auto"`
+- Claude may answer in text instead of calling the extraction tool
+- Fine for chat; risky for a pipeline that expects structured output every time
 
-### `"unclear"` Enum Values
-- When classifying ambiguous text into an `enum`, include an explicit `"unclear"` or `"not_specified"` value so the model is not forced to guess.
+### `"any"`
+- Claude **must** call one of the provided tools, and it chooses which
+- Use when several schemas exist (`extract_invoice`, `extract_receipt`, `extract_contract`) and the document type is unknown up front
 
-### Extensible `"other"` + Detail Pattern
-- For open-ended categories, add `"other"` to the `enum` alongside an optional `category_other_detail` string property to capture novel cases cleanly.
+### Forced Tool
+- `{"type": "tool", "name": "extract_invoice"}`
+- Claude must call **that** tool
+- Use when the document type is known, or when one extraction must run before any enrichment
 
-### Prompt Normalization Rules
-- Pair strict output schemas with prompt-level normalization rules (for example, converting `"Oct 30, 2026"` and `"30/10/26"` into ISO `YYYY-MM-DD`).
+<!-- below-columns -->
+> [!NOTE]
+> On the exam, `"any"` and forced selection are correct answers. In current releases, they return a 400 error on Opus 5.5, Sonnet 5.5, Fable 5.1, and Mythos 5.1; use Claude Haiku 5.5 or Opus 5, or rely on `"auto"` with a system prompt that requires the tool call.
+
+---
+
+<!-- layout: 2-column -->
+# Nullable Fields for Absent Data
+
+### Required String: Forced Fabrication
+```json
+"po_number": {"type": "string"}
+```
+- The document has no PO number, but the schema demands a string
+- The model fills it with something plausible: `"N/A"`, `"PO-0000"`, or an invented number
+- Downstream systems treat the placeholder as real data
+
+### Nullable: An Honest Answer
+```json
+"po_number": {
+  "type": ["string", "null"],
+  "description": "PO number if printed on the document; otherwise null"
+}
+```
+- The model can return `null` when the value is absent
+- Code checks for `null` and routes the record for follow-up
 
 ---
 
@@ -257,6 +439,55 @@ python demo_09_nullable.py
 
 ---
 
+<!-- layout: 2-column -->
+# Enums with `unclear` and `other` Plus Detail
+
+### `"unclear"` for Ambiguous Text
+```json
+"contract_type": {
+  "enum": ["fixed_price", "time_and_materials",
+           "retainer", "unclear"]
+}
+```
+- Without `"unclear"`, an ambiguous clause is forced into the nearest category
+- With it, ambiguous documents are labeled honestly and can be routed to review
+
+### `"other"` Plus Detail for Novel Cases
+```json
+"payment_method": {
+  "enum": ["card", "ach", "wire", "check", "other"]
+},
+"payment_method_other_detail": {
+  "type": ["string", "null"]
+}
+```
+- New cases (“crypto escrow”) are captured in the detail field instead of being mislabeled
+- Reviewing the detail values tells you when to add a new enum value
+
+---
+
+<!-- layout: 2-column -->
+# Format Normalization Rules in the Prompt
+
+### Why the Schema Is Not Enough
+- `{"type": "string"}` accepts `"Oct 30, 2026"`, `"30/10/26"`, and `"2026-10-30"` equally
+- The schema checks types, not your team’s conventions
+- Without rules, downstream code has to handle every format the source documents used
+
+### Add Explicit Rules
+```text
+Normalization rules:
+- Dates: YYYY-MM-DD. "30/10/26" in a UK
+  document is 2026-10-30.
+- Money: number in the document currency,
+  no symbols. "$1,450.00" -> 1450.00
+- Units: kilograms. "2,200 lb" -> 997.9
+- If a value cannot be normalized
+  confidently, return null.
+```
+
+---
+
 # Extraction Tool Schema Example
 
 - **Combining nullable fields, `"unclear"` enums, and `"other"` + detail strings**:
@@ -295,14 +526,87 @@ python demo_09_nullable.py
 
 ---
 
-<!-- layout: stacked -->
+<!-- layout: title-image -->
 # Validation-Retry Feedback Loops
 
-- **Retry-with-error-feedback**: when Pydantic or semantic validation fails, send a follow-up request containing the **original document**, the **failed extraction JSON**, and the **exact validation error message**
-- **Self-correction fields**: extract `calculated_total` alongside `stated_total` and `conflict_detected` booleans to catch arithmetic discrepancies automatically
-- **Tracking false-positive patterns**: include a `detected_pattern` field in code review findings so you can analyze which constructs developers frequently dismiss
-
 ![Validation and Retry Feedback Loop](images/ch05-validation-retry-loop.svg)
+
+---
+
+# Retrying with Specific Error Feedback
+
+- **A retry works when Claude can see exactly what went wrong**: send the **original document**, the **failed extraction**, and the **exact validation error**, not just “try again”
+
+```python
+try:
+    Invoice.model_validate(extracted)
+except ValidationError as err:
+    messages += [
+        {"role": "assistant", "content": response.content},  # the failed extraction call
+        {"role": "user", "content": [{
+            "type": "tool_result",
+            "tool_use_id": call.id,
+            "is_error": True,
+            "content": (
+                f"Validation failed:\n{err}\n\n"
+                "Re-read the invoice above and call extract_invoice again. "
+                "Fix only the fields named in the error."
+            ),
+        }]},
+    ]
+    response = client.messages.create(model="claude-haiku-5-5", max_tokens=1024,
+                                      tools=[extract_invoice], messages=messages)
+```
+
+> [!NOTE]
+> The original document stays in `messages`, so the retry can check the source. Cap retries at 2 or 3, then route the record to human review.
+
+---
+
+<!-- layout: 2-column -->
+# Self-Correction Fields
+
+### The Pattern
+- Extract the total **as printed** (`stated_total`)
+- Also have Claude compute the total from the line items (`calculated_total`)
+- Add a `conflict_detected` boolean, and verify it in code
+- A mismatch becomes a data signal, not a silent error
+
+### Example Output
+```json
+{
+  "line_items": [
+    {"qty": 3, "unit_price": 200.00},
+    {"qty": 2, "unit_price": 320.00}
+  ],
+  "stated_total": 1450.00,
+  "calculated_total": 1240.00,
+  "conflict_detected": true
+}
+```
+- Conflicts route to review instead of flowing into the ledger
+
+---
+
+<!-- layout: 2-column -->
+# `detected_pattern` for False-Positive Analysis
+
+### The Pattern
+- Each review finding names the code construct that triggered it
+- When developers dismiss findings, you can group dismissals by pattern
+- The patterns with high dismissal rates are where your criteria or few-shot examples need work
+
+### Example Finding
+```json
+{
+  "location": "jobs/runner.py:42",
+  "issue": "Broad exception handler",
+  "severity": "warning",
+  "detected_pattern": "except_exception_reraise",
+  "suggested_fix": "Catch specific exceptions"
+}
+```
+- Dismissal data: `except_exception_reraise` dismissed 31 of 33 times, so add an “acceptable pattern” example
 
 ---
 
@@ -345,25 +649,134 @@ python demo_09_nullable.py
 
 ---
 
-# Batch SLA Math and Failure Recovery
+# Batch Lifecycle: Create, Poll, Retrieve
 
-- **SLA submission frequency math**: because a batch can take up to **24 hours**, if your business SLA requires all incoming documents to be processed within **30 hours**, you must submit newly queued documents at least **every 6 hours** (or on a 4-hour schedule with safety margin: `4h queue + 24h max batch = 28h <= 30h SLA`)
-- **Handling partial batch failures**:
-  - Identify failed items using their `custom_id`
-  - Resubmit **only the failed documents** with targeted adjustments (such as chunking oversized documents that exceeded context limits)
-- **Pre-batch sample refinement**: test and refine your extraction prompt on a small representative sample set first to maximize first-pass batch accuracy
+- **A batch is asynchronous**: submit every request at once, poll until processing ends, then match each result to its request by `custom_id`
+
+```python
+batch = client.messages.batches.create(requests=[
+    {"custom_id": f"doc-{doc.id}",
+     "params": {"model": "claude-haiku-5-5", "max_tokens": 1024,
+                "tools": [extract_invoice],
+                "tool_choice": {"type": "tool", "name": "extract_invoice"},
+                "messages": [{"role": "user", "content": doc.text}]}}
+    for doc in documents
+])
+
+while client.messages.batches.retrieve(batch.id).processing_status != "ended":
+    time.sleep(60)
+
+failed = []
+for entry in client.messages.batches.results(batch.id):
+    if entry.result.type == "succeeded":
+        save(entry.custom_id, entry.result.message)
+    else:  # "errored", "canceled", or "expired"
+        failed.append(entry.custom_id)
+```
+
+> [!NOTE]
+> Results can come back in any order, which is why `custom_id` is required. Each request is a single turn: if Claude asks for a tool, the batch cannot run that tool and continue.
+
+---
+
+# Batch SLA Math
+
+- **Work backward from the SLA**: a document can wait in your queue, then spend up to **24 hours** in the batch, and the total must fit inside the SLA
+
+| Quantity | Value |
+| :--- | :--- |
+| Business SLA (document arrives to result ready) | 30 hours |
+| Maximum batch processing window | 24 hours |
+| Longest a document can wait before submission | 30 - 24 = **6 hours** |
+| Submitting every 6 hours | Worst case exactly 30 hours: no margin |
+| Submitting every **4 hours** | Worst case 4 + 24 = 28 hours: 2 hours of margin |
+
+- **Exam pattern**: the answer is the submission interval that keeps the worst case inside the SLA; “submit once a day” and “switch to synchronous calls” are the usual distractors
+
+---
+
+<!-- layout: 2-column -->
+# Resubmitting Failures by `custom_id`
+
+### Results Excerpt
+```json
+{"custom_id": "doc-1041",
+ "result": {"type": "succeeded", "...": "..."}}
+{"custom_id": "doc-1042",
+ "result": {"type": "errored",
+  "error": {"type": "invalid_request_error",
+   "message": "prompt is too long"}}}
+{"custom_id": "doc-1043",
+ "result": {"type": "expired"}}
+```
+
+### Recovery Rules
+- Resubmit **only** the failed `custom_id` values; never rerun the whole batch
+- Fix the cause before resubmitting: **chunk** `doc-1042` into sections that fit the context window
+- Resubmit `doc-1043` unchanged; it expired without being processed
+- Merge chunk results back under the original document ID
+
+---
+
+<!-- layout: 2-column -->
+# Refine Prompts on a Sample Before Batching
+
+### Batching an Untested Prompt
+- 10,000 documents run overnight
+- In the morning, 18% have a misread date format
+- Fixing the prompt means paying for, and waiting for, a second full batch
+
+### Sample First
+1. Pick 50 to 100 documents that cover every layout and edge case
+2. Run them synchronously and check the results against expected values
+3. Fix the prompt and schema until the sample passes
+4. Submit the full batch with the refined prompt
+
+---
+
+<!-- layout: 2-column -->
+# Why Self-Review Fails: Use an Independent Instance
+
+### Same-Session Self-Review
+- The model that wrote the extraction or code still holds the reasoning that produced it
+- Asked to check its work, it tends to re-justify its choices
+- Errors rooted in a wrong assumption survive the review
+
+### Independent Instance
+- A second Claude call with **fresh context** receives only the artifact and the review criteria
+- It evaluates what is there, not what was intended
+- Use it for code review, extraction verification, and any check where the generator could be biased
 
 ---
 
 <!-- layout: stacked -->
-# Multi-Instance and Multi-Pass Review Architectures
+# Multi-Pass Review: Per-File Then Integration
 
-- **Why same-session self-review fails**: a model in the same session retains its generation reasoning context and rarely questions its own implementation choices; always use a **second independent Claude instance** for verification
-- **Overcoming attention dilution on large PRs**: reviewing 14 modified files in one single pass causes superficial comments and contradictory feedback
-- **Two-stage multi-pass review**: run focused **per-file local analysis passes** first, followed by a separate **cross-file integration pass** examining data flow across modules
-- **Confidence-scored verification pass**: have the reviewer report a confidence level alongside each finding, then calibrate thresholds to route low-confidence findings to human review (this routes review attention; it is not an escalation trigger for live customers)
+- **One pass over 14 files dilutes attention**: comments become superficial, some files get skipped, and findings contradict each other
+- **Pass 1: per-file local analysis**: each file reviewed on its own for bugs inside that file
+- **Pass 2: cross-file integration**: one pass over the interfaces and data flow between modules, using the per-file summaries
 
 ![Multi-Pass Code Review Architecture](images/ch05-multi-pass-review.svg)
+
+---
+
+<!-- layout: 2-column -->
+# Confidence-Scored Verification Pass
+
+### The Pattern
+- The reviewer reports a confidence level with each finding
+- A verification pass, or your thresholds, decides what happens to each finding
+- High confidence: post the comment directly
+- Low confidence: route to a human reviewer instead of posting it
+
+### Calibrate, Do Not Trust Raw Scores
+- Raw self-reported confidence is poorly calibrated
+- Measure it against findings that humans labeled correct or incorrect
+- Set the threshold where posted findings meet your precision target
+
+<!-- below-columns -->
+> [!NOTE]
+> This routes **review attention** for findings. It is not an escalation trigger for live customers; the exam treats self-reported confidence as an unreliable escalation signal.
 
 ---
 

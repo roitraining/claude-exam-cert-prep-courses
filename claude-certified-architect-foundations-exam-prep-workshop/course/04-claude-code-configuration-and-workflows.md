@@ -14,7 +14,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 - Configure `CLAUDE.md` hierarchies and path-scoped `.claude/rules/`
 - Create custom slash commands and isolated skills
-- Choose between Plan Mode and Direct Execution
+- Choose between Plan Mode and Direct Execution, and refine output iteratively
 - Integrate Claude Code into CI/CD pipelines
 
 ---
@@ -53,11 +53,65 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Modular Organization and Diagnostics
+<!-- layout: 2-column -->
+# Diagnosing a Missing Instruction
 
-- **Diagnosing missing instructions**: if a new teammate clones the repository and Claude Code ignores team conventions, check whether the author placed those conventions in `~/.claude/CLAUDE.md` instead of the project-level `CLAUDE.md`
-- **Modularizing with `@import`**: reference external standards files (such as `@docs/api-standards.md` or `@docs/security-checklist.md`) inside package `CLAUDE.md` files to avoid duplicating prose
-- **Inspecting loaded memory**: run the `/memory` command inside Claude Code to verify exactly which `CLAUDE.md` and `.claude/rules/` files are active in the current session
+### The Symptom
+- Priya’s Claude Code always uses the team’s `pytest` fixtures and naming rules
+- A new teammate clones the repo, and Claude ignores those conventions completely
+- Same repository, same prompt, different behavior
+
+### The Diagnosis
+- Ask **where the instruction lives**, not how it is worded
+- Priya wrote the conventions in `~/.claude/CLAUDE.md`, which is user scope and never committed
+- **Fix**: move team conventions into the project `CLAUDE.md` (or `.claude/rules/`) and commit it
+- Keep only personal preferences, such as editor habits, in user scope
+
+<!-- below-columns -->
+> [!TIP]
+> “Works for one developer, not for others” points to configuration **scope**. Rewording the instruction or adding emphasis will not reach a file the teammate never received.
+
+---
+
+<!-- layout: 2-column -->
+# Modular `CLAUDE.md` with `@import`
+
+### The Problem
+- Three packages each need the same API and security standards
+- Copying the text into three `CLAUDE.md` files means three copies drift apart
+- One giant root `CLAUDE.md` loads billing rules while you edit the web UI
+
+### The Pattern
+```markdown
+# packages/billing/CLAUDE.md
+Billing service. Money values are
+integer cents; never use floats.
+
+@docs/api-standards.md
+@docs/security-checklist.md
+```
+- `@path` pulls the referenced file into context when this `CLAUDE.md` loads
+- Each standard lives in one file, and each package imports only what it needs
+
+---
+
+# Verifying Loaded Memory with `/memory`
+
+- **`/memory` shows which memory files are loaded in the current session**: user, project, and subdirectory `CLAUDE.md` files, plus their imports
+- **Use it before rewriting an instruction**: if the file is not listed, the problem is location or scope, not wording
+- **Use it to open a memory file for editing** without hunting for its path
+
+```text
+> /memory
+
+  User memory     ~/.claude/CLAUDE.md
+  Project memory  ./CLAUDE.md
+                  ./packages/billing/CLAUDE.md
+                  @docs/api-standards.md
+```
+
+> [!NOTE]
+> The exact display varies by release. The exam point is the workflow: verify what is loaded first, then fix scope or content.
 
 ---
 
@@ -124,30 +178,90 @@ paths:
 
 ---
 
-<!-- layout: card-layout -->
-# Configuring Skills with `SKILL.md` Frontmatter
+<!-- layout: 2-column -->
+# Skill Frontmatter: `context: fork`
 
-### `context: fork`
-- Runs the skill inside an isolated sub-agent context window.
-- Prevents verbose codebase analysis, log dumps, or exploratory brainstorming from polluting the main conversation history.
+### Without `context: fork`
+- The skill runs **inside your main conversation**
+- A codebase audit reads 60 files, and every file’s contents land in your session history
+- After the skill finishes, the context is crowded with output you no longer need
 
-### `allowed-tools`
-- On the exam, `allowed-tools` restricts which tools Claude can invoke while executing the skill (for example, `allowed-tools: ["Read", "Grep", "Glob"]` for read-only inspection).
-- In current releases, it pre-approves the listed tools without restricting the rest; use `disallowed-tools` to remove tools during a skill.
+### With `context: fork`
+- The skill runs in an **isolated subagent context**
+- It does its verbose work there and returns only its final result to the main session
+- Use it for codebase analysis, log triage, and exploratory brainstorming
 
-### `argument-hint`
-- Displays parameter guidance when a developer types the skill name without required arguments (for example, `argument-hint: "<migration-name> <target-schema>"`).
-
-### Personal Skill Variants
-- Store personal skill customizations in `~/.claude/skills/` under a distinct skill name so you do not override or disrupt shared project skills in `.claude/skills/`.
+<!-- below-columns -->
+> [!TIP]
+> If an exam scenario says a skill’s output “fills the context” or “derails the conversation,” the fix is `context: fork`, not a shorter prompt.
 
 ---
 
-# Example `SKILL.md` Configuration and Selection Rule
+# Skill Frontmatter: `allowed-tools`
 
-- **When to choose a Skill vs `CLAUDE.md`**:
-  - **Skill (`.claude/skills/`)**: on-demand, task-specific workflows invoked for specialized jobs (security audit, migration generator)
-  - **`CLAUDE.md` / `.claude/rules/`**: always-on or file-path-triggered coding standards
+- **On the exam, `allowed-tools` limits what a skill can do**: a read-only audit skill lists only inspection tools, so it cannot edit files while it runs
+
+```markdown
+---
+name: dependency-audit
+description: Lists outdated and vulnerable dependencies without changing anything
+allowed-tools: ["Read", "Grep", "Glob"]
+---
+Inspect package manifests and lock files. Report findings only.
+```
+
+- **Exam framing**: choose `allowed-tools` when a scenario asks how to keep a skill read-only or limit its blast radius
+
+> [!NOTE]
+> On the exam, `allowed-tools` restricts tools. In current releases, it **pre-approves** the listed tools so they run without permission prompts, and it does not remove the others; use `disallowed-tools` to block tools during a skill.
+
+---
+
+<!-- layout: 2-column -->
+# Skill Frontmatter: `argument-hint`
+
+### The Problem
+- `/new-migration` needs a migration name and a target schema
+- Developers type `/new-migration` alone and get a vague, guessed result
+- Nobody remembers the argument order
+
+### The Fix
+```markdown
+---
+name: new-migration
+description: Creates a reversible SQL migration
+argument-hint: "<migration-name> <target-schema>"
+---
+Create migration $ARGUMENTS with up and
+down scripts and a rollback test.
+```
+- The hint shows the expected arguments as the developer types the command
+- `$ARGUMENTS` passes what they typed into the skill body
+
+---
+
+<!-- layout: 2-column -->
+# Personal Skill Variants in `~/.claude/skills/`
+
+### The Situation
+- The team shares `.claude/skills/review/SKILL.md`, which creates `/review`
+- You want a stricter version with extra checks for your own work
+- Editing the shared skill changes it for everyone
+
+### The Pattern
+- Create `~/.claude/skills/review-strict/SKILL.md` in your home directory
+- Use a **distinct name** (`/review-strict`), so the team’s `/review` keeps working as expected
+- Your variant follows you across projects and is never committed
+
+<!-- below-columns -->
+> [!NOTE]
+> In current releases, a personal skill with the **same** name as a project skill takes precedence for you. A distinct name avoids silently replacing the shared workflow.
+
+---
+
+# Example `SKILL.md` Configuration
+
+- **A complete skill combines the fields**: an isolated context, a read-only tool set, and an argument hint
 
 ```markdown
 ---
@@ -159,6 +273,25 @@ argument-hint: "<directory-or-module-path>"
 ---
 Analyze the target module for injection risks and return a summarized report.
 ```
+
+- Invoke it with `/security-audit src/auth`; the audit runs in a fork and returns only the summary
+
+---
+
+# Skills vs `CLAUDE.md`: Choosing the Mechanism
+
+- **Ask when the guidance is needed**: always, only for certain files, or only when someone runs a specific job
+
+| Need | Mechanism | Example |
+| :--- | :--- | :--- |
+| Standards that apply to every task in the repo | Root `CLAUDE.md` | Build commands, architecture overview, commit rules |
+| Standards for one folder tree | Subdirectory `CLAUDE.md` | `services/legacy-auth/CLAUDE.md` |
+| Standards for a file type spread across folders | `.claude/rules/` with `paths` | Test conventions for `**/*.test.tsx` |
+| An on-demand, multi-step workflow | Skill in `.claude/skills/` | Security audit, migration generator, release notes |
+| A personal workflow | Skill in `~/.claude/skills/` | Your own stricter review checklist |
+
+> [!TIP]
+> Putting a 40-step security audit procedure in `CLAUDE.md` loads it into every session, even when nobody is auditing. That is a skill.
 
 ---
 
@@ -188,7 +321,26 @@ Analyze the target module for injection risks and return a summarized report.
 <!-- below-columns -->
 
 > [!TIP]
-> For multi-phase tasks with verbose discovery, delegate exploration to the **`Explore` subagent** so discovery output is summarized and does not exhaust the main conversation context window.
+> When the scenario stresses “many files,” “multiple valid approaches,” or “unfamiliar code,” choose plan mode. When it stresses “clear stack trace” or “one function,” choose direct execution.
+
+---
+
+<!-- layout: 2-column -->
+# The `Explore` Subagent
+
+### What It Does
+- A built-in, **read-only** subagent that searches and reads the codebase in its **own** context window
+- Returns a concise summary of what it found to the main conversation
+- Claude Code uses it automatically for broad searches, and you can ask for it directly: “Use the Explore subagent to map how billing events flow”
+
+### Plan Mode vs `Explore`
+- **Plan mode** controls *permissions*: the main session can read and propose but not edit
+- **`Explore`** controls *context*: verbose discovery happens elsewhere and only the summary comes back
+- They combine well: plan mode for the decision, with `Explore` doing the discovery so the planning context stays clean
+
+<!-- below-columns -->
+> [!TIP]
+> For multi-phase tasks where discovery output would exhaust the main context window, the exam answer is to delegate exploration to the **`Explore` subagent**.
 
 ---
 
@@ -246,24 +398,102 @@ python demo_07_plan_mode.py
 
 ---
 
-<!-- layout: card-layout -->
-# Four Iterative Refinement Patterns
+# Plan Then Execute: Combining Modes
 
-### 1. Concrete Input/Output Examples
-- When prose instructions for data or code transformations are interpreted inconsistently, provide 2 to 3 concrete input/output examples.
-- Examples eliminate ambiguity faster than adding longer prose rules.
+- **Large changes use both modes in sequence**: investigate and decide in plan mode, then implement the approved plan with direct execution
 
-### 2. Test-Driven Iteration
-- Write the test suite covering expected behavior, edge cases (such as `null` values in migration scripts), and performance first.
-- Iterate by sharing test execution failures until all tests pass.
+| Phase | Mode | Example: Migrate 45 Files from `requests` to `httpx` |
+| :--- | :--- | :--- |
+| 1. Explore | Plan mode, with `Explore` for discovery | Find every import, session object, and retry wrapper |
+| 2. Propose | Plan mode | Compare a shim layer with a direct rewrite; list risks and the file order |
+| 3. Approve | You review | Choose the shim layer; ask for the auth module to go first |
+| 4. Implement | Direct execution | Apply the approved changes file by file, running tests after each group |
 
-### 3. The Interview Pattern
-- Before implementing in an unfamiliar domain, instruct Claude to interview you and ask clarifying questions first.
-- Surfaces hidden design considerations such as cache invalidation or partial-failure recovery early.
+> [!NOTE]
+> Skipping phases 1 to 3 on a 45-file change risks a half-finished migration built on the wrong approach. Using plan mode for a one-line fix wastes a round of review.
 
-### 4. Interacting vs Independent Fixes
-- Send **interacting issues together in a single detailed message** so the fix accounts for all constraints simultaneously.
-- Fix **independent issues sequentially** one at a time.
+---
+
+<!-- layout: 2-column -->
+# Refinement Pattern: Concrete Input/Output Examples
+
+### Prose Instruction (Inconsistent)
+```text
+Convert the legacy date strings to ISO
+format, handling the different styles
+the old system used.
+```
+- Claude guesses which styles exist and how to treat ambiguous dates such as `03/04/22`
+- Each rerun can resolve the ambiguity differently
+
+### Two or Three Examples (Consistent)
+```text
+Convert like this:
+  "03/04/22"    -> "2022-03-04"  (MM/DD/YY)
+  "4 Mar 2022"  -> "2022-03-04"
+  "20220304"    -> "2022-03-04"
+  ""            -> null
+```
+- The examples settle the ambiguous cases faster than more prose rules would
+
+---
+
+<!-- layout: 2-column -->
+# Refinement Pattern: Test-Driven Iteration
+
+### The Loop
+1. Write tests first: expected behavior, edge cases such as `null` values in a migration, and a performance bound
+2. Ask Claude to implement until the tests pass
+3. Paste the **actual failure output** back to Claude
+4. Repeat until the suite is green
+
+### Example Prompt
+```text
+Here are the failing tests after your
+last change:
+
+FAILED test_migrate.py::test_null_email
+  AssertionError: expected None, got ""
+
+Fix the migration so empty emails become
+NULL. Do not change the tests.
+```
+
+---
+
+<!-- layout: 2-column -->
+# Refinement Pattern: The Interview Pattern
+
+### When to Use It
+- The domain is unfamiliar, or the request hides design decisions
+- Example: “Add caching to the pricing service”
+- Hidden questions: How stale can prices be? What invalidates the cache? What happens if the cache is down?
+
+### Example Prompt
+```text
+Before writing any code, interview me.
+Ask one question at a time about
+requirements, edge cases, and failure
+behavior for caching the pricing service.
+When you have enough, summarize the
+design and wait for my approval.
+```
+- Surfaces cache invalidation and partial-failure recovery **before** they become bugs
+
+---
+
+<!-- layout: 2-column -->
+# Refinement Pattern: Interacting vs Independent Issues
+
+### Interacting Issues: One Message
+- Example: a checkout fix must keep the response under 200 ms **and** stop double-charging on retry
+- Fixing one alone tends to break the other (adding a lock slows the response)
+- Send both constraints in **one detailed message** so the fix satisfies them together
+
+### Independent Issues: One at a Time
+- Example: a typo in an error message, a missing log line, a wrong default page size
+- No fix affects the others
+- Fix them **sequentially**, verifying each one before moving on
 
 ---
 
@@ -293,17 +523,98 @@ claude -p "Review the git diff for security and concurrency bugs" \
 
 ---
 
+# Consuming `--output-format json` Results
+
+- **The JSON envelope wraps the answer with run metadata**: with `--json-schema`, the schema-valid object is in `structured_output`, so the pipeline never parses prose
+
+```json
+{
+  "type": "result",
+  "subtype": "success",
+  "session_id": "8c1f...",
+  "num_turns": 6,
+  "result": "Found 2 issues.",
+  "structured_output": {
+    "findings": [
+      {"file": "api/orders.py", "line": 88, "severity": "critical",
+       "issue": "SQL built with f-string", "suggested_fix": "Use a parameterized query"}
+    ]
+  }
+}
+```
+
+```bash
+jq -c '.structured_output.findings[]' review.json | while read -r f; do
+  gh api "repos/$REPO/pulls/$PR/comments" -f commit_id="$SHA" -f side=RIGHT \
+    -f path="$(jq -r .file <<<"$f")" -F line="$(jq -r .line <<<"$f")" \
+    -f body="$(jq -r '"[\(.severity)] \(.issue)"' <<<"$f")"
+done
+```
+
+---
+
 <!-- layout: 2-column -->
-# High-Signal CI Code Reviews and Test Generation
+# Independent Review Instances in CI
 
-### Independent Review Context
-- A Claude session that just generated code retains its own reasoning context and is poor at questioning its own assumptions
-- Always run automated PR review in an **independent Claude instance** with clean context
-- On follow-up commits, pass **prior review findings** in context and instruct Claude to report only new or still-unaddressed issues
+### Same-Session Review (Weak)
+- The session that wrote the code reviews it in the same conversation
+- It still holds its own reasoning for every choice, so it tends to confirm rather than question
+- Bugs that come from a wrong assumption survive review
 
-### Context-Aware Test Generation
-- Include **existing test files** in context so Claude does not generate duplicate test scenarios already covered
-- Document testing standards, high-value test criteria, and available mock fixtures in project `CLAUDE.md` so CI jobs inherit them automatically
+### Independent Instance (Strong)
+- A separate `claude -p` run with clean context sees only the diff and the review criteria
+- It has no memory of why the code was written that way, so it judges the code as written
+- This is the standard design for automated PR review
+
+<!-- below-columns -->
+> [!TIP]
+> “Ask the same session to double-check its work” and “add a self-review step to the prompt” are distractors. Independence comes from a **new context**, not from more instructions.
+
+---
+
+<!-- layout: 2-column -->
+# Re-Reviews: Pass Prior Findings
+
+### The Problem
+- A PR gets a review with 6 findings
+- The author pushes two fix commits, and CI reviews again from scratch
+- It re-posts 4 findings that were already fixed or already discussed, and developers start ignoring the bot
+
+### The Pattern
+```text
+Prior review findings for this PR:
+<prior_findings>
+1. api/orders.py:88 SQL f-string (critical)
+2. api/orders.py:120 missing timeout
+...
+</prior_findings>
+
+Review the new diff. Report only NEW
+issues, or prior issues that are still
+unaddressed. Do not repeat fixed ones.
+```
+
+---
+
+<!-- layout: 2-column -->
+# Test Generation Context: Existing Tests and Fixtures
+
+### Include Existing Tests
+- Pass the current test files for the module in context
+- Claude sees which scenarios are already covered and writes only the missing ones
+- Without them, it regenerates happy-path tests that already exist
+
+### Document Conventions in `CLAUDE.md`
+```markdown
+## Testing
+- High-value tests: money math,
+  permission checks, retries
+- Use fixtures in tests/fixtures/
+  (customer_factory, order_factory)
+- Never call real payment APIs; use
+  the stripe_mock fixture
+```
+- CI jobs load the project `CLAUDE.md` automatically, so every run follows the same rules
 
 ---
 
@@ -325,7 +636,7 @@ claude -p "Review the git diff for security and concurrency bugs" \
 
 - Configured `CLAUDE.md` hierarchies and path-scoped `.claude/rules/`
 - Created custom slash commands and isolated skills
-- Chose between Plan Mode and Direct Execution
+- Chose between Plan Mode and Direct Execution, and refined output iteratively
 - Integrated Claude Code into CI/CD pipelines
 
 ---

@@ -33,16 +33,16 @@ Slide counts below include **content slides where the instructor talks** (object
 | Chapter # | Slide Count | Lecture Time | Activity Time | Quiz Time |
 | :--- | :---: | :---: | :---: | :---: |
 | **00: Introduction** | 6 | 18 min | 20 min | 0 min |
-| **01: Architect Foundations Overview** | 13 | 39 min | 2 min | 0 min |
-| **02: Agentic Architecture and Orchestration** | 19 | 57 min | 51 min | 15 min |
-| **03: Tool Design and MCP Integration** | 16 | 48 min | 4 min | 15 min |
-| **04: Claude Code Configuration and Workflows** | 14 | 42 min | 47 min | 15 min |
-| **05: Prompt Engineering and Structured Output** | 13 | 39 min | 64 min | 15 min |
-| **06: Context Management and Reliability** | 11 | 33 min | 62 min | 15 min |
+| **01: Architect Foundations Overview** | 14 | 42 min | 2 min | 0 min |
+| **02: Agentic Architecture and Orchestration** | 33 | 99 min | 51 min | 15 min |
+| **03: Tool Design and MCP Integration** | 26 | 78 min | 4 min | 15 min |
+| **04: Claude Code Configuration and Workflows** | 28 | 84 min | 47 min | 15 min |
+| **05: Prompt Engineering and Structured Output** | 30 | 90 min | 64 min | 15 min |
+| **06: Context Management and Reliability** | 30 | 90 min | 62 min | 15 min |
 | **07: Final Practice Exam** | 5 | 15 min | 0 min | 30 min |
-| **Total** | **97** | **291 min (4.9 hrs)** | **250 min (4.2 hrs)** | **105 min (1.8 hrs)** |
+| **Total** | **172** | **516 min (8.6 hrs)** | **250 min (4.2 hrs)** | **105 min (1.8 hrs)** |
 
-**Combined Classroom Time (Lecture + Activity + Quiz):** `646 min` (`10.8 hours`)
+**Combined Classroom Time (Lecture + Activity + Quiz):** `871 min` (`14.5 hours`)
 
 ---
 

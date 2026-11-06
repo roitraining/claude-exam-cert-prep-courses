@@ -41,12 +41,12 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-# Tool Descriptions Drive Tool Selection
+# How Descriptions Drive Tool Selection
 
-- **Primary selection mechanism**: LLMs rely on tool names and descriptions to choose which tool to invoke
+- **Claude chooses tools by reading their names and descriptions**: there is no other routing signal, so the description is the tool’s entire interface contract
 - **Root cause of misrouting**: when two tools have minimal or overlapping descriptions (such as `"Retrieves customer info"` vs `"Retrieves order details"`), Claude frequently picks the wrong tool on ambiguous user queries
-- **First-step architectural fix**: expand tool descriptions with explicit input formats, example queries, edge cases, and boundary explanations before building external classifiers or consolidating backends
-- **System prompt keyword traps**: audit system prompts for keyword-sensitive instructions that unintentionally bias Claude toward a specific tool regardless of its description
+- **What a strong description contains**: what the tool returns, the input format, example queries it answers, edge cases, and when **not** to use it
+- **First-step architectural fix**: expand tool descriptions before building external classifiers or consolidating backends
 
 > [!IMPORTANT]
 > Exam Rule: When an agent misroutes calls between two similar tools with minimal descriptions, the most effective **first step** is expanding the tool descriptions - not adding 8 few-shot examples or building a pre-routing classifier.
@@ -88,19 +88,88 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
-<!-- layout: card-layout -->
-# Eliminating Functional Overlap Across Tools
+<!-- layout: 2-column -->
+# System Prompt Keywords Can Override Descriptions
 
-### Rename Ambiguous Tools
-- Near-identical names like `analyze_content` and `analyze_document` cause frequent selection collisions.
-- Rename `analyze_content` to `extract_web_results` with a web-specific description so the domain boundary is unmistakable.
+### The Trap
+```text
+System prompt:
+"Always look up the customer before
+answering any question about an account."
+```
+- User asks: “Where is order ORD-10442?”
+- Claude reads “account” into the request and calls `get_customer` first, then asks for an email it does not need
+- The tool descriptions were fine; the **system prompt** biased selection
 
-### Split Overloaded Generic Tools
-- A catch-all `analyze_document` tool with dozens of mode flags forces complex parameter guessing.
-- Split it into purpose-specific tools with strict input/output contracts: `extract_data_points`, `summarize_content`, and `verify_claim_against_source`.
+### The Fix
+```text
+System prompt:
+"If the user gives an order ID, call
+lookup_order directly. Call get_customer
+only when you need to verify identity
+before a refund or account change."
+```
+- Audit system prompts for keyword-triggered instructions that compete with tool descriptions
+- State the condition that triggers each tool, not a blanket rule
 
-### Constrain Generic Network Tools
-- Replace unconstrained tools like `fetch_url` with role-validated alternatives such as `load_document` that verify allowed document storage URLs.
+---
+
+<!-- layout: 2-column -->
+# Renaming Tools to Remove Overlap
+
+### Before: Colliding Names
+```json
+[
+  {"name": "analyze_content",
+   "description": "Analyzes content."},
+  {"name": "analyze_document",
+   "description": "Analyzes a document."}
+]
+```
+- Near-identical names and descriptions give Claude no way to tell them apart
+- Selection becomes close to a coin flip on any “analyze this” request
+
+### After: Distinct Domains
+```json
+[
+  {"name": "extract_web_results",
+   "description": "Extracts titles, snippets, and URLs from web search results. Use only on search output, never on uploaded files."},
+  {"name": "analyze_document",
+   "description": "Analyzes an uploaded PDF or DOCX by document_id. Use for files the user attached."}
+]
+```
+
+---
+
+<!-- layout: 2-column -->
+# Splitting Generic Tools into Purpose-Specific Tools
+
+### Before: One Tool, Many Modes
+```json
+{
+  "name": "analyze_document",
+  "input_schema": {"properties": {
+    "document_id": {"type": "string"},
+    "mode": {"enum": ["extract", "summarize",
+             "verify", "compare", "classify"]},
+    "options": {"type": "object"}
+  }}
+}
+```
+- Claude must guess the right `mode` and the shape of `options` for each mode
+- One vague description has to cover five behaviors
+
+### After: One Tool per Job
+```json
+[
+  {"name": "extract_data_points",
+   "description": "Returns metric, value, unit, and page for each figure in a document."},
+  {"name": "summarize_content",
+   "description": "Returns a 150-word summary of a document."},
+  {"name": "verify_claim_against_source",
+   "description": "Returns supported, contradicted, or not_found for one claim against one document."}
+]
+```
 
 ---
 
@@ -151,6 +220,22 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
   ]
 }
 ```
+
+---
+
+# How the Agent Responds to Each Error Category
+
+- **The category tells the agent what to do next**: the tool’s job is to classify the failure; the agent’s job is to act on that classification
+
+| Category | `isRetryable` | Agent Action | Example Message in the Error |
+| :--- | :--- | :--- | :--- |
+| **Transient** | `true` | Retry locally with backoff; escalate after a few attempts | “Payment service timed out after 10 seconds.” |
+| **Validation** | `true` | Fix the input and call again; ask the user if the value is unknown | “`order_id` must match `ORD-` plus 5 digits; received `10442`.” |
+| **Business rule** | `false` | Stop retrying; explain the policy to the user or escalate | “Return window of 30 days expired on Oct 2.” |
+| **Permission** | `false` | Stop; propagate to the coordinator or a human | “Agent role `support-tier1` cannot read payment records.” |
+
+> [!TIP]
+> Retrying a business-rule error is the most common wrong answer: the agent burns turns and the customer still gets no explanation. Include a user-safe `userMessage` so the agent can explain without guessing.
 
 ---
 
@@ -266,12 +351,43 @@ python demo_05_error_category.py
 
 ---
 
-<!-- layout: stacked -->
-# Scoping Tool Sets Across Agents
+<!-- layout: 2-column -->
+# Too Many Tools Degrade Selection
 
-- **Avoid tool bloat**: giving a single agent 18 tools degrades selection accuracy compared to 4 to 5 role-specific tools
-- **Prevent cross-specialization misuse**: a synthesis agent given general web search tools will bypass coordination and run uncoordinated searches
-- **Scoped cross-role exception**: if 85% of synthesis verifications are simple fact-checks (dates, names, stats), grant a constrained `verify_fact` tool while routing the 15% complex investigations back through the coordinator
+### One Agent, 18 Tools
+- Every tool description competes for attention on every turn
+- Similar tools (`search_orders`, `find_order`, `lookup_purchase`) blur together
+- Selection accuracy drops, and tool definitions consume a large share of the input tokens
+
+### Four Agents, 4 to 5 Tools Each
+- **Support agent**: `get_customer`, `lookup_order`, `process_refund`, `escalate_to_human`
+- **Research agent**: `web_search`, `fetch_document`, `extract_data_points`
+- Each agent chooses among a small, distinct set that matches its role
+- Apply least privilege: an agent gets only the tools its role requires
+
+---
+
+<!-- layout: 2-column -->
+# Out-of-Role Tools Get Misused
+
+### The Failure
+- A synthesis agent is given `web_search` “just in case”
+- When a finding looks thin, it runs its own searches instead of reporting the gap
+- The coordinator loses track of what was searched, sources go unvetted, and work is duplicated
+
+### The Fix
+- Remove tools that belong to another role
+- Have the synthesis agent **report gaps** back to the coordinator, which decides whether to re-delegate
+- **Constrain generic tools**: replace an open `fetch_url` with `load_document`, which accepts only URLs in approved document storage
+
+---
+
+<!-- layout: stacked -->
+# Scoped Cross-Role Tools for High-Frequency Needs
+
+- **Allow a narrow exception when one need dominates**: if 85% of the synthesis agent’s verification needs are simple fact checks (a date, a name, a statistic), routing each one through the coordinator adds a full round trip
+- **Grant a constrained `verify_fact` tool**, not general `web_search`: it checks one claim and returns `supported`, `contradicted`, or `not_found`
+- **Keep the 15% of complex investigations** routed back through the coordinator, so research stays coordinated
 
 ![Scoped Tool Distribution](images/ch03-scoped-tool-distribution.svg)
 
@@ -299,6 +415,33 @@ python demo_05_error_category.py
 
 ---
 
+# Forcing a First Tool, Then Returning to `auto`
+
+- **`tool_choice` is set per request, so it can change from turn to turn**: force the required first step, then let Claude choose freely for the rest of the loop
+
+```python
+tool_choice = {"type": "tool", "name": "extract_metadata"}  # turn 1: must extract first
+
+while True:
+    response = client.messages.create(
+        model="claude-haiku-5-5",  # forced tool_choice is supported on this model
+        max_tokens=2048,
+        tools=[extract_metadata, lookup_vendor, check_po_number],
+        tool_choice=tool_choice,
+        messages=messages,
+    )
+    messages.append({"role": "assistant", "content": response.content})
+    if response.stop_reason != "tool_use":
+        break
+    messages.append({"role": "user", "content": run_tools(response.content)})
+    tool_choice = {"type": "auto"}  # later turns: Claude picks enrichment tools as needed
+```
+
+> [!NOTE]
+> Leaving the forced choice on every turn traps the loop: Claude must call `extract_metadata` again and can never reach `end_turn`.
+
+---
+
 <!-- layout: 2-column -->
 # Selecting Built-In Search Tools: `Grep` vs `Glob`
 
@@ -313,17 +456,62 @@ python demo_05_error_category.py
 <!-- below-columns -->
 
 > [!TIP]
-> Incremental exploration rule: start with `Grep` or `Glob` to locate entry points, then use `Read` to follow imports and trace flows - never read every file in a repository upfront.
+> Ask what the question is searching: **text inside files** (a function name, an error string) is `Grep`; **file names or paths** (all test files, every `schema.json`) is `Glob`.
 
 ---
 
-# File Operations and Wrapper Tracing (`Read`, `Write`, `Edit`)
+<!-- layout: 2-column -->
+# `Edit` Failures and the `Read` + `Write` Fallback
 
-- **Targeted edits with `Edit`**: replaces a unique text anchor inside a file without rewriting the entire file
-- **Fallback when `Edit` fails**: if `Edit` fails because the anchor text appears multiple times (non-unique match), fall back to **`Read`** (load full file contents) followed by **`Write`** (save updated file)
-- **Tracing usage across wrapper modules**:
-  1. Read the wrapper module first to identify all exported aliases and re-exported function names
-  2. Run `Grep` across the codebase for each exported name to find every call site accurately
+### How `Edit` Works
+- Replaces one **unique** text anchor (`old_string`) with new text
+- Leaves the rest of the file untouched, so it is the preferred tool for targeted changes
+- Fails when the anchor appears more than once, because it cannot tell which occurrence you mean
+
+### When It Fails
+- Example: `timeout = 30` appears in three config blocks, and only one should change
+- **First choice**: widen the anchor with surrounding lines so it becomes unique
+- **Fallback**: `Read` the full file, apply the change, and `Write` the complete updated contents
+- `Write` replaces the whole file, so use it only after a fresh `Read` of the current contents
+
+---
+
+<!-- layout: 2-column -->
+# Tracing Wrapper Modules to Their Implementations
+
+### The Trap
+```python
+# utils/payments.py (a wrapper module)
+from vendor.stripe_client import (
+    charge as create_charge,
+    refund as issue_refund,
+)
+```
+- `Grep "stripe_client.refund"` finds almost no call sites
+- Callers import `issue_refund` from `utils.payments`, so the real usage is hidden behind the alias
+
+### The Method
+1. `Read` the wrapper module to list every exported name and alias
+2. `Grep` for each exported name (`issue_refund`, `create_charge`) across the codebase
+3. `Read` the call sites that matter for the change
+- Result: a complete call-site list instead of a misleading “only 2 uses”
+
+---
+
+# Building Codebase Understanding Incrementally
+
+- **Explore in widening steps, guided by what each step finds**: reading every file up front fills the context window before you know what matters
+
+| Step | Tool | Example | What You Learn |
+| :--- | :--- | :--- | :--- |
+| 1. Locate files | `Glob` | `src/**/refund*.py` | Where refund logic lives |
+| 2. Find the entry point | `Grep` | `def handle_refund` | Which function starts the flow |
+| 3. Read the entry point | `Read` | `src/api/refunds.py` | What it calls and imports |
+| 4. Follow imports | `Read` | `src/services/ledger.py` | How the flow continues |
+| 5. Find other callers | `Grep` | `post_ledger_entry\(` | Who else depends on this code |
+
+> [!TIP]
+> Exam distractors include “read all files in the repository first” and “use `Bash` with `find` and `cat`.” The built-in search tools plus targeted `Read` calls are the expected answer.
 
 ---
 
@@ -370,20 +558,22 @@ python demo_05_error_category.py
 
 ---
 
-<!-- layout: card-layout -->
-# MCP Resources and Adoption Best Practices
+<!-- layout: 2-column -->
+# MCP Resources vs MCP Tools
 
-### Expose Catalogs via MCP Resources
-- Use **MCP resources** to expose read-only content catalogs such as issue summaries, documentation trees, and database schemas.
-- Gives agents immediate visibility into available data without burning turns on exploratory tool calls.
+### MCP Tools: Actions
+- Claude **calls** a tool with arguments, and it runs code: search, fetch, create, update
+- Each call costs a turn and returns a result into context
+- Example: `fetch_runbook(name="db-failover")`
 
-### Prevent Built-In Tool Fallback
-- If an MCP tool has a vague description, Claude Code often prefers familiar built-in tools like `Grep` or `Bash`.
-- Write detailed MCP tool descriptions explaining exact capabilities and rich outputs so the agent chooses the MCP tool over `Grep`.
+### MCP Resources: Readable Content
+- The server **exposes** read-only content by URI, such as an issue summary list, a documentation tree, or a database schema
+- The agent sees what exists up front instead of discovering it through exploratory calls
+- Example: `runbooks://catalog` lists every runbook name and its purpose
 
-### Community vs Custom MCP Servers
-- Choose vetted community or official MCP servers for standard platforms like Jira, GitHub, or Postgres.
-- Reserve custom MCP server development for proprietary internal workflows and domain-specific business logic.
+<!-- below-columns -->
+> [!TIP]
+> When the exam describes an agent wasting turns calling `list_*` or search tools just to find out what data exists, the answer is to expose a **catalog as an MCP resource**.
 
 ---
 
@@ -456,6 +646,45 @@ Using the runbooks MCP server, which runbooks exist, and what are the steps for 
 
 > [!NOTE]
 > The catalog is a **resource**: read-only content the agent can see without guessing. Fetching one runbook is a **tool**. Because `.mcp.json` lives in the project, everyone who clones the repository gets the same server.
+
+---
+
+<!-- layout: 2-column -->
+# Writing MCP Tool Descriptions That Compete with Built-Ins
+
+### Vague: Claude Uses `Grep` Instead
+```json
+{"name": "search_docs",
+ "description": "Searches documentation."}
+```
+- Claude Code already knows `Grep` well and can see the docs folder
+- With no stated advantage, the MCP tool looks redundant, so the agent falls back to the built-in tool
+
+### Specific: Claude Uses the MCP Tool
+```json
+{"name": "search_docs",
+ "description": "Semantic search across the internal developer portal (12,000 pages, including Confluence and archived wikis NOT in this repo). Returns title, URL, owning team, and last-updated date. Use for questions about internal APIs, runbooks, or architecture decisions."}
+```
+- States what the tool reaches that `Grep` cannot, and what it returns
+
+---
+
+<!-- layout: 2-column -->
+# Community Servers vs Custom Servers
+
+### Use a Community or Official Server
+- The integration is a standard platform: GitHub, Jira, Slack, Postgres
+- Someone else maintains authentication, pagination, and API changes
+- Configure it in `.mcp.json` and you are done
+
+### Build a Custom Server
+- The workflow is proprietary: internal ticketing, a domain-specific pricing engine, a regulated data store
+- You need business rules enforced inside the tool, such as policy checks or field masking
+- No vetted server exists for the system
+
+<!-- below-columns -->
+> [!NOTE]
+> Writing a custom GitHub MCP server when an official one exists is a classic over-engineering distractor.
 
 ---
 

@@ -227,6 +227,29 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 
 ---
 
+<!-- layout: 2-column -->
+# Worked Example: Deconstructing a Sample Question
+
+### The Question
+- **Scenario:** Customer Support Resolution Agent
+- **Stem:** Production logs show the agent sometimes calls `process_refund` before `get_customer` has verified the account, in about 12% of refund conversations. What is the most effective fix?
+- **A.** Add “ALWAYS verify the customer first” to the system prompt in bold
+- **B.** Add a prerequisite gate that blocks `process_refund` until `get_customer` returns a verified ID
+- **C.** Add three few-shot examples that show verification first
+- **D.** Move the agent to a larger model
+
+### Applying the Four Rules
+- **Root cause:** the order of tool calls is not enforced; the tools themselves work
+- **Consequence:** refunds move money, so the rule needs 100% compliance, not “usually”
+- **Eliminate:** A and C are probabilistic prompt guidance; D does not address ordering at all
+- **Answer: B.** A programmatic gate is deterministic and proportionate, and it changes only the failing layer
+
+<!-- below-columns -->
+> [!TIP]
+> Read the stem twice: once for the scenario constraint (money, compliance, latency) and once for the diagnostic clue (logs, percentages, symptoms). The constraint tells you how strong the fix must be; the clue tells you where it goes.
+
+---
+
 # Exam-Day Pacing and Logistics
 
 - **Budget 30 minutes per scenario**: with 60 questions across 4 scenarios in 120 minutes, aim for roughly 2 minutes per question
