@@ -191,10 +191,13 @@ In this task, you create a Message Batches API request file using `custom_id` co
 1. In `ccarf-lab-03`, create a file named `batch-requests.jsonl` containing three batch extraction requests correlated via `custom_id`:
 
 ```json
-{"custom_id": "inv-2026-001", "params": {"model": "claude-sonnet-4-20250514", "max_tokens": 1024, "tools": [{"name": "extract_invoice", "input_schema": {"type": "object", "properties": {"invoice_id": {"type": "string"}, "stated_total": {"type": ["number", "null"]}}}}], "tool_choice": {"type": "tool", "name": "extract_invoice"}, "messages": [{"role": "user", "content": "Invoice INV-001: Total $450.00"}]}}
-{"custom_id": "inv-2026-002", "params": {"model": "claude-sonnet-4-20250514", "max_tokens": 1024, "tools": [{"name": "extract_invoice", "input_schema": {"type": "object", "properties": {"invoice_id": {"type": "string"}, "stated_total": {"type": ["number", "null"]}}}}], "tool_choice": {"type": "tool", "name": "extract_invoice"}, "messages": [{"role": "user", "content": "Invoice INV-002: [Oversized 250-page appendix exceeding context window...]"}]}}
-{"custom_id": "inv-2026-003", "params": {"model": "claude-sonnet-4-20250514", "max_tokens": 1024, "tools": [{"name": "extract_invoice", "input_schema": {"type": "object", "properties": {"invoice_id": {"type": "string"}, "stated_total": {"type": ["number", "null"]}}}}], "tool_choice": {"type": "tool", "name": "extract_invoice"}, "messages": [{"role": "user", "content": "Invoice INV-003: Total $1,200.00"}]}}
+{"custom_id": "inv-2026-001", "params": {"model": "claude-haiku-5-5", "max_tokens": 1024, "tools": [{"name": "extract_invoice", "input_schema": {"type": "object", "properties": {"invoice_id": {"type": "string"}, "stated_total": {"type": ["number", "null"]}}}}], "tool_choice": {"type": "tool", "name": "extract_invoice"}, "messages": [{"role": "user", "content": "Invoice INV-001: Total $450.00"}]}}
+{"custom_id": "inv-2026-002", "params": {"model": "claude-haiku-5-5", "max_tokens": 1024, "tools": [{"name": "extract_invoice", "input_schema": {"type": "object", "properties": {"invoice_id": {"type": "string"}, "stated_total": {"type": ["number", "null"]}}}}], "tool_choice": {"type": "tool", "name": "extract_invoice"}, "messages": [{"role": "user", "content": "Invoice INV-002: [Oversized 250-page appendix exceeding context window...]"}]}}
+{"custom_id": "inv-2026-003", "params": {"model": "claude-haiku-5-5", "max_tokens": 1024, "tools": [{"name": "extract_invoice", "input_schema": {"type": "object", "properties": {"invoice_id": {"type": "string"}, "stated_total": {"type": ["number", "null"]}}}}], "tool_choice": {"type": "tool", "name": "extract_invoice"}, "messages": [{"role": "user", "content": "Invoice INV-003: Total $1,200.00"}]}}
 ```
+
+> [!NOTE]
+> These requests use Claude Haiku 5.5 because forced `tool_choice` returns a 400 error on Opus 5.5, Sonnet 5.5, Fable 5.1, and Mythos 5.1. On those models, use `tool_choice: {"type": "auto"}` with `strict: true` on the tool instead.
 
 2. Ask Claude Code to generate `batch-architecture-plan.md` answering the three Domain 4.5 exam questions for this workload:
 
