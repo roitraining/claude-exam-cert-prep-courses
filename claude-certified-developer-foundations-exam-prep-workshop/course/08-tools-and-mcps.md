@@ -49,7 +49,7 @@ Claude Certified Developer - Foundations: Hands-On Exam Prep Workshop
 - Keep per-agent tool sets small (4 to 5 role-specific tools) to maximize selection accuracy.
 - When an agent must access a catalog of 30+ tools, mark rarely used tools `defer_loading: true` and include the **tool search tool** so Claude loads detailed schemas on demand instead of paying 15,000+ tokens on every turn.
 
-### 3. Structured Error Handling (`is_error: true`)
+### 3. Error Handling (`is_error: true`)
 - Return failures as structured results, never unhandled exceptions or fake empty `[]` successes.
 - Set `is_error: true` on a Messages API `tool_result` (MCP uses `isError: true`) with an `errorCategory` (`transient`, `validation`, `permission`, `business`) and `isRetryable` flag.
 
@@ -74,6 +74,10 @@ import anthropic
 load_dotenv()
 client = anthropic.Anthropic()
 
+ORDERS = {
+    "ORD-1001": "shipped",
+}
+
 tools = [{
     "name": "lookup_order",
     "description": "Look up one order by its ID. IDs look like ORD-1001.",
@@ -86,53 +90,59 @@ tools = [{
     },
 }]
 
-def follow_up(is_error):
-    label = "Error result" if is_error else "Empty success"
-    messages = [{
-        "role": "user",
-        "content": "Look up order ORD-MISSING and tell me the status.",
-    }]
+def lookup_order(order_id):
+    if not (order_id.startswith("ORD-") and order_id[4:].isdigit()):
+        return {
+            "is_error": True,
+            "content": "No order with that ID. Check the ORD-NNNNN format.",
+        }
+    status = ORDERS.get(order_id)
+    if status is None:
+        return {"content": "[]"}
+    return {"content": status}
+
+def ask(question):
+    messages = [{"role": "user", "content": question}]
     first = client.messages.create(
         model="claude-haiku-5-5",
-        max_tokens=512,
+        max_tokens=1028,
+        output_config={"effort": "low"},
         tools=tools,
         messages=messages,
     )
     tool_uses = [block for block in first.content if block.type == "tool_use"]
     if not tool_uses:
-        print(label)
+        print(question)
         print("Claude answered without calling lookup_order. Run the file again.")
         print()
         return
     tool_use = tool_uses[0]
-    if is_error:
-        result = {
-            "type": "tool_result",
-            "tool_use_id": tool_use.id,
-            "is_error": True,
-            "content": "No order with that ID. Check the ORD-NNNNN format.",
-        }
-    else:
-        result = {
-            "type": "tool_result",
-            "tool_use_id": tool_use.id,
-            "content": "[]",
-        }
+    found = lookup_order(tool_use.input["order_id"])
+    result = {
+        "type": "tool_result",
+        "tool_use_id": tool_use.id,
+        "content": found["content"],
+    }
+    if found.get("is_error"):
+        result["is_error"] = True
+    print(question)
+    print(f"  lookup_order({tool_use.input['order_id']}) -> {found}")
     messages.append({"role": "assistant", "content": first.content})
     messages.append({"role": "user", "content": [result]})
     second = client.messages.create(
         model="claude-haiku-5-5",
-        max_tokens=512,
+        max_tokens=1028,
+        output_config={"effort": "low"},
         tools=tools,
         messages=messages,
     )
     text = "".join(block.text for block in second.content if block.type == "text")
-    print(label)
-    print(text)
+    print("  Claude said:", text)
     print()
 
-follow_up(is_error=False)
-follow_up(is_error=True)
+ask("Look up order ORD-1001 and tell me the status.")
+ask("Look up order ORD-9999 and tell me the status.")
+ask("Look up order ORD-MISSING and tell me the status.")
 ```
 
 **Step 3. Run it**
@@ -143,8 +153,9 @@ python demo_06_tool_error.py
 
 **Step 4. Examine the output**
 
-- **Empty success:** Claude treats `[]` as a finished lookup and says there is no such order
-- **Error result:** Claude treats the tool as failed and asks you to check the `ORD-NNNNN` format
+- **Success:** `ORD-1001` is a valid ID and it is in `ORDERS`. `lookup_order` returns the order, and Claude gives its status.
+- **Empty success:** `ORD-9999` is a valid ID and it is not in `ORDERS`. `lookup_order` returns `[]`. Claude says there is no such order.
+- **Error result:** `ORD-MISSING` does not match `ORD-NNNNN`. `lookup_order` returns `is_error: true`. Claude asks you to check the format.
 
 > [!NOTE]
 > `[]` tells Claude the lookup worked and nothing was found, so it may answer “there is no such order.” `is_error: true` tells Claude the tool failed, so it can ask for a corrected ID instead of inventing a result.
@@ -190,9 +201,9 @@ python demo_06_tool_error.py
 
 ---
 
-# Scaling Large Tool Catalogs with `defer_loading` and Structured Errors
+# Code: Load a Rare Tool with `defer_loading`
 
-- **On-demand tool discovery** (`defer_loading: true`) and **actionable error payloads** (`is_error: true`):
+A large catalog does not belong in every request. Mark the rare tools `defer_loading: true` and include the tool search tool. Claude receives the full schema only after it discovers that tool.
 
 ```python
 tools = [
@@ -210,8 +221,15 @@ tools = [
         },
     },
 ]
+```
 
-# Structured error tool_result so Claude knows whether to retry, fix input, or explain policy
+---
+
+# Code: Return a Structured Tool Error
+
+When the tool cannot run, return `is_error: true` and a JSON body. `errorCategory` names the kind of failure. `isRetryable` tells Claude whether to try the call again.
+
+```python
 error_tool_result = {
     "type": "tool_result",
     "tool_use_id": tool_call.id,
@@ -229,17 +247,17 @@ error_tool_result = {
 <!-- layout: 3-column -->
 # Client-Side vs Server-Side Tools
 
-### Client Tools (You Define)
+### Client Tools
 - Declared in `tools` with `name`, `description`, and `input_schema` (add `strict: true` for guaranteed schema-valid input)
 - Claude returns `stop_reason: "tool_use"`; **your harness** runs the function and returns a `tool_result`
 - The only option (alongside your own MCP servers) that reaches private VPC systems directly
 
-### Anthropic-Defined Client Tools
+### Anthropic Client Tools
 - Schema supplied by Anthropic, executed by your harness: `bash` (`bash_20250124`), `text_editor`, `memory` (`memory_20250818`), computer use
 - Declare by `type` and `name` with no `input_schema`
 - Your application still owns container sandboxing and command approval
 
-### Server Tools (Anthropic Executes)
+### Server Tools
 - `web_search` (`web_search_20250305`), `web_fetch`, `code_execution`, tool search: executed on Anthropic infrastructure; results arrive in the same response
 - Long server loops can stop with `stop_reason: "pause_turn"`: resend to resume
 - **Cannot** reach your private internal VPC services
@@ -256,19 +274,19 @@ error_tool_result = {
 ---
 
 <!-- layout: stacked -->
-# Model Context Protocol (MCP) Architecture and Primitives
+# Model Context Protocol (MCP) Architecture
 
 - **Standardized integration protocol**: an MCP Host (Claude Code, Claude Desktop, or your custom agent app) uses MCP Clients to maintain 1:1 stateful connections with MCP Servers
 - **Three core server primitives**:
-  - **Tools (Model-controlled)**: executable functions (`check_sku_stock`, `create_ticket`) that Claude chooses to invoke
-  - **Resources (App-controlled)**: read-only URI-addressed data catalogs (`inventory://catalog/schema`, documentation trees) attached by the host/user without exploratory model tool calls
-  - **Prompts (User-controlled)**: parameterized workflow templates exposed to users as slash commands
+  - **Tools (Model-controlled)**: executable functions that Claude chooses to invoke
+  - **Resources (App-controlled)**: read-only URI-addressed data catalogs (`inventory://catalog/schema`, documentation trees)
+  - **Prompts (User-controlled)**: parameterized workflow templates exposed as slash commands
 
 ![MCP Architecture and Primitives](images/ch08-mcp-architecture-primitives.svg)
 
 ---
 
-# Authoring an MCP Server with Tools, Resources, and Prompts
+# Authoring an MCP Server
 
 - **Exposing all three primitives** from one centrally maintained Python MCP server (`MCPServer`, called `FastMCP` prior to SDK 2.0):
 
@@ -296,25 +314,22 @@ def restock_incident_template(sku: str, warehouse: str) -> str:
 ---
 
 <!-- layout: 2-column -->
-# MCP Transports (`stdio` vs Streamable HTTP) and Debugging
+# MCP Transports (`stdio` vs Streamable HTTP)
 
 ### `stdio` Transport (Local Subprocess)
 - Host spawns the server as a local child process; JSON-RPC 2.0 frames travel over `stdin` and `stdout`
 - Ideal for single-user local tooling in Claude Code or Claude Desktop
 - **Critical exam rule**: **never** write `print()` or debug logs to `stdout` in a `stdio` MCP server: it corrupts the JSON-RPC stream. Always log diagnostics to `stderr` (`sys.stderr` or Python’s `logging` module)
 
-### Streamable HTTP Transport (Remote Service)
-- Current standard for remote, multi-client MCP servers (replaces deprecated `HTTP+SSE`)
+### HTTP Transport (Remote Service)
+- Current standard for remote, multi-client MCP servers
 - Deployed once as a central cloud service with OAuth 2.1 / bearer authentication so multiple teams and agent services can share it
-- Connect via `claude mcp add --transport http`, `.mcp.json`, or the Messages API **MCP connector** (`mcp_servers` + `mcp_toolset`)
-- Test locally before connecting an LLM using **MCP Inspector** (`npx @modelcontextprotocol/inspector`)
+- Connect via `claude mcp add --transport http`, `.mcp.json`, or the Messages API **MCP connector** 
 
 ---
 
-<!-- layout: 2-column -->
-# Safe Logging in `stdio` Servers and Testing with MCP Inspector
+# Log `stdio` Servers to `stderr`
 
-### Logging to `stderr` in Python `stdio` Servers
 - Any stray character written to `stdout` breaks JSON-RPC framing and causes the host to drop the server connection
 - Configure Python’s `logging` module (or `print(..., file=sys.stderr)`) to write exclusively to `stderr`
 
@@ -329,7 +344,10 @@ logging.basicConfig(
 logger = logging.getLogger("inventory-mcp")
 ```
 
-### Interactive Debugging with MCP Inspector
+---
+
+# Test the Server with MCP Inspector
+
 - Run **MCP Inspector** before wiring your server into Claude Code or production agents to verify tool schemas, resource URIs, and `isError: true` responses interactively:
 
 ```bash
@@ -340,12 +358,13 @@ npx @modelcontextprotocol/inspector \
 ---
 
 <!-- layout: 2-column -->
-# Configuring `.mcp.json` Scopes and the Messages API MCP Connector
+# Project `.mcp.json` and User `~/.claude.json`
 
-### Shared Project `.mcp.json` vs User `~/.claude.json`
+### Where Each Scope Lives
 - **Project scope (`.mcp.json`)**: checked into Git so every teammate gets the shared server; always inject secrets via `${ENV_VAR}` expansion
 - **User scope (`~/.claude.json`)**: personal or experimental MCP servers that should not affect teammates
 
+### Committed Project File
 ```json
 // Committed project .mcp.json
 {
@@ -361,7 +380,10 @@ npx @modelcontextprotocol/inspector \
 }
 ```
 
-### Messages API Remote MCP Connector
+---
+
+# Connect with the Messages API MCP Connector
+
 - Connect a stateless Messages API call directly to a remote Streamable HTTP MCP server without writing client-side MCP connection plumbing:
 
 ```python
@@ -394,7 +416,8 @@ resp = await client.beta.messages.create(
 <!-- layout: card-layout -->
 # Choosing the Right Agentic Customization Approach
 
-### Built-In Tools (`Read`, `Write`, `Edit`, `Bash`, `Grep`, `Glob`)
+### Built-In Tools 
+- `Read`, `Write`, `Edit`, `Bash`, `Grep`, `Glob`
 - Use for local file inspection, targeted code edits, pattern searching, and local shell execution inside Claude Code or the Agent SDK.
 - Built-in tools **cannot** automatically reach arbitrary internal REST APIs without custom wiring.
 
