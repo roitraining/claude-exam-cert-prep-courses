@@ -95,7 +95,7 @@ while True:
 | `"refusal"` | Claude declined for safety reasons | Stop, log it, and route to a human or a fallback path |
 
 > [!WARNING]
-> A loop written as `while stop_reason != "end_turn"` spins forever on `"refusal"`, and a loop that exits on anything other than `"tool_use"` silently returns truncated `"max_tokens"` output as a finished answer.
+> `while stop_reason != "end_turn"` keeps calling the API forever when Claude returns `"refusal"`, because `"refusal"` is not `"end_turn"`. `if stop_reason != "tool_use": break` has the opposite bug: it stops for every other value, including `"max_tokens"`, and returns the truncated response as a finished answer.
 
 ---
 
@@ -271,6 +271,7 @@ Flag any subtopic with no findings.
 ```
 
 <!-- below-columns -->
+
 > [!WARNING]
 > If a downstream agent is missing information an upstream agent found, check whether the coordinator **passed it in the prompt**. Subagents do not share memory or history automatically.
 
@@ -289,7 +290,7 @@ Flag any subtopic with no findings.
 ---
 
 <!-- layout: 2-column -->
-# Iterative Refinement: Evaluate Synthesis, Re-Delegate Gaps
+# Iterative Refinement: Evaluate Synthesis, Re-Delegate
 
 ### The Loop
 - The coordinator reads the synthesis draft and checks it against the original research goal
@@ -311,7 +312,7 @@ Then re-run synthesis with all findings.
 ---
 
 <!-- layout: 2-column -->
-# Coordinator Prompts: Goals and Quality Criteria, Not Procedures
+# Coordinator Prompts: Goals, Not Procedures
 
 ### Procedural (Weak)
 ```text
@@ -341,7 +342,7 @@ Flag subtopics that miss the bar.
 
 - **Subagents are spawned through a tool call**: the coordinator emits a `Task` tool call with `subagent_type`, `description`, and `prompt`; the SDK runs that subagent and returns its final result as the `tool_result`
 - **No tool, no subagents**: the coordinator’s `allowedTools` **must** include `"Task"`; otherwise it has no way to delegate, however well the subagents are defined
-- **Subagents get their own tool lists**: a subagent sees only the tools in its own definition, not the coordinator’s
+- **Subagents get their own tool lists**: a subagent sees only the tools in its own definition
 - **Diagnostic clue**: “Subagents are configured but the coordinator does all the work itself” usually means `Task` is missing from `allowedTools`
 
 > [!NOTE]
@@ -379,14 +380,34 @@ options = ClaudeAgentOptions(
 ---
 
 <!-- layout: 2-column -->
-# Passing Context Explicitly
+# The Coordinator Must Pass State
 
-### What to Pass
-- **Complete prior findings**, not a pointer to them: the subagent cannot look them up
-- **Content separated from metadata**, so attribution survives the handoff
-- **The specific task and its output format**, so results come back ready to merge
+### What a Subagent Cannot See
+- The coordinator’s conversation, including the user’s earlier messages
+- Another subagent’s results: the web-search agent and the doc-analysis agent do not share memory
+- Each `Task` call starts a **new, empty** conversation
 
-### Example Subagent Prompt
+### How State Actually Moves
+- The subagent’s result comes back only to the **coordinator**, as a `tool_result`
+- The coordinator copies the facts the next subagent needs into that subagent’s `prompt`
+- Nothing is shared automatically. If it is not in the prompt, the subagent does not have it
+
+<!-- below-columns -->
+
+> [!IMPORTANT]
+> “Use the findings so far” and “ask the other agent” both fail. There is no shared state. The coordinator is the only one who can pass it on.
+
+---
+
+<!-- layout: 2-column -->
+# What to Put in the Handoff Prompt
+
+### Pass the Data, Not a Pointer
+- **Write the findings out** in the prompt. The subagent cannot look up “the findings so far”
+- **Keep content separate from metadata** (`source_url`, `document_name`, `page_number`) so the next step can still cite them
+- **State the task and the return format**, so the result comes back ready for the coordinator to merge
+
+### Example Prompt the Coordinator Sends
 ```text
 Task: Verify the claims below against
 the attached filings.
@@ -404,8 +425,9 @@ Return: claim, verdict, document_name,
 ```
 
 <!-- below-columns -->
-> [!IMPORTANT]
-> Flattening findings into one prose paragraph loses `source_url` and `page_number`. Downstream synthesis then cannot cite anything, which the exam treats as a provenance failure.
+
+> [!WARNING]
+> Flattening those findings into one prose paragraph drops `source_url` and `page_number`. Synthesis then cannot cite anything, which the exam treats as a provenance failure.
 
 ---
 
@@ -413,9 +435,9 @@ Return: claim, verdict, document_name,
 # Sequential vs Parallel Subagent Execution
 
 ### Sequential Execution (Slow)
-- Coordinator emits one `Task` tool call, waits for the result, then emits the next `Task` call on a subsequent turn
+- Coordinator emits one `Task` tool call, waits for the result, then emits the next 
 - Multiplies end-to-end latency across independent research subtopics
-- Appropriate only when Task B strictly depends on the output of Task A
+- Appropriate only when Task B depends on Task A
 
 ### Parallel Execution (Fast)
 - Coordinator emits **multiple `Task` tool calls in a single response turn**
@@ -429,10 +451,10 @@ Return: claim, verdict, document_name,
 
 ---
 
-<!-- layout: 2-column -->
-# Code Comparison: Sequential vs Parallel `Task` Calls
+# Sequential `Task` Calls: One Tool Per Turn
 
-### Sequential (Multiple Turns)
+- The coordinator emits a `Task` call, waits for that `tool_result`, then emits the next on a later turn
+
 ```python
 # Turn 1: Coordinator emits only one Task
 turn_1 = [
@@ -450,7 +472,12 @@ turn_2 = [
 ]
 ```
 
-### Parallel (Single Turn + Concurrent Run)
+---
+
+# Parallel `Task` Calls: Several Tools in One Turn
+
+- The coordinator emits every independent `Task` call in the **same** assistant response
+
 ```python
 # Turn 1: Coordinator emits multiple Tasks at once
 response_content = [
@@ -488,6 +515,7 @@ results = await asyncio.gather(
 - Fix the coordinator prompt so it enumerates the full scope before delegating
 
 <!-- below-columns -->
+
 > [!TIP]
 > Distractors blame the search subagent (“improve its queries”) or synthesis (“tell it to be more comprehensive”). Neither can report on topics nobody was asked to research.
 
@@ -632,6 +660,7 @@ my shipping address for ORD-1002."
 - Claude reads the reason and escalates with a structured handoff
 
 <!-- below-columns -->
+
 > [!IMPORTANT]
 > The tool never runs, regardless of what the prompt or the customer says. That is why the exam prefers hooks over system prompt rules for financial and compliance limits.
 
@@ -653,7 +682,7 @@ my shipping address for ORD-1002."
 
 # SDK Hook Implementation Pattern
 
-- **Enforcing a $500 refund ceiling and normalizing timestamps** in code rather than relying on prompt compliance:
+- **Enforcing a $500 refund ceiling and normalizing timestamps** in code:
 
 ```python
 def deny(input_data, reason):
@@ -780,7 +809,7 @@ python demo_03_refund_hook.py
 <!-- layout: 2-column -->
 # Task Decomposition Strategies
 
-### Fixed Sequential Pipelines (Prompt Chaining)
+### Fixed Sequential Pipelines
 - Breaks predictable multi-aspect workflows into a fixed sequence of passes
 - Example: analyze each modified file individually in local passes, then run a dedicated cross-file integration pass
 - Prevents attention dilution on large pull requests (such as 14+ files)
@@ -901,7 +930,7 @@ python demo_04_fork.py
 - Use `fork_session` right after completing a shared architectural mapping phase.
 - Explore Approach A in one branch and Approach B in a second branch cleanly.
 
-### Start Fresh with Injected Summary
+### Start Fresh with Summary
 - When major refactoring has invalidated most prior tool outputs in a long session, resuming with stale tool results causes confusion.
 - Start a new session and inject a concise, structured summary of verified findings.
 
@@ -928,6 +957,7 @@ keep your other findings as they are.
 ```
 
 <!-- below-columns -->
+
 > [!TIP]
 > Targeted notification beats both extremes: silently resuming trusts stale tool results, and re-exploring all 40 files throws away work that is still valid.
 
