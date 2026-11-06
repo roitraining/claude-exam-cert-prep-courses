@@ -245,6 +245,7 @@ Claude Certified Architect - Foundations: Hands-On Exam Prep Workshop
 - **Answer: B.** A programmatic gate is deterministic and proportionate, and it changes only the failing layer
 
 <!-- below-columns -->
+
 > [!TIP]
 > Read the stem twice: once for the scenario constraint (money, compliance, latency) and once for the diagnostic clue (logs, percentages, symptoms). The constraint tells you how strong the fix must be; the clue tells you where it goes.
 

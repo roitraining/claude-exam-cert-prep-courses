@@ -23,7 +23,7 @@
 
   <!-- Branch A: tool_use -->
   <line x1="575" y1="165" x2="660" y2="120" stroke="#1e71d6" stroke-width="4" marker-end="url(#arr)"/>
-  <text x="615" y="125" text-anchor="middle" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">"tool_use"</text>
+  <text x="600" y="102" text-anchor="middle" fill="#1e71d6" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">"tool_use"</text>
 
   <rect x="670" y="65" width="235" height="110" rx="14" fill="#ffffff" stroke="#1e71d6" stroke-width="3"/>
   <text x="787" y="112" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="19" font-weight="700">3. Execute Tool(s)</text>
@@ -42,7 +42,7 @@
 
   <!-- Branch B: end_turn -->
   <line x1="575" y1="220" x2="660" y2="290" stroke="#16a34a" stroke-width="4" marker-end="url(#arr-green)"/>
-  <text x="615" y="280" text-anchor="middle" fill="#16a34a" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">"end_turn"</text>
+  <text x="600" y="348" text-anchor="middle" fill="#16a34a" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">"end_turn"</text>
 
   <rect x="670" y="245" width="510" height="110" rx="14" fill="#ecfdf5" stroke="#16a34a" stroke-width="3"/>
   <text x="925" y="292" text-anchor="middle" fill="#065f46" font-family="Inter, system-ui, sans-serif" font-size="21" font-weight="700">Terminate Loop and Return Final Response</text>
