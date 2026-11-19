@@ -1,0 +1,123 @@
+Welcome. This is your audio guide to the Claude Certified Developer Foundations exam. We’ll cover the exam, then walk through all eight domains with real-world examples to make the key ideas stick.
+
+First, the essentials. The exam has fifty-three questions in one hundred and twenty minutes, which is about two minutes per question. Some questions ask you to pick more than one answer, but they always tell you how many. Scores run from one hundred to one thousand, and you need seven hundred and twenty to pass. There’s no curve. The exam costs one hundred and twenty-five dollars, it’s delivered by Pearson VUE online or at a test center, and the credential lasts twelve months, with free renewal if you renew on time.
+
+Almost every question is a scenario: a team has a requirement and a constraint, and you pick the best design or fix. So listen for the decision rules, and in every question, look for the hard constraint, words like “guaranteed,” “overnight,” or “shared across four applications.” That one phrase usually eliminates half the answers.
+
+Now the domains, which are not equally weighted. Domain two, Applications and Integration, is a third of the exam. Domain five, Model Selection, is about seventeen percent, and domain one, Agents and Workflows, about fifteen. Together, those three are two-thirds of your score. Prompt and Context Engineering is eleven percent, Tools and MCPs about eleven, and Security and Safety eight. Claude Code and Eval and Debugging are only about three questions combined. Study accordingly.
+
+Let’s start with domain one, Agents and Workflows.
+
+The first decision is workflow or agent. Use a workflow when the steps are predictable and you can write them in code. Use an agent when the task is open-ended and each step depends on what the model discovers. A workflow is a recipe. An agent is a detective. The exam likes to offer an autonomous agent for a simple three-step pipeline. That’s a trap: if the steps are known, a workflow is cheaper, faster, and easier to test.
+
+Know the five workflow patterns. Prompt chaining runs calls in sequence with code checks in between, so you can stop when a step fails. Routing uses a cheap model like Haiku to classify requests and send them to the right handler, like a triage nurse. Parallelization either splits a job into independent pieces or runs the same check several times and takes a vote. Orchestrator-workers has a lead model decide the subtasks at runtime. And evaluator-optimizer has one call write a draft while another grades it, looping a limited number of times.
+
+Agents often use a supervisor that hands work to subagents, like a general contractor hiring specialists. Subagents keep verbose work out of the supervisor’s context, since only a summary comes back. But a subagent starts with a blank slate. If the supervisor says “summarize the findings so far” without including the findings, the subagent will make something up. It’s like texting a contractor “fix the thing we talked about” when you never talked.
+
+Two more subagent tips. When subagents are independent, launch them in the same turn so they run at the same time, not one after another. And don’t over-split. Every subagent pays for its own prompt and tools, so five subagents for a three-file change multiplies your cost for nothing.
+
+If you write your own agent loop, the most tested rule is that the stop reason controls the loop. “Tool use” means run every requested tool and send all the results back in one message. “End turn” means you’re done. “Max tokens” means the output was cut off, so don’t treat it as complete. “Refusal” means don’t blindly retry. And always cap the number of turns, so a confused agent can’t loop forever. Never end the loop by looking for a phrase like “here’s my final answer.” The stop reason is the traffic light. You don’t go because the car next to you went.
+
+Hooks make agent behavior deterministic. A Pre Tool Use hook runs before a tool and can allow it, deny it, or ask a human. A Post Tool Use hook cleans up results before Claude sees them. A rule in the prompt, like “never refund more than five hundred dollars,” is a sign that says “Employees only.” A hook is a locked door with a badge reader.
+
+For memory, the key trick is a pinned case facts block. When long conversations get summarized, exact order numbers and dollar amounts get blurry. So you keep them in a small structured block that’s included on every turn, like the sticky note on your monitor with the case number on it. Long-term memory lives outside the conversation, in memory files, CLAUDE.md files, or a database.
+
+Finally, know where agents run. Your own loop, the SDK’s Tool Runner, and the Claude Agent SDK all run in your environment and can reach your private systems. Claude Managed Agents run on Anthropic’s infrastructure. And for frameworks: PydanticAI for strict typed outputs, LangGraph for explicit state machines with checkpoints, and Strands for lightweight, model-driven tool loops.
+
+Now for domain two, Applications and Integration. This is a third of the exam.
+
+It starts with requirements. Imagine a stakeholder who says: “Flag risky clauses in vendor contracts for our legal team in the portal, re-score our forty thousand archived contracts before the audit, and keep all data in our AWS account.” That one request contains three decisions. The live portal needs the real-time Messages API with streaming. The archive is bulk and non-urgent, so it goes to the Message Batches API. And “keep data in AWS” means calling Claude through Amazon Bedrock.
+
+Claude is also available through Google Cloud Vertex AI and Microsoft Foundry. These cloud routes keep traffic, identity, and billing inside that cloud. Just check that the features you need are available on your platform before you design around them.
+
+The systems life cycle is normal software practice applied to AI. Define measurable targets and build a golden test set from real examples. Keep prompts and schemas in Git. Gate every merge on automated evaluations. Roll out behind feature flags or to a small slice of traffic first. And in operations, watch token usage, cache hit rates, latency, and model retirement dates, because one day a retired model ID will take down production if nobody is tracking it.
+
+Real-time versus batch is almost guaranteed to appear. Batches handle up to a hundred thousand requests, finish within twenty-four hours, and cost half as much. It’s overnight express versus ground shipping. The exam guide’s sample question is ten thousand documents overnight with cost as the priority, and the answer is the Batches API. The distractors are worth knowing. Sending everything synchronously in parallel finishes faster but doesn’t lower the per-token price. Lowering max tokens just risks truncated output. And switching to the smallest model regardless of quality ignores the real tradeoff. One detail: batch results come back out of order, so give each request a unique custom ID and match on it, like a coat-check ticket.
+
+The next foundational fact is that the Messages API is stateless. It remembers nothing between calls, so you send the system prompt, tools, and conversation history every time. It’s a doctor with no access to your chart. Your app holds the chart.
+
+The tool round trip has strict rules. Send back Claude’s full response, including thinking blocks, unchanged. Then return a result for every tool request in a single message. Splitting parallel results into separate messages, or editing thinking blocks, gets you an HTTP four hundred error.
+
+Stream when users are watching the answer appear. For PDFs, put the document before your question. If you’ll query the same file repeatedly, upload it once with the Files API. And turn on citations when answers must be auditable.
+
+On engineering practice, run calls concurrently but cap them with a semaphore, like a restaurant with twenty-five tables where party twenty-six waits at the door. Let the SDK handle retries. And make side-effecting tools idempotent, so a retry never charges a customer twice.
+
+Treat prompts, tool schemas, and CLAUDE.md files as code: version them and review them in pull requests, even when Claude wrote them. For a small fix, edit directly and run the tests. For a large refactor across dozens of files, start in Plan Mode, agree on the design, and then work in steps, keeping tests green. You don’t renovate a house without a blueprint.
+
+On design, remember that the raw API is zero magic. Claude Code loads your CLAUDE.md files and settings automatically, but the API sees only what you send. So when a prompt “works in claude.ai but not through the API,” the app was supplying context you didn’t replicate.
+
+In multi-user apps, never share one conversation list across users. Store each conversation by tenant and session, so one customer’s history can never leak into another’s.
+
+For configuration, pin explicit model IDs, keep prompts in Git, track model retirement dates, and run your evaluations before changing anything. And use a plugin when one bundle of Skills, hooks, and MCP servers must be shared across many repositories, like a security team’s standard setup. A plugin is the company-issued toolkit every new hire gets on day one.
+
+Next up are domain three, Claude Code, and domain four, Eval, Testing, and Debugging. Together they’re only about three questions.
+
+Claude Code has five core components: Rules, which are your CLAUDE.md and rule files; Skills, which load on demand; Commands; custom Agents; and Agent Memory. CLAUDE.md files form a hierarchy, from an organization’s managed policy, to your personal file, to the project file, to subfolder files. Team conventions go in the project’s CLAUDE.md, committed to Git, not in your personal file where nobody else sees them. And when a rule applies to one file type spread across many folders, like all your test files, use a rule file with a path pattern instead of copying CLAUDE.md everywhere. For permissions, deny beats ask, and ask beats allow, at every level, so your personal allow can never override a project deny. It’s like building security: if management closes a floor, your key card doesn’t override that. Plan Mode researches without editing. Headless mode, “claude dash p,” runs one prompt and exits, which is how you use Claude Code in CI. Forget the dash p and your pipeline hangs. Auto mode lets a background classifier approve actions while your deny rules still apply. And bypass permissions belongs only in an isolated container, never on your laptop. In long sessions, compact summarizes the history when context fills up, and clear starts fresh when you switch tasks.
+
+For debugging, know your errors. A four hundred means fix the request. Don’t retry it. Four twenty-nine is a rate limit, so honor the retry-after header. Five-hundred-level errors are temporary, so retry with backoff. And here’s the catch: a refusal and a max-tokens cutoff both return HTTP two hundred, success. Always check the stop reason before you trust the content.
+
+When a tool fails, return a result marked as an error, so Claude knows the tool broke and can explain or try something else.
+
+Then read the trace before you change anything. If Claude sends a valid null value and your Python code crashes, that’s an integration bug, and rewriting the prompt won’t help. If the tool returns a total of eight eighty-five sixty and Claude reports the subtotal instead, that’s a model problem. Fix it with clearer field names or validation in code. Like a good mechanic, check for gas in the tank before rebuilding the engine.
+
+For evaluations, build a golden dataset from real traffic and past bugs. Run fast code checks first, like “is the JSON valid” and “was the right tool called,” then an LLM judge with a written rubric for things like tone. Gate your pull requests on the results. And when quality drops in production, change one variable at a time, so you know whether it was the prompt, the model, or the data.
+
+Moving on to domain five, Model Selection and Optimization.
+
+Claude works in tokens, roughly three to four characters of English each. Code, JSON, tool definitions, and images all use tokens too, and newer models can produce more tokens for the same text, so don’t guess. Measure with the count tokens endpoint. The context window, a million tokens on current models, must hold input, thinking, and output together. Output varies from run to run, so design around structured outputs and validation. On the current Claude 5 models, custom temperature settings are rejected, and adaptive thinking, where Claude decides how much to reason, replaces fixed thinking budgets. You steer with prompts, examples, structured outputs, and effort instead. And know the prompting vocabulary: zero-shot means no examples, single-shot means one, and few-shot means two to five.
+
+The main dial is effort: low, medium, high, extra high, or max. Use low for classification and routing, and high for complex debugging. It’s like proofreading: a text to a friend gets a glance, and a contract gets read three times. You don’t always need a different model, just a different effort level.
+
+Fast mode is different. It runs the exact same Opus model at higher speed for a premium price. It doesn’t swap in a smaller model. Same chef, rush fee.
+
+A quick technical note. Claude’s API streams with server-sent events, a one-way stream from server to client. WebSockets are two-way, and they’re useful between a user’s browser and your backend agent, when the user needs to cancel or approve actions mid-run. Either way, never call the Claude API straight from a browser with a key baked in. Only your backend holds the key.
+
+For model choice, picture a hospital. Haiku is the front desk, fast and cheap, handling routing and classification. Sonnet is the staff physician, handling most production coding and agent work. Opus is the specialist for deep reasoning. The cascade pattern sends simple requests to Haiku and routes the hard ones up. When you upgrade models, watch for breaking changes. Prefilled responses, forced tool choice, temperature settings, and fixed thinking budgets can all cause errors on newer models. When an upgrade breaks production, read the error and the eval results before rewriting prompts.
+
+Now cost. Prompt caching is your biggest lever. When requests share a long identical prefix, you cache it. The first call costs a bit more, and later calls read the prefix for a fraction of the price. It’s meal prep: Sunday takes longer, but every weekday lunch is quick. The prefix is built as tools, then system, then messages, and it must match exactly. So a timestamp at the top of the system prompt means nothing ever caches. That’s a favorite distractor. A few more caching rules. The default cache lasts five minutes, refreshed on every hit, with a one-hour option for calls spaced further apart. Prompts below the minimum length simply don’t cache, and there’s no error to warn you. And caches are separate for each model. Track all four token counts in every response: input, output, cache writes, and cache reads.
+
+In the workshop’s example, a support agent on Sonnet handles ten thousand requests a day with the same ten-thousand-token prefix. Uncached, input costs about two hundred ten dollars a day. Cached, about twenty. That’s a ninety percent cut. And the Batches API discount stacks on top of caching for bulk jobs.
+
+Next is domain six, Prompt and Context Engineering.
+
+As an agent works, tool output piles up and buries what matters, like a desk covered in printouts. Keep the desk clean. Prune tool results down to the fields you need. Summarize old turns, but keep a pinned case facts block so exact IDs and amounts stay sharp. Send noisy work to subagents. And put long documents at the top of the prompt, with your question at the end.
+
+The API can help with context editing, which automatically clears old tool results, and server-side compaction, which summarizes earlier turns as you approach the limit. But there’s a tradeoff. Clearing content from the middle changes the prefix and breaks your cache. So configure it to clear a large chunk at once, not a little every turn. Take the trash out when the bag is full, not after every wrapper.
+
+For prompts, put persistent rules in the system prompt and per-request input in the messages. Replace vague words like “be conservative” with explicit criteria for what to flag and what to skip, and add two to four examples that show your reasoning when that isn’t enough. It’s the difference between “turn left at the big building” and “turn left on Fifth Street, right after the gas station.” Wrap untrusted input in XML tags, but also escape it, so a fake closing tag can’t break out. And improve prompts with data, not vibes: measure a baseline, change one thing, and re-run the full test set.
+
+For output, use structured outputs so the response matches your schema. The older tricks, prefilling the response and forcing a tool choice, are legacy, and the newest models reject them. Then check the stop reason for truncation or refusal, and validate the meaning in code. A schema guarantees shape, not truth. It’s a form with every box in the right place, but someone still has to check the numbers in the boxes.
+
+One last pattern: when two sources disagree, keep both. If one report says twelve percent growth and another says eighteen, don’t average them. Return both, each labeled with its source.
+
+Now domain seven, Security and Safety.
+
+A data leak needs three things at once: private data, untrusted input, and a way to send data out. Like a bank robbery, it needs a way in, a vault, and a getaway car. Remove any one leg, in code, and the attack fails.
+
+Prompt injection hides instructions in content your agent reads, like a web page that says “ignore previous instructions.” The exam guide’s sample answer: treat that content as untrusted, keep it separate from your instructions, and use guardrails or hooks so injected text can’t trigger sensitive actions. The wrong answers are raising the temperature, adding a polite request to the prompt, or using a bigger model, which may follow the injected instructions even more faithfully.
+
+The workshop’s support-ticket example shows three layers. First, escape the ticket’s delimiters and wrap it in an untrusted tag. Second, remove the export tool from the summarization agent entirely. Third, put a hook on the send email tool that denies any recipient other than the customer’s verified address. Also, never store secrets in a system prompt, and treat the model’s output as untrusted when it flows into a database or web page. A string pulled from an untrusted document can carry a SQL injection, even inside valid JSON.
+
+Layer your guardrails like airport security: screen inputs with a fast model, gate risky actions with hooks and human approval, and check outputs for leaks. Give each agent only the tools it needs, so a summarizer has no email tool. And remember that hooks run as code on every call, so injected text can’t talk past them. Just don’t rely on naive text matching. A hook that blocks the exact text “rm dash r f” misses “rm dash f r.” Parse the arguments properly, and layer hooks with deny rules and sandboxing.
+
+For secrets, use a secret manager, keep separate keys for each environment, and never put keys in Git, browser code, or prompts. Authentication is who you are, and authorization is what you can touch, like a hotel key card that opens only your room. Check authorization on every tool call, and pass the real user’s identity into each tool instead of using one shared admin account, so you can audit who did what.
+
+Our last domain is domain eight, Tools and MCPs.
+
+Good tools start with clear descriptions: what the tool does, the input format, and when not to use it. If an agent picks the wrong tool, fix the description before reaching for a bigger model. Write it like the label on a power tool in a shared workshop. “Drill” isn’t enough. “Cordless drill for wood and drywall, not for masonry” is. Keep each agent to four or five tools. If you have thirty or more, mark the rare ones for deferred loading and add the tool search tool, so Claude loads full definitions only when needed. And turn on strict mode so inputs always match your schema.
+
+When a tool fails, return an error result, never an empty list. An empty list means “I looked and found nothing.” An error means “I couldn’t look.” Return an empty list after a database timeout, and Claude will confidently tell a customer they have no orders.
+
+Gate dangerous tools, like deleting a customer or sending a wire transfer, behind human approval or a hook, and let read-only lookups run freely. And know who runs each tool. Your custom tools run in your code, so they can reach your private systems. Server tools, like web search and code execution, run on Anthropic’s infrastructure and can’t reach your private network.
+
+The Model Context Protocol, or MCP, is like USB-C: build an integration once and plug it into many Claude applications. An MCP server offers tools, which the model calls, resources, which are read-only data, and prompts, which are templates the user picks. Local servers talk over standard I-O, and remote servers use HTTP. One rule to memorize: a standard I-O server must never print to standard output, because that channel carries the protocol. Log to standard error instead. It’s a walkie-talkie: start humming into it, and nobody can hear the real message. Test your server with the MCP Inspector, and commit the project’s MCP config to Git, with secrets pulled from environment variables.
+
+Finally, choosing the right customization. Built-in tools are like the faucets in your house, and they can’t reach your internal APIs. A custom tool is a gadget for one room. A Skill is a recipe card: it teaches how, but connects to nothing. And an MCP server is a utility hookup that every house on the street can share. So when several apps need a shared, independently maintained inventory API, which is the exam guide’s third sample question, the answer is an MCP server. Hard-coding it into prompts isn’t maintainable, pasting inventory into context gives no live access, and built-in tools don’t reach internal APIs. A few quick matches: to find every caller of a function in a local repo, use the built-in grep tool. To run a long checklist on demand, use a Skill. To format currency in one service, use a custom tool.
+
+Let’s wrap up with three questions to ask on every scenario. What are the latency and cost constraints: real-time or batch? Where are the trust boundaries, and are risky actions enforced in code? And what’s the reuse scope: one app, one repo, or many apps?
+
+Remember: hooks beat prompt rules, the stop reason is the source of truth, and the trace comes before blaming the model. Haiku routes, Sonnet works, and Opus thinks. Cache the stable prefix.
+
+On exam day, take your time. You have about two minutes per question. Find the hard constraint, eliminate what doesn’t address it, and check both halves of any two-part answer. And watch for the classic distractors: a bigger model, a higher temperature, a polite request in the prompt, or doing everything synchronously.
+
+Then go build one small Claude app that uses a tool, and watch the stop reason change from “tool use” to “end turn.” You’ve got this. Good luck.
