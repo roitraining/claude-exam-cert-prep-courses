@@ -19,7 +19,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 5: Governance, Safety, and Risk Management (14% of Exam)
+# Domain 5: Governance, Safety, and Risk
+
+**Governance, Safety, and Risk Management** is **14%** of the exam.
 
 | Task # | Task Statement |
 | :--- | :--- |
@@ -103,17 +105,17 @@ Label each control **P** (preventive), **D** (detective), or **C** (compensating
 ---
 
 <!-- layout: card-layout -->
-# Identifying LLM Risks, Limitations, and Failure Modes
+# LLM Risks, Limitations, and Failure Modes
 
 ### Indirect Prompt Injection
 - External untrusted content (web pages, emails, support tickets, RAG chunks) embeds hidden instructions attempting to hijack the agent’s tools or exfiltrate data.
 - **Mitigation**: isolate untrusted data in XML tags, strip unnecessary tools (least privilege), and enforce deterministic `PreToolUse` hooks on all state-changing actions.
 
-### Hallucinations and Unverified Citations
+### Hallucinations
 - Models can synthesize plausible-sounding facts or fabricate legal/medical citations when source context is missing or ambiguous.
 - **Mitigation**: require verbatim evidence excerpts and source IDs via structured output schemas, allow explicit `"unclear"` / abstention responses, and verify citations post-generation.
 
-### Sycophancy and Premature Compliance
+### Sycophancy
 - Models may agree with a user’s false premise or waive policy rules under emotional pressure.
 - **Mitigation**: ground decisions in external policy documents and enforce prerequisites and financial limits in code.
 
@@ -145,7 +147,7 @@ Label each control **P** (preventive), **D** (detective), or **C** (compensating
 - Current models can return a `refusal` stop reason on legitimate but sensitive requests, and the same input can yield different outputs.
 - Handle `stop_reason` explicitly with a fallback path, and evaluate distributions, not single runs.
 
-### Knowledge Limits and Model Lifecycle
+### Knowledge Limits and Lifecycle
 - Models have a training cutoff and know nothing about your private data unless you supply it.
 - Models are retired on a schedule, so a production system must plan for migration.
 
@@ -161,15 +163,15 @@ Label each control **P** (preventive), **D** (detective), or **C** (compensating
 ---
 
 <!-- layout: 2-column -->
-# Designing Human-in-the-Loop (HITL) Validation Strategies
+# Designing Human-in-the-Loop Validation
 
-### Pre-Execution Action Approval (Synchronous)
-- Pauses agent execution **before** a high-impact or irreversible tool call runs (such as issuing a large wire transfer, deleting production records, or sending external legal notices)
+### Approve Before Execution
+- **Synchronous**: pauses agent execution **before** a high-impact or irreversible tool call runs (such as issuing a large wire transfer, deleting production records, or sending external legal notices)
 - Presents the human approver with a structured summary: `proposed_action`, `parameters`, `supporting_evidence`, and `policy_check_result`
 - Resumes the agentic loop only after explicit, authenticated human sign-off
 
-### Post-Generation Review Queues (Asynchronous)
-- Routes completed extractions, reports, or policy exceptions to human specialists based on **calibrated field-level confidence thresholds** or detected source conflicts
+### Review After Generation
+- **Asynchronous**: routes completed extractions, reports, or policy exceptions to human specialists based on **calibrated field-level confidence thresholds** or detected source conflicts
 - Prioritizes scarce human reviewer bandwidth on low-confidence or high-risk items
 - Uses **stratified random sampling** on auto-approved high-confidence outputs to detect silent drift
 
@@ -209,7 +211,7 @@ Label each control **P** (preventive), **D** (detective), or **C** (compensating
 - **Right to erasure**: personal data persists in logs, evaluation datasets, vector indexes, memory files, and fine-tuning sets; design deletion by subject or document ID for each
 - **Residency and transfers**: use regional processing options and a data processing agreement that covers cross-border transfer rules
 
-### HIPAA (Protected Health Info)
+### HIPAA (Health Data)
 - **BAA requirement**: sign a Business Associate Agreement with the platform provider before processing PHI, and confirm each feature you use is in its scope
 - **Zero Data Retention (ZDR)**: use ZDR-eligible configurations so prompts and completions containing PHI are not retained by the provider
 - Enforce encryption, minimum-necessary access, and access audit logs
@@ -229,7 +231,7 @@ Label each control **P** (preventive), **D** (detective), or **C** (compensating
 <!-- layout: 2-column -->
 # Compliance Constrains Feature Choice
 
-### Eligibility Varies by Feature and Model
+### Eligibility Varies by Feature
 - Not every API feature or model is eligible for Zero Data Retention or HIPAA coverage
 - Features that store state on the provider’s side (hosted agent sessions, stored files, server-held conversation threads) are the usual exceptions
 - Some models require standard data retention unless the provider authorizes otherwise
@@ -267,10 +269,10 @@ Label each control **P** (preventive), **D** (detective), or **C** (compensating
 - Evaluate model outputs, refusal rates, and escalation decisions across protected demographic subgroups (age, gender, race, language dialect) using counterfactual test suites.
 - Verify that automated triage or summarization does not systematically disadvantage specific groups.
 
-### Transparency and AI Disclosure
+### AI Disclosure
 - Clearly disclose to end users when they are interacting with an AI agent rather than a human representative, and provide an immediate path to human escalation.
 
-### Explainability and Auditability
+### Auditability
 - Persist immutable audit records linking every automated decision to the exact prompt version, model ID, retrieved chunk IDs, tool outputs, and guardrail checks that produced it.
 
 ---
@@ -317,7 +319,7 @@ A company deploys an agent that reads employees’ inbound email, searches the i
 
 ---
 
-# Domain 5 Quiz: Governance, Safety, and Risk Management
+# Domain 5 Quiz: Governance, Safety, and Risk
 
 - [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-11-52-ccar-p-realistic-instructor.json)
 

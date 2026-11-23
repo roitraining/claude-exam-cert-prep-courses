@@ -73,7 +73,7 @@
 - **12:15** - Lunch
 - **1:15** - Stakeholder Communication and Lifecycle Management
 - **2:30** - Developer Productivity and Operational Enablement
-- **3:15** - Lab: Lifecycle Architecture Review and Team Enablement
+- **3:15** - Lab: Architecture Review and Team Enablement
 - **4:15** - Final Practice Exam
 - **4:50** - Course Wrap-Up
 

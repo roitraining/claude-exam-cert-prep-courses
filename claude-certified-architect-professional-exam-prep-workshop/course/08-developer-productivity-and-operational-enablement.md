@@ -18,7 +18,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 7: Developer Productivity and Operational Enablement (7% of Exam)
+# Domain 7: Developer Productivity
+
+**Developer Productivity and Operational Enablement** is **7%** of the exam.
 
 | Task # | Task Statement |
 | :--- | :--- |
@@ -38,21 +40,21 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: card-layout -->
-# Standardizing Claude Code Across Engineering Teams
+# Standardizing Claude Code for Teams
 
-### Project-Scoped `CLAUDE.md` and `@import`
+### Project `CLAUDE.md` Files
 - Commit shared build commands, architectural boundaries, and testing standards in root `CLAUDE.md` (not `~/.claude/CLAUDE.md`) so every developer and CI runner inherits them.
 - Use `@import` to link modular package standards cleanly.
 
-### Conditional Path Rules (`.claude/rules/`)
+### Path-Scoped Rules
 - Place YAML frontmatter `paths` globs (such as `paths: ["**/*.test.ts", "src/api/**/*"]`) in `.claude/rules/*.md`.
 - Loads domain conventions automatically when editing matching files anywhere in the repository without bloating unrelated sessions.
 
-### Shared Commands and Isolated Skills
+### Commands and Skills
 - Version-control team workflows in `.claude/commands/` and specialized tasks in `.claude/skills/<name>/SKILL.md`; in current releases, commands and skills are merged, and both create a `/name` command.
 - Set `context: fork` and `allowed-tools` on verbose analysis skills so main developer sessions stay clean and safe.
 
-### Governed Team MCP Servers (`.mcp.json`)
+### Governed Team MCP Servers
 - Configure approved team MCP servers in project `.mcp.json` using `${ENV_VAR}` secret expansion, and enforce which servers are allowed through settings.
 
 ---
@@ -188,7 +190,7 @@ claude -p "Print the contents of config/payments.env"
 <!-- layout: 2-column -->
 # Scaling AI-Assisted Engineering Workflows
 
-### Interactive Architecture and Refactoring
+### Interactive Refactoring
 - Use **Plan Mode** before executing multi-file migrations, microservice decompositions, or unfamiliar legacy refactoring
 - Delegate broad codebase searches to the **`Explore` subagent** or maintain scratchpad files to prevent context degradation
 - Fork a session (`--resume` with `--fork-session` on the CLI, or `fork_session` in the Agent SDK) to compare alternative designs from a shared discovery baseline
@@ -283,7 +285,7 @@ jobs:
 ### 3. Inspect Structured Tool Telemetry
 - Check tool `isError` rates by the error category your tools return. A spike in `transient` errors requires backoff or circuit breaking, whereas `validation` errors indicate a schema or tool-description mismatch.
 
-### 4. Execute Safe Rollbacks and Degradations
+### 4. Roll Back or Degrade Safely
 - Use pinned model IDs and versioned prompt registries to roll back a regressed prompt or index immediately, or route affected intents to human queues while root-causing.
 
 ---
@@ -302,7 +304,7 @@ jobs:
 
 ---
 
-# Worked Exam Question: Keeping Secrets Out of Sessions
+# Worked Exam Question: Secrets in Sessions
 
 A platform team supports 300 developers using Claude Code across 120 repositories. Security requires that Claude Code never reads files under `secrets/` or runs `curl` in any repository, and that individual developers cannot turn this off. What is the best approach?
 
@@ -329,13 +331,13 @@ A platform team supports 300 developers using Claude Code across 120 repositorie
 
 ---
 
-# Domain 7 Quiz: Developer Productivity and Operational Enablement
+# Domain 7 Quiz: Developer Productivity
 
 - [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-11-54-ccar-p-realistic-instructor.json)
 
 ---
 
-# Lab 4: Lifecycle Architecture Review and Team Enablement
+# Lab 4: Architecture Review and Team Enablement
 
 **Time:** 60 minutes
 

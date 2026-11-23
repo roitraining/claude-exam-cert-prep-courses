@@ -19,7 +19,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 1: Solution Design and Architecture (17% of Exam)
+# Domain 1: Solution Design and Architecture
+
+**Solution Design and Architecture** is **17%** of the exam.
 
 | Task # | Task Statement |
 | :--- | :--- |
@@ -54,7 +56,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
-# Translating Business Problems into AI System Boundaries
+# Defining the AI System Boundary
 
 ### What Belongs in Deterministic Code
 - Authentication, RBAC/ABAC authorization, and tenant isolation
@@ -185,7 +187,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - Classify an incoming request (often with a fast model like Claude Haiku) and route it to a specialized prompt, toolset, or model tier.
 - Prevents prompt bloat from trying to handle 10 unrelated intents in one monolithic prompt.
 
-### Parallelization (Sectioning and Voting)
+### Parallelization
 - **Sectioning**: split independent subtasks (such as reviewing 10 files or checking content guardrails alongside main generation) to run concurrently.
 - **Voting**: run multiple independent passes on high-stakes security reviews to aggregate findings.
 
@@ -195,7 +197,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
-# Worked Example: Decomposing a Vendor Due-Diligence Review
+# Worked Example: Vendor Due-Diligence Review
 
 ### The Request
 - “Review this new vendor’s contract, SOC 2 report, and financial statements, and tell procurement whether to approve.”
@@ -347,7 +349,7 @@ class SubagentResultContract(BaseModel):
 
 ---
 
-# Worked Cost: What Actually Drives Cost per Resolved Ticket
+# Worked Cost: What Drives Cost per Resolved Ticket
 
 - **Support agent on `claude-sonnet-5-5`** ($2 / MTok input, $10 / MTok output, cache reads $0.10 / MTok): 50,000 tickets per month, 6 turns per ticket, a 10,000-token shared prefix plus 2,000 new input tokens and 400 output tokens per turn
 - **Token cost per ticket**:

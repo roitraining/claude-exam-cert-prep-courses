@@ -19,7 +19,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 4: Evaluation, Testing, and Optimization (16% of Exam)
+# Domain 4: Evaluation, Testing, and Optimization
+
+**Evaluation, Testing, and Optimization** is **16%** of the exam.
 
 | Task # | Task Statement |
 | :--- | :--- |
@@ -44,7 +46,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- layout: card-layout -->
 # Five Dimensions of Enterprise AI Evaluation
 
-### 1. Accuracy and Faithfulness
+### 1. Accuracy
 - Measure answer correctness, context precision and recall (for RAG), and citation faithfulness (zero unsupported claims).
 - Segment by document type, intent, and edge-case tier rather than relying on one aggregate score.
 
@@ -276,7 +278,7 @@ python demo_06_judge_variance.py
 
 ---
 
-# Demo: A Stale Chunk Gives a Confident Wrong Answer
+# Demo: Stale Chunk, Confident Wrong Answer
 
 In `ccarp-labs`, with the virtual environment still active:
 
@@ -344,7 +346,7 @@ python demo_07_stale_chunk.py
 <!-- layout: card-layout -->
 # Optimizing Cost, Latency, and Token Usage
 
-### 1. Prefix Alignment and Prompt Caching
+### 1. Prompt Caching
 - Keep tools, system instructions, and static reference documents in a deterministic order at the start of the request with `cache_control`.
 - Reduces cached input token costs and cuts TTFT on repeated prefixes.
 

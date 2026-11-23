@@ -74,12 +74,12 @@ Slide counts below include **content slides where the instructor talks** (object
 | **01: Architect Professional Overview** | 12 | 36 min | 2 min | 0 min |
 | **02: Solution Design and Architecture** | 21 | 63 min | 49 min | 15 min |
 | **03: Claude Models, Prompting, and Context** | 19 | 57 min | 4 min | 15 min |
-| **04: Integration** | 25 | 75 min | 49 min | 15 min |
+| **04: Integration** | 26 | 78 min | 49 min | 15 min |
 | **05: Evaluation, Testing, and Optimization** | 18 | 54 min | 4 min | 15 min |
 | **06: Governance, Safety, and Risk Management** | 18 | 54 min | 47 min | 15 min |
 | **07: Stakeholder Communication and Lifecycle** | 21 | 63 min | 2 min | 15 min |
 | **08: Developer Productivity and Enablement** | 14 | 42 min | 62 min | 15 min |
 | **09: Final Practice Exam** | 6 | 18 min | 0 min | 30 min |
-| **Total** | **160** | **480 min (8.0 hrs)** | **239 min (4.0 hrs)** | **135 min (2.3 hrs)** |
+| **Total** | **161** | **483 min (8.1 hrs)** | **239 min (4.0 hrs)** | **135 min (2.3 hrs)** |
 
-**Combined Classroom Time (Lecture + Activity + Quiz):** `854 min` (`14.2 hours`)
+**Combined Classroom Time (Lecture + Activity + Quiz):** `857 min` (`14.3 hours`)

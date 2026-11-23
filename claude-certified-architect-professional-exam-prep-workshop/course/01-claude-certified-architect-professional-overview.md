@@ -76,7 +76,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
-# How Architect Professional Expands Beyond Foundations
+# How Professional Builds on Foundations
 
 ### Foundations Focus (CCAR-F)
 - Core mechanics of `stop_reason` loops, `Task` subagent spawning, and SDK hooks
@@ -108,15 +108,15 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- layout: card-layout -->
 # Three Canonical CCAR-P Exam Patterns
 
-### 1. Least Privilege Over Detective Controls
+### 1. Least Privilege
 - When a support agent has tools to read tickets, draft replies, issue refunds, and delete accounts, but the role only needs reading and drafting, **remove the refund and delete tools entirely**.
 - Detective logging and confirmation prompts leave unnecessary attack surface in place.
 
-### 2. Prefix Ordering for Prompt Caching
+### 2. Cache Prefix Order
 - When an application sends the same 8,000-token system prompt and policy document on every request followed by a short user query, **place static content first and enable prompt caching**.
 - Cuts both time-to-first-token (TTFT) latency and per-request cost without truncating policy rules or downsizing models blindly.
 
-### 3. Isolating RAG Regressions After Data Changes
+### 3. RAG Regressions
 - When a RAG system suddenly returns confident but wrong answers right after a document refresh while model version and latency are unchanged, **investigate the retrieval and indexing pipeline first**.
 - Broken re-indexing or mismatched embeddings feed stale or irrelevant chunks to an otherwise healthy model.
 

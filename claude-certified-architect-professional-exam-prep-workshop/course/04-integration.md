@@ -56,14 +56,36 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 ---
 
 <!-- layout: 2-column -->
+# Two Ways to Search: Vector Embeddings vs BM25
+
+### Vector Embedding Search (Semantic)
+- **What it is**: an embedding model turns each chunk and each question into a vector, a long list of numbers that captures meaning
+- **How it ranks**: returns the chunks whose vectors sit closest to the question’s vector, even when they share no words
+- **Strength**: “How do I get back into my account?” finds a chunk titled “Resetting your password”
+- **Weakness**: exact codes blur together; `ERR-4092-B` and `ERR-4093-B` embed almost identically, so the wrong one can rank first
+
+### BM25 Lexical Search (Keyword)
+- **What it is**: the classic keyword-ranking formula (“Best Match 25”) behind search engines such as Elasticsearch and OpenSearch
+- **How it ranks**: scores chunks that contain the question’s exact words; rare words count more, repeats count less each time, and long chunks get no free advantage
+- **Strength**: `ERR-4092-B`, part numbers, SKUs, and “Article 17” match exactly
+- **Weakness**: misses paraphrases; “get back into my account” does not match “resetting your password”
+
+<!-- below-columns -->
+
+> [!TIP]
+> Hybrid retrieval runs both searches and merges the two ranked lists, so each question gets meaning-based recall and exact-term precision. Most enterprise RAG systems need both.
+
+---
+
+<!-- layout: 2-column -->
 # Chunking Trade-Offs
 
-### Small Chunks (about 100 to 300 tokens)
+### Small Chunks: 100 to 300 Tokens
 - **Precise matches**: each chunk is about one idea, so similarity scores are sharp
 - **Lost context**: “the limit is $5,000” loses which product and which year it applies to
 - **Good for**: FAQs, glossaries, short policy clauses, and catalog entries
 
-### Large Chunks (about 800 to 1,500 tokens)
+### Large Chunks: 800 to 1,500 Tokens
 - **Rich context**: the answer and its qualifiers travel together
 - **Diluted matches**: one embedding must represent several ideas, so recall drops on narrow questions
 - **Good for**: narrative documents, procedures, and contracts where clauses depend on each other
@@ -75,7 +97,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
-# Contextual Retrieval: Give Every Chunk Its Missing Context
+# Contextual Retrieval: Restore Missing Context
 
 - **The problem**: a chunk that says “Revenue grew 3% over the prior quarter” does not say which company or which quarter, so neither embeddings nor BM25 can match it to the question
 - **The technique**: before indexing, have Claude write one or two sentences that place each chunk within its document, and prepend them to the chunk for both the embedding and the BM25 index
@@ -91,7 +113,7 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 ---
 
 <!-- layout: card-layout -->
-# Indexing Lifecycle: Embedding Versions and Safe Refreshes
+# Indexing Lifecycle and Safe Refreshes
 
 ### Version the Embedding Model
 - Store the embedding model and version with every vector.
@@ -112,7 +134,7 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 ---
 
 <!-- layout: card-layout -->
-# Matching Retrieval Strategy to Data Shape and Query Pattern
+# Matching Retrieval to Data and Query Shape
 
 ### Dense Vector Retrieval
 - Best for natural language conceptual queries where users phrase ideas differently from the source document.
@@ -186,7 +208,7 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 <!-- layout: 3-column -->
 # Selecting Enterprise Connection Protocols
 
-### Model Context Protocol (MCP)
+### Model Context Protocol
 - Open client-server protocol connecting an agent to **tools**, **resources**, and **prompts**
 - **Best when**: the same capabilities must be reused across multiple Claude applications, Claude Code, and agent workflows while maintained independently
 - Decouples tool implementation from agent orchestration
@@ -263,7 +285,7 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 
 ---
 
-# Demo: What 40 Tools Cost Before Claude Says a Word
+# Demo: The Token Cost of 40 Tools
 
 In `ccarp-labs`, with the virtual environment still active:
 
@@ -343,7 +365,7 @@ python demo_05_tool_tokens.py
 - Support staff using this agent only ever need to read tickets and draft replies
 - Leaving `issue_refund` and `delete_user_account` attached creates severe prompt-injection and accidental-execution risk
 
-### The Least-Privilege Fix (Exam Standard)
+### The Least-Privilege Fix
 - **Remove `issue_refund` and `delete_user_account` from the agent’s configuration entirely**
 - **Why other options fail on the exam**:
   - Adding audit logging is only a *detective* control after damage occurs
@@ -357,7 +379,7 @@ python demo_05_tool_tokens.py
 
 ---
 
-# Authentication, Authorization, and Identity Propagation
+# Authentication and Identity Propagation
 
 - **Prevent the “Confused Deputy” vulnerability**: never execute backend tools using a single shared superuser service account when acting on behalf of an end user
 - **Propagate caller identity**: pass short-lived, user-scoped OAuth/JWT tokens or verified user claims to the tool execution layer so backend RBAC/ABAC policies enforce row-level security
@@ -437,14 +459,14 @@ Read this agent configuration for an internal HR assistant that answers employee
 <!-- layout: card-layout -->
 # Balancing Accuracy-Latency Trade-Offs
 
-### Parallel Tool and Subagent Calls
+### Parallel Calls
 - Emit independent tool calls and subagent delegations in a single turn so network I/O executes concurrently rather than sequentially.
 
-### Retrieval Depth vs Context Latency
+### Retrieval Depth
 - Fetching top-50 chunks increases input token count, time-to-first-token (TTFT), and “lost in the middle” noise.
 - Retrieve top-25 fast, then apply a compact cross-encoder reranker to pass only the top-5 highest-signal chunks to Claude.
 
-### Streaming and Speculative Execution
+### Streaming
 - Stream responses to users to minimize perceived latency while running fast input guardrails in parallel with initial context retrieval.
 
 ---

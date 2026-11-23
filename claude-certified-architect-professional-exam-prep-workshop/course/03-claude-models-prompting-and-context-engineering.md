@@ -19,7 +19,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 2: Claude Models, Prompting, and Context Engineering (13% of Exam)
+# Domain 2: Models, Prompting, and Context
+
+**Claude Models, Prompting, and Context Engineering** is **13%** of the exam.
 
 | Task # | Task Statement |
 | :--- | :--- |
@@ -43,18 +45,18 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- layout: 3-column -->
 # Selecting Across the Claude Model Family
 
-### Claude Haiku (`claude-haiku-5-5`)
-- **$0.10 / $0.50** per million input / output tokens (prompts up to 100K tokens)
+### Claude Haiku
+- `claude-haiku-5-5`: **$0.10 / $0.50** per million input / output tokens (prompts up to 100K tokens)
 - Lowest latency and cost: high-volume routing, classification, PII and injection screening, simple extraction, and lightweight subagents
 - Weakest on deep multi-hop reasoning and subtle policy judgment
 
-### Claude Sonnet (`claude-sonnet-5-5`)
-- **$2 / $10** per million input / output tokens
+### Claude Sonnet
+- `claude-sonnet-5-5`: **$2 / $10** per million input / output tokens
 - The balanced production workhorse: customer-facing agents, code generation, RAG synthesis, and multi-turn tool use
 - Best quality-to-latency ratio for most production workloads
 
-### Claude Opus (`claude-opus-5-5`)
-- **$4 / $20** per million input / output tokens
+### Claude Opus
+- `claude-opus-5-5`: **$4 / $20** per million input / output tokens
 - Deepest reasoning in the standard tiers: complex orchestration, security and code audits, legal and financial synthesis
 - Claude Fable sits above Opus at a higher price for the most demanding long-horizon work
 
@@ -68,7 +70,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- layout: 2-column -->
 # Adaptive Thinking and the Effort Setting
 
-### How Thinking Works on Current Models
+### How Adaptive Thinking Works
 - **Thinking is adaptive**: Claude decides when and how much to reason before answering or calling a tool
 - **Effort is the control**: `output_config={"effort": "low"}` through `"medium"`, `"high"`, `"xhigh"`, and `"max"` sets how thoroughly Claude thinks and how many tokens it spends
 - **Fixed thinking budgets are gone**: `budget_tokens` is rejected on current models; if an exam item says “thinking budget,” read it as effort
@@ -185,7 +187,7 @@ python demo_03_model_tiers.py
 <!-- layout: card-layout -->
 # Designing Production System Prompts and Templates
 
-### Clear Role and Behavioral Guardrails
+### Role and Guardrails
 - Define the agent’s role, domain boundaries, allowed actions, and explicit refusal/escalation rules in the `system` parameter.
 - Specify negative constraints alongside positive actions (for example, “Never extrapolate policy rules not explicitly present in `<policy_document>`”).
 
@@ -228,7 +230,7 @@ Return the claim_summary schema. Keep "summary" under 120 words.
 ---
 
 <!-- layout: 2-column -->
-# Format Guardrails: Structured Outputs Instead of Prefill
+# Structured Outputs Instead of Prefill
 
 ### Weak: Asking Nicely, or Prefilling
 - “Respond only in valid JSON” in the prompt is followed most of the time, not every time
@@ -273,7 +275,7 @@ Return the claim_summary schema. Keep "summary" under 120 words.
 - **Why instructions fail**: the definitions overlap; more adjectives do not draw the line
 - **Fix**: three short examples that sit right on the boundary, each with a one-line reason for its label
 
-### Chain-of-Thought Fixes Multi-Constraint Logic
+### Reasoning Fixes Constraint Logic
 - **Symptom**: an eligibility checker misses that a policy’s waiting period, a pre-existing-condition clause, and a state rule interact
 - **Why examples fail**: no small set of examples covers every combination of constraints
 - **Fix**: raise effort, or instruct Claude to check each constraint in turn and state which one decides the outcome
@@ -430,7 +432,7 @@ python demo_04_cache_prefix.py
 ---
 
 <!-- layout: stacked -->
-# Skills: Reusable Expertise with Progressive Disclosure
+# Skills: Expertise Loaded on Demand
 
 - **A Skill is a folder**: `SKILL.md` with a name and description, plus optional reference files and scripts, that teaches Claude a repeatable task
 - **Loads in three levels**: metadata is always present, instructions load when the task matches, and resources load only when a step needs them
@@ -481,7 +483,7 @@ An internal operations agent must follow 60 detailed procedures (password resets
 
 ---
 
-# Domain 2 Quiz: Claude Models, Prompting, and Context Engineering
+# Domain 2 Quiz: Models, Prompting, and Context
 
 - [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-11-46-ccar-p-realistic-instructor.json)
 

@@ -19,7 +19,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
-# Domain 6: Stakeholder Communication and Lifecycle Management (14% of Exam)
+# Domain 6: Stakeholders and Lifecycle
+
+**Stakeholder Communication and Lifecycle Management** is **14%** of the exam.
 
 | Task # | Task Statement |
 | :--- | :--- |
@@ -47,7 +49,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - Determine which parts of the workflow genuinely require LLM reasoning versus deterministic business rules or traditional SQL/code.
 - Reject forcing an autonomous agent onto a process that is a fixed 3-step deterministic form validation.
 
-### 2. Data Readiness and Sensitivity Audit
+### 2. Data Readiness Audit
 - Inventory source document quality, update frequency, access control lists (ACLs), and regulatory classification (PII, PHI, PCI, confidential IP).
 - Poorly maintained or contradictory source documents must be flagged before promising high RAG accuracy.
 
@@ -161,12 +163,12 @@ Write:
 <!-- layout: 3-column -->
 # Tailoring Communication by Stakeholder Audience
 
-### Executive and Business Leaders
+### Business Leaders
 - Focus on **business value pillars**: cost per resolved case, cycle-time reduction, revenue protection, and time-to-market
 - Frame model and pattern choices in terms of ROI, customer experience impact, and phased rollout milestones
 - Avoid low-level token or embedding jargon
 
-### Security, Legal, and Compliance
+### Security and Compliance
 - Focus on **trust boundaries**, data retention (Zero Data Retention / BAA), GDPR/HIPAA/FedRAMP alignment, and least-privilege tool scoping
 - Demonstrate how deterministic hooks and audit trails prevent unauthorized actions even if a prompt injection occurs
 
@@ -216,7 +218,7 @@ Write:
 ---
 
 <!-- layout: 2-column -->
-# Aligning Expectations Around Non-Determinism and SLAs
+# Non-Determinism and Realistic SLAs
 
 ### Managing Probabilistic Reality
 - Stakeholders accustomed to traditional software often expect 100% deterministic outputs on every edge case
@@ -240,7 +242,7 @@ Write:
 - **Partial autonomy**: low-risk categories go straight through, and the rest stay assisted
 - Each stage has an exit criterion agreed with stakeholders in advance
 
-### Define Quality SLOs with Error Budgets
+### Quality SLOs and Error Budgets
 - **SLO example**: at least 95% of sampled answers rated correct each week
 - **Error budget**: the 5% allowance; when it is spent, changes pause until quality recovers
 - Report SLOs on the same dashboard as latency and availability, so quality is managed like uptime
@@ -255,7 +257,7 @@ Write:
 - **Monthly**: sponsor review against the success criteria and the roadmap
 - **Per release**: evaluation results and a change summary sent to every stakeholder group
 
-### When Someone Says “It’s Wrong Sometimes”
+### When Users Say “It’s Wrong”
 - Ask for the examples, and add them to the evaluation set with their trace IDs
 - Show the measured error rate and its trend, not reassurance
 - Agree which errors matter most, then prioritize fixes by business impact
@@ -387,7 +389,7 @@ Six weeks after launch, a business sponsor says the claims-summary assistant “
 
 ---
 
-# Domain 6 Quiz: Stakeholder Communication and Lifecycle Management
+# Domain 6 Quiz: Stakeholders and Lifecycle
 
 - [Open Quiz](https://claude-certification-exam-prep-1077635956541.us-east4.run.app/questions?file=public/2026-10-31-11-53-ccar-p-realistic-instructor.json)
 

@@ -1,4 +1,4 @@
-# Lifecycle Architecture Review and Team Enablement
+# Architecture Review and Team Enablement
 
 ## Time Required
 
