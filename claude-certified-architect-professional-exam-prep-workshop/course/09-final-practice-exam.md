@@ -40,16 +40,29 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
-# Rapid Review: Domains 1 to 4 Cheat Sheet
+# Rapid Review: Domains 1 and 2 Cheat Sheet
 
 | Domain / Scenario | Correct Enterprise Decision | Common Exam Distractor |
 | :--- | :--- | :--- |
-| **D1: Pattern Selection** | Start with Augmented LLM or deterministic Workflow; use Autonomous Agents only for open-ended paths | Using unconstrained multi-agent loops for fixed 3-step business processes |
-| **D2: 8K Static Policy + Short User Turn** | Place static prompt and policy **first** and enable **Prompt Caching** | Truncating policy to 1K tokens, downsizing blindly, or moving policy to few-shot |
-| **D2: Model Tiering** | Haiku for fast routing/guardrails, Sonnet for core agent/RAG, Opus for deep synthesis | Using Opus with max extended thinking for high-volume ticket triage |
-| **D3: Capability Bloat / Extra Tools** | **Remove unneeded tools** (`delete_account`, `issue_refund`) from agent config | Adding detective audit logs or confirmation prompts while keeping the tools attached |
-| **D3: Protocol Selection** | **MCP** for reusable cross-app tools/resources; **Direct API** for tight single-app calls; **A2A** for specialist agent delegation | Hard-coding internal API logic into system prompts across multiple apps |
+| **D1: Pattern Selection** | Augmented LLM or deterministic Workflow when the steps are known; Agent only when the next step depends on what was just found | Unconstrained agents or multi-agent hierarchies for fixed, regulated sequences |
+| **D1: Multi-Agent Design** | Use subagents for parallel breadth, context isolation, or separated permissions; contracts and budgets per worker | Multi-agent for tightly coupled work, which multiplies tokens and loses shared context |
+| **D1: Business Value** | Optimize cost per resolved case and resolution rate, tied to SLAs | Optimizing raw cost per token while escalations dominate the unit economics |
+| **D2: 8K Static Policy + Short User Turn** | Place static prompt and policy **first** and enable **Prompt Caching**; dynamic content after the cached prefix | Truncating policy to 1K tokens, downsizing blindly, or moving policy to few-shot |
+| **D2: Model Tier and Effort** | Haiku for high-volume routing and screening, Sonnet for core agents, Opus for deep synthesis; set **effort** per route and measure | Opus at maximum effort for ticket triage, or the smallest model regardless of task fit |
+| **D2: Many Procedures, Few Used per Request** | Package them as **Skills** (progressive disclosure) | Truncating procedures, or loading all of them into every request |
+
+---
+
+# Rapid Review: Domains 3 and 4 Cheat Sheet
+
+| Domain / Scenario | Correct Enterprise Decision | Common Exam Distractor |
+| :--- | :--- | :--- |
+| **D3: Capability Bloat / Extra Tools** | **Remove unneeded tools** from the agent config; use **tool search** when a large catalog is unavoidable | Adding audit logs or confirmation prompts while keeping the tools attached |
+| **D3: Authentication** | Propagate the user’s identity with scoped, short-lived tokens; no shared superuser accounts; no token passthrough | A system prompt telling the agent to access only the user’s own data |
+| **D3: Protocol Selection** | **MCP** for tools shared across apps; **Direct API/CLI** for one tight integration; **A2A** for independently owned agents across boundaries | A2A for in-app subagents, or duplicating API wrappers in every app |
+| **D3: Exact Codes Missed by Retrieval** | **Hybrid retrieval**: BM25 fused with vectors, plus metadata filters | Raising top-K or switching to a bigger model |
 | **D4: Confident Wrong RAG Answers After Doc Refresh** | Investigate **retrieval and indexing** first (broken re-index, stale chunks, mismatched embeddings) | Blaming silent model weight changes, temperature, or shrinking context windows |
+| **D4: Is the New Prompt Better?** | Larger stratified eval set, several trials per case, one variable changed, then a canary | Declaring a winner from a few cases or a single run |
 
 ---
 
@@ -57,11 +70,12 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 | Domain / Scenario | Correct Enterprise Decision | Common Exam Distractor |
 | :--- | :--- | :--- |
-| **D5: Indirect Prompt Injection Defense** | Isolate untrusted text in XML tags + least-privilege tool removal + deterministic `PreToolUse` hooks | Adding a system prompt line asking users not to include malicious instructions |
-| **D5: Regulatory Compliance (GDPR / HIPAA / FedRAMP)** | GDPR: PII minimization/erasure; HIPAA: BAA + Zero Data Retention (ZDR); FedRAMP: authorized cloud regions | Storing raw customer PII/PHI inside long-term prompt caches or public eval logs |
-| **D6: Communicating Accuracy SLAs** | Frame LLM quality as a statistical benchmark distribution backed by deterministic safety gates and HITL fallbacks | Promising 100% deterministic LLM outputs without code gates |
-| **D6: Lifecycle Governance** | Maintain ADRs, pinned model versions, golden eval gates in CI, and operational rollback runbooks | Upgrading production traffic to a new model release without running golden evals |
-| **D7: Team Claude Code Standardization** | Root `CLAUDE.md` + `.claude/rules/` path globs + `.claude/commands/` + `claude -p` in CI | Putting team rules in `~/.claude/CLAUDE.md` or omitting `-p` in CI pipelines |
+| **D5: Control Strength** | **Preventive** controls (remove the tool, ACL filter, code gate) over detective (logs) and compensating (confirmations) | “Add logging and review it weekly” as the primary fix |
+| **D5: Indirect Prompt Injection and Exfiltration** | Break a leg of the lethal trifecta: scope data, isolate untrusted content, remove or gate outbound actions | A system prompt asking the model to ignore instructions in documents |
+| **D5: Regulatory Compliance (GDPR / HIPAA / FedRAMP)** | GDPR: minimization and erasure across logs, datasets, and indexes; HIPAA: BAA plus ZDR-eligible features; FedRAMP: authorized cloud environments | Assuming every feature and model is ZDR- or BAA-eligible |
+| **D6: Communicating Accuracy SLAs** | Measurable success criteria, quality SLOs on an agreed eval set, deterministic gates and HITL for costly errors | Promising 100% deterministic LLM outputs |
+| **D6: Lifecycle Governance** | ADRs, pinned model IDs, golden eval gates in CI, rollback runbooks, and a model migration playbook | Moving production to a new model without side-by-side evaluation |
+| **D7: Team Claude Code Standardization** | Committed project settings and `CLAUDE.md`; **managed settings** for policy users cannot override; `claude -p` in CI | Team rules in `CLAUDE.md` alone or `~/.claude/` files; omitting `-p` in CI |
 
 ---
 

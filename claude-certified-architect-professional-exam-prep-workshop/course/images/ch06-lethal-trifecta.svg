@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" width="1200" height="380" role="img" aria-label="The lethal trifecta: private data, untrusted content, and an outbound channel">
+  <!-- Venn circles -->
+  <circle cx="470" cy="150" r="125" fill="#2563eb" fill-opacity="0.16" stroke="#2563eb" stroke-width="3"/>
+  <circle cx="640" cy="150" r="125" fill="#d97706" fill-opacity="0.16" stroke="#d97706" stroke-width="3"/>
+  <circle cx="555" cy="255" r="125" fill="#7e22ce" fill-opacity="0.16" stroke="#7e22ce" stroke-width="3"/>
+
+  <text x="420" y="110" text-anchor="middle" fill="#1e3a8a" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Private Data</text>
+  <text x="420" y="134" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">CRM, email, files,</text>
+  <text x="420" y="154" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">internal databases</text>
+
+  <text x="690" y="110" text-anchor="middle" fill="#92400e" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Untrusted Content</text>
+  <text x="690" y="134" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">web pages, inbound email,</text>
+  <text x="690" y="154" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">tickets, shared documents</text>
+
+  <text x="555" y="318" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Outbound Channel</text>
+  <text x="555" y="342" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">send email, call a URL,</text>
+  <text x="555" y="362" text-anchor="middle" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="14">post a message, write a link</text>
+
+  <rect x="497" y="178" width="116" height="40" rx="8" fill="#b91c1c"/>
+  <text x="555" y="204" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">Exfiltration</text>
+
+  <!-- Right-hand guidance -->
+  <rect x="815" y="40" width="365" height="300" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="997" y="78" text-anchor="middle" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700">Break at Least One Leg</text>
+  <text x="840" y="118" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">• Scope data access to the task</text>
+  <text x="840" y="150" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">• Separate the agent that reads</text>
+  <text x="852" y="172" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">untrusted content from private data</text>
+  <text x="840" y="204" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">• Remove or allowlist outbound</text>
+  <text x="852" y="226" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">tools and destinations</text>
+  <text x="840" y="258" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">• Require human approval for</text>
+  <text x="852" y="280" fill="#334155" font-family="Inter, system-ui, sans-serif" font-size="15">any outbound action</text>
+  <text x="997" y="318" text-anchor="middle" fill="#b91c1c" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Prompt rules alone cannot break a leg</text>
+
+  <!-- Left-hand caption -->
+  <text x="40" y="150" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">When one agent has all three,</text>
+  <text x="40" y="176" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">an instruction hidden in</text>
+  <text x="40" y="202" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">untrusted content can send</text>
+  <text x="40" y="228" fill="#082445" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700">private data out.</text>
+</svg>

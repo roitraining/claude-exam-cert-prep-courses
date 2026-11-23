@@ -6,203 +6,297 @@
 
 ## Overview
 
-In this lab, you will author architectural handoff documentation and stakeholder briefs, standardize Claude Code across an engineering team, and triage simulated production incidents using an operational runbook.
+In this lab, you will choose and document an architecture decision, defend it to three skeptical stakeholders, set up Claude Code so a whole engineering team inherits the same standards and guardrails, and run an on-call incident drill.
 
 ### You learn how to:
-- Document Architectural Decision Records (ADRs) and tailor SLA communications by stakeholder group.
-- Standardize team repositories with `CLAUDE.md`, path-scoped `.claude/rules/`, commands, and isolated skills.
-- Diagnose production telemetry alerts across retrieval, caching, hooks, and CI layers.
-- Run non-interactive architectural checks with Claude Code in CI/CD pipelines.
+- Choose between architecture options with data, document the decision in an ADR, and defend it to different audiences.
+- Standardize Claude Code for a team with `CLAUDE.md`, path-scoped rules, a forked skill, and enforced permissions.
+- Triage production incidents by mapping each symptom to the layer that changed.
+- Run non-interactive architecture checks with Claude Code in a CI pipeline.
 
 ## Scenario
 
-Your team is preparing to hand off a new enterprise Claude platform to production operations while onboarding 40 software engineers onto Claude Code. Before launch, you must align executive, security, and engineering stakeholders on realistic SLAs, standardize repository configurations, and prepare an on-call runbook for production incidents.
+Your team is handing a claims-processing assistant to production operations and onboarding 40 engineers onto Claude Code. The executive sponsor, the CISO, and the VP of Operations each have concerns about the launch. Before go-live, you must settle the open model-routing decision, set up the shared repository, and make sure the on-call team can triage the incidents most likely to happen.
 
 ![Lab 4 Architecture Overview](images/lab04-lifecycle-and-team-enablement.svg)
 
 ## Lab Instructions
 
-### Task 1: Author an Architectural Decision Record (ADR) and stakeholder SLA brief
+### Task 1: Choose, document, and defend a decision
 
-In this task, you create your lab workspace, document key architectural trade-offs in an ADR, and craft stakeholder-specific communication briefs that align expectations around statistical LLM quality and deterministic guardrails.
+In this task, you create your workspace, choose a model-routing option from measured data, have Claude draft the ADR from your choice, and then defend the decision to three stakeholders.
 
-1. Open your terminal (Terminal on macOS or PowerShell / Command Prompt / VS Code Terminal on Windows) and create a working folder for this lab:
+1. Open a terminal, go to your course workspace, and create a folder for this lab:
+
+**macOS:**
 
 ```bash
+cd ~/ccarp-labs
 mkdir ccarp-lab-04
 cd ccarp-lab-04
 ```
 
-2. Open `ccarp-lab-04` in VS Code (or your preferred text editor) and create a file named `project-discovery-notes.json` capturing the system context and stakeholder concerns:
+**Windows (PowerShell):**
 
-```json
-{
-  "project_name": "Enterprise Claims and Policy Assistant",
-  "pinned_model_id": "claude-sonnet-4-20250514",
-  "router_model_id": "claude-haiku-4-5-20251001",
-  "key_decisions": [
-    "Chose tiered routing (Haiku -> Sonnet) + Prompt Caching on the 10K-token policy guide over downsizing all turns to Haiku.",
-    "Chose Model Context Protocol (MCP) for Claims and Policy lookups so 3 internal apps and Claude Code share one governed integration.",
-    "Removed delete_claim and issue_payout tools from the drafting agent configuration to enforce least privilege."
-  ],
-  "stakeholder_questions": {
-    "executive_sponsor": "How does this reduce our cost per resolved claim and accelerate turnaround time?",
-    "chief_information_security_officer": "How do you guarantee a prompt injection cannot trigger an unauthorized payout or leak PHI under HIPAA?",
-    "vp_of_operations": "Can you guarantee 100% deterministic accuracy on every claim summary?"
-  }
-}
+```powershell
+cd $HOME\ccarp-labs
+mkdir ccarp-lab-04
+cd ccarp-lab-04
 ```
 
-3. Launch Claude Code in `ccarp-lab-04`:
+2. Open `ccarp-lab-04` in VS Code (or your preferred editor) and create a file named `options.md`:
+
+```markdown
+# Claims assistant: model routing options
+
+Measured on the 500-case golden evaluation set. SLA: p95 under 4 seconds.
+Volume: 1.2 million requests per month. 70% are simple status and coverage questions.
+
+| Option | Accuracy | p95 latency | Monthly model cost | Notes |
+| --- | --- | --- | --- | --- |
+| A: Sonnet for all traffic | 93% | 3.1 s | $41,000 | One model, simplest to operate |
+| B: Haiku router, Haiku for simple, Sonnet for the rest | 92% | 1.4 s simple, 3.3 s other | $19,000 | Router misroutes 2% of complex cases |
+| C: Opus for all traffic | 95% | 5.8 s | $83,000 | Best accuracy |
+
+Constraints: claims contain PHI; payouts are never made by the assistant;
+a human adjuster reviews every claim decision.
+```
+
+3. Read the options and choose one. Start Claude Code in `ccarp-lab-04`:
 
 ```bash
 claude
 ```
 
-4. In Claude Code, run the following prompt to generate `adr-001-claims-architecture.md` from `project-discovery-notes.json`:
+4. Send one message that states your choice and your reason in one or two sentences, starting with:
 
 ```text
-Read project-discovery-notes.json. Create adr-001-claims-architecture.md containing:
-1. "Architectural Decision Record (ADR-001)": Context, Decisions Made (Model Tiering + Prompt Caching, MCP Protocol Selection, and Least-Privilege Capability Removal), Rejected Alternatives, and Quantitative Trade-Offs.
-2. "Tailored Stakeholder Communication Briefs":
-   - Executive Brief (business value pillars: cost per resolved claim, cycle-time reduction, phased rollout ROI without low-level token jargon).
-   - Security and Legal Brief (HIPAA BAA + Zero Data Retention endpoints, XML trust boundaries, least-privilege tool removal, and deterministic PreToolUse hooks).
-   - Operations and SLA Alignment Brief (explaining why LLM comprehension follows a statistical quality distribution measured against a golden evaluation floor, paired with 100% deterministic code gates for financial rules and graceful HITL fallback queues).
+I choose option
 ```
 
-5. Review `adr-001-claims-architecture.md` in your editor to verify how each stakeholder group receives the exact framing they care about.
+5. Then paste this prompt:
+
+```text
+Read options.md. Write adr-001-model-routing.md for the option I chose, with these sections:
+Context, Decision, Alternatives Considered (with their numbers and why each was rejected),
+Consequences (including new risks and how they are measured), and Rollback.
+If my choice breaks a stated constraint or the SLA, say so plainly before writing the ADR.
+```
+
+6. Read the ADR. Then paste this prompt to start the stakeholder round:
+
+```text
+Now play three stakeholders, one at a time: the CFO, the CISO, and the VP of Operations.
+Each asks me the hardest question they would ask about this ADR. Wait for my answer
+before moving on. After each answer, grade it: did I use that stakeholder's terms
+(money, risk and data protection, or reliability and process), did I use the numbers,
+and did I avoid promising that the AI will always be right?
+```
+
+7. Answer each stakeholder in two or three sentences.
+
+**Success criteria**
+
+- Option C is rejected because it breaks the 4-second p95 SLA, whatever its accuracy
+- Options A and B are both defensible. B’s case is cost and latency; its new risk, misrouting, must be measured and owned
+- Your answer to the VP of Operations frames quality as a measured rate on the evaluation set, backed by adjuster review, never as a guarantee
+- Your answer to the CISO addresses PHI handling and data retention, not model accuracy
 
 > [!IMPORTANT]
-> On the CCAR-P exam, never promise stakeholders 100% deterministic LLM prose outputs. Instead, frame LLM quality as a **statistical benchmark distribution** governed by offline golden eval gates, and pair it with **deterministic code hooks and HITL fallbacks** where 100% policy compliance is mandatory.
+> On the exam, the best stakeholder answer gives each audience the consequence it cares about, uses numbers, and never promises deterministic LLM output.
 
-### Task 2: Standardize Claude Code for an engineering team
+### Task 2: Standardize Claude Code for the team
 
-In this task, you configure a shared repository layout so every developer and CI pipeline inherits universal standards via root `CLAUDE.md` and `@import`, conditional file conventions via `.claude/rules/`, shared slash commands in `.claude/commands/`, and isolated skills in `.claude/skills/`.
+In this task, you set up the shared repository configuration that every engineer and CI runner inherits, then verify that each piece works.
 
-1. Inside `ccarp-lab-04`, create the standard directories for a team repository:
+1. Exit Claude Code (`/exit`). In `ccarp-lab-04`, create the folders a team repository needs:
+
+**macOS:**
 
 ```bash
-mkdir -p docs .claude/rules .claude/commands .claude/skills/perf-audit src/api
+mkdir -p docs .claude/rules .claude/skills/perf-audit src/api secrets
 ```
 
-2. Create `docs/architecture-standards.md` with modular rules that will be imported into the root `CLAUDE.md`:
+**Windows (PowerShell):**
+
+```powershell
+mkdir docs, .claude\rules, .claude\skills\perf-audit, src\api, secrets
+```
+
+2. Create `docs/architecture-standards.md`:
 
 ```markdown
 # Enterprise Architecture Standards
 
-- Always pin exact Claude model snapshot IDs (such as `claude-sonnet-4-20250514`) in production configs.
-- Place static tools, system instructions, and `<policy_document>` blocks before dynamic per-request variables to preserve Prompt Caching hit rates.
-- Never attach state-mutating or administrative tools to read/draft-only agents.
+- Always pin an explicit Claude model ID (such as `claude-sonnet-5-5`), never a moving alias, in production configs.
+- Place static tools, system instructions, and policy documents before per-request content to preserve prompt caching.
+- Never attach state-changing or administrative tools to read-only or drafting agents.
 ```
 
-3. Create the project-level `CLAUDE.md` at the root of `ccarp-lab-04`:
+3. Create the project `CLAUDE.md` at the root of `ccarp-lab-04`:
 
 ```markdown
 # Claims Platform Repository Instructions
-
-This file is version-controlled in Git so all engineers and CI pipelines share the same standards.
 
 ## Architecture and Security Rules
 @docs/architecture-standards.md
 
 ## Development Workflow
-- Use Plan Mode before executing multi-file refactorings or schema migrations.
-- Run golden evaluation gates before promoting any prompt, chunking, or model version change.
+- Use Plan Mode before multi-file refactorings or schema migrations.
+- Run the golden evaluation before promoting any prompt, chunking, or model change.
 ```
 
-4. Create a path-scoped rule file at `.claude/rules/api-handlers.md` using YAML frontmatter `paths` globs so API conventions load only when editing files under `src/api/`:
+4. Create a path-scoped rule, `.claude/rules/api-handlers.md`, that loads only when Claude works on files under `src/api/`:
 
 ```markdown
 ---
 paths:
-  - "src/api/**/*.ts"
   - "src/api/**/*.py"
 ---
 # API Handler Conventions
 
-- Propagate caller-scoped OAuth/JWT identity to downstream MCP tools; never use a shared superuser token.
-- Attach a correlation `trace_id` to every model call, retrieval query, and MCP tool invocation.
+- Every handler takes the caller's identity token as a parameter and passes it to downstream tools; never use a shared service account.
+- Every handler accepts a `trace_id` and includes it in every log line and model call.
 ```
 
-5. Create a shared project slash command at `.claude/commands/arch-review.md`:
-
-```markdown
-Review the target service configuration against our enterprise architecture checklist:
-1. Check for unpinned floating model aliases.
-2. Check for dynamic variables (timestamps, UUIDs) placed ahead of cached static prompt prefixes.
-3. Check for capability bloat (unneeded tools attached to the agent role).
-4. Check for missing caller identity propagation or missing trace_id instrumentation.
-```
-
-6. Create an isolated skill at `.claude/skills/perf-audit/SKILL.md` with `context: fork`, `allowed-tools`, and `argument-hint`:
+5. Create a skill, `.claude/skills/perf-audit/SKILL.md`, that runs in a forked context with read-only tools:
 
 ```markdown
 ---
 name: perf-audit
-description: Audits service configs for TTFT latency, prompt cache invalidation, and RAG top-K bloat
+description: Audits a service config for latency, prompt caching, and retrieval settings. Use when asked to review performance of a config file.
 context: fork
-allowed-tools: ["Read", "Grep", "Glob"]
+allowed-tools: Read, Grep, Glob
 argument-hint: "<config-file-path>"
 ---
-Inspect the specified configuration file in an isolated subagent context and return a concise summary of latency, caching, and retrieval optimizations.
+Read the config file given as the argument. Report, in at most 6 bullets, anything that would hurt
+time to first token, break the prompt cache prefix, or bloat retrieved context.
 ```
 
-7. In Claude Code inside `ccarp-lab-04`, run `/memory` to verify that `CLAUDE.md`, `@docs/architecture-standards.md`, and `.claude/rules/api-handlers.md` are recognized.
+> [!NOTE]
+> Older guides put shared team commands in `.claude/commands/`. In current releases, commands and skills are merged: a skill folder creates the same `/perf-audit` command and can also run in a forked context with restricted tools.
 
-### Task 3: Triage production incidents and write an operational runbook
-
-In this task, you diagnose four simulated production telemetry alerts by correlating each symptom with the exact architectural layer that changed, and compile an on-call runbook with immediate rollback procedures.
-
-1. In `ccarp-lab-04`, create a file named `production-alerts.json` containing four live on-call incidents:
+6. Create the team permissions file, `.claude/settings.json`:
 
 ```json
 {
-  "alerts": [
-    {
-      "alert_id": "SEV2-01",
-      "symptom": "RAG claims assistant suddenly returns confident but wrong policy coverage answers starting at 03:15 UTC. Model snapshot ID and p50 latency are unchanged.",
-      "recent_deploy": "Automated ingestion job re-indexed 8,500 updated policy PDFs at 03:00 UTC."
-    },
-    {
-      "alert_id": "SEV2-02",
-      "symptom": "Time-to-First-Token (TTFT) doubled from 0.9s to 2.1s and input token cost spiked 4x immediately after a minor prompt logging commit.",
-      "telemetry": "cache_read_input_tokens dropped from 94% to 0%; cache_creation_input_tokens spiked to 100%."
-    },
-    {
-      "alert_id": "SEV2-03",
-      "symptom": "Audit logs show the support agent skipped caller identity verification in 9% of sessions despite a bold warning added to the system prompt.",
-      "telemetry": "Verification currently relies on system prompt instructions rather than a PreToolUse code gate."
-    },
-    {
-      "alert_id": "SEV2-04",
-      "symptom": "Automated GitHub Actions pull request review job hangs indefinitely until the 60-minute CI runner timeout kills it.",
-      "recent_deploy": "Added step: claude \"Review this PR diff for security issues\" to .github/workflows/pr-check.yml"
-    }
-  ]
+  "permissions": {
+    "allow": ["Bash(git status)", "Bash(git diff:*)"],
+    "deny": ["Read(./secrets/**)", "Bash(curl:*)"]
+  }
 }
 ```
 
-2. Ask Claude Code to analyze `production-alerts.json` and generate `operational-runbook.md`:
+7. Create a fake secret so you can test the deny rule. Put this one line in `secrets/claims-db.env`:
 
 ```text
-Read production-alerts.json. Create operational-runbook.md with a structured triage table and step-by-step remediation playbook for SEV2-01 through SEV2-04, specifying for each alert:
-1. Failing Architectural Layer (Retrieval/Indexing, Prompt Cache Prefix, Deterministic Hook Gate, or CLI Invocation Mode).
-2. First Diagnostic Verification Check.
-3. Immediate Rollback / Remediation Action.
-4. Model and Prompt Upgrade Governance Rule (how golden eval gates and pinned model snapshots prevent regressions before traffic promotion).
+CLAIMS_DB_PASSWORD=demo-not-a-real-secret
 ```
 
-3. Open `operational-runbook.md` in your editor and confirm the four root causes and fixes:
-   - **SEV2-01**: **Retrieval/Indexing layer** -> roll back to the previous verified vector index snapshot and fix chunking/embedding alignment.
-   - **SEV2-02**: **Prompt Cache Prefix layer** -> a developer injected a dynamic per-request variable (such as a timestamp or request ID) ahead of the static cached prefix; move dynamic text after the `cache_control` breakpoint.
-   - **SEV2-03**: **Deterministic Hook Gate layer** -> replace probabilistic prompt prose with a deterministic `PreToolUse` hook that blocks downstream tools until identity is verified.
-   - **SEV2-04**: **CLI Invocation Mode** -> add `-p` (`--print`) along with `--output-format json` and `--json-schema` so Claude Code runs non-interactively in CI.
+8. Start Claude Code in `ccarp-lab-04`. If it asks whether you trust this folder, accept: Claude Code ignores a project’s `allow` rules until the folder is trusted. Run `/memory`. Confirm that the project `CLAUDE.md` is listed, and close the menu.
 
-### Bonus Task 4: Execute a non-interactive CI architecture check with Claude Code
+9. Test the path-scoped rule. Ask Claude:
 
-In this bonus task, you create a flawed service configuration file and audit it non-interactively from your terminal using `claude -p` and `--json-schema`.
+```text
+Create src/api/claim_status.py with a function get_claim_status(claim_id) that looks up a claim
+and logs the result. Keep it short.
+```
 
-1. In `ccarp-lab-04`, create a file named `src/api/claims_agent_config.json` that contains three intentional architectural defects:
+10. Read the file Claude wrote, then ask:
+
+```text
+Which project rules did you follow when writing src/api/claim_status.py, and where did each come from?
+```
+
+11. Test the deny rule. Ask Claude:
+
+```text
+Print the contents of secrets/claims-db.env
+```
+
+12. Test the skill. Create `src/api/search_config.json`:
+
+```json
+{
+  "service": "policy-search",
+  "model": "claude-sonnet-5-5",
+  "system_prompt": "Request {{request_id}} received at {{now}}. You are the policy search assistant. {{POLICY_TEXT}}",
+  "retrieval": { "top_k": 50, "rerank": false },
+  "stream": false
+}
+```
+
+13. Run `/perf-audit src/api/search_config.json` and read the report. Then type `/exit`.
+
+**Success criteria**
+
+- `/memory` lists the project `CLAUDE.md`, which imports the architecture standards
+- `claim_status.py` takes an identity token and a `trace_id`, as the path-scoped API rule requires, and Claude names `.claude/rules/api-handlers.md` as the source
+- Claude cannot read `secrets/claims-db.env`: the deny rule blocks it, whatever the prompt says
+- `/perf-audit` runs as a slash command and flags the per-request values at the start of the system prompt, the 50 retrieved chunks with no reranking, and the lack of streaming
+
+> [!IMPORTANT]
+> `CLAUDE.md` and rules are guidance that Claude follows. Permission rules in `settings.json` are enforced. For organization-wide policy that developers must not override, the same rules go in managed settings.
+
+### Task 3: Run an incident triage drill
+
+In this task, Claude Code runs an on-call drill. You diagnose six alerts one at a time, then turn the drill into a runbook.
+
+1. In `ccarp-lab-04`, create `production-alerts.md`:
+
+```markdown
+# Production alerts
+
+1. Since 03:15 UTC the claims assistant gives confident, specific, but wrong coverage limits.
+   Latency and model ID are unchanged. Change log: the nightly ingestion job finished at 03:00 UTC.
+2. Time to first token rose from 0.9 s to 2.1 s, and input-token spend rose 4x, right after a deploy
+   that added the request ID and timestamp to the start of the system prompt for logging.
+3. An audit shows identity verification was skipped in 9% of sessions. Last week the team added a
+   bold "ALWAYS VERIFY IDENTITY FIRST" line to the system prompt.
+4. The new PR-review job in CI never finishes; runners are killed at the 60-minute timeout.
+   The job step runs: claude "Review this PR diff for security issues"
+5. Between 9:00 and 9:15 each morning, 12% of requests fail with HTTP 429. The rest of the day is normal.
+6. A small share of requests about medication dosages return no answer, and the logs show
+   stop_reason "refusal".
+```
+
+2. Start Claude Code in `ccarp-lab-04` and paste:
+
+```text
+Run an on-call triage drill. Read production-alerts.md and present the alerts one at a time.
+For each, wait for my answer: the failing layer, the first thing I would check, and the immediate
+remediation. Then grade my answer and give the expert answer. Do not reveal answers first.
+
+Judge using these principles:
+- Map the symptom to the layer that most recently changed: retrieval and indexing, prompt and
+  context, model, tools and integration, or platform and operations.
+- Check the cheapest decisive evidence first: usage fields, traces, change logs, error codes.
+- Prefer rollback and structural fixes (code gates, configuration) over stronger prompt wording.
+```
+
+3. Answer each alert in the chat.
+
+4. When the drill ends, paste:
+
+```text
+Write operational-runbook.md from this drill: one section per alert with the symptom,
+first check, remediation, and how to prevent it from happening again.
+```
+
+**Success criteria**
+
+- **1**: retrieval and indexing. Check whether the right chunks are retrieved for failing questions; roll back the index
+- **2**: the prompt cache prefix. Check `cache_read_input_tokens`; move the per-request values after the cached prefix
+- **3**: a missing code gate. Prompt wording is probabilistic; enforce verification with a `PreToolUse` hook or a prerequisite check
+- **4**: CLI invocation. The job runs Claude Code interactively and waits for input; add `-p`
+- **5**: rate limits at peak. Retry with backoff that honors `retry-after`, smooth the burst with a queue, or request higher limits
+- **6**: refusals. Handle `stop_reason == "refusal"` explicitly: route to a human or pharmacist workflow, and review whether the requests are legitimate
+
+### Bonus Task 4: Run a non-interactive architecture check
+
+In this bonus task, you audit a defective service configuration from the command line, the way a CI pipeline would, and get structured findings back.
+
+1. Create `src/api/claims_agent_config.json`:
 
 ```json
 {
@@ -214,7 +308,11 @@ In this bonus task, you create a flawed service configuration file and audit it 
 }
 ```
 
-2. Exit your interactive Claude Code session (`/exit` or `Ctrl+C`) and run `claude -p` from your terminal to audit `src/api/claims_agent_config.json` into structured JSON findings:
+2. Before you run the audit, list the defects you expect it to find.
+
+3. From your terminal in `ccarp-lab-04` (not inside a Claude Code session), run:
+
+**macOS:**
 
 ```bash
 claude -p "Audit src/api/claims_agent_config.json against our CLAUDE.md architecture standards" \
@@ -222,12 +320,26 @@ claude -p "Audit src/api/claims_agent_config.json against our CLAUDE.md architec
   --json-schema '{"type":"object","properties":{"findings":{"type":"array","items":{"type":"object","properties":{"defect_category":{"type":"string"},"severity":{"type":"string","enum":["critical","high","medium"]},"issue":{"type":"string"},"remediation":{"type":"string"}},"required":["defect_category","severity","issue","remediation"]}}},"required":["findings"]}'
 ```
 
-3. Confirm that the JSON output identifies the unpinned model alias (`claude-sonnet-latest`), the broken prompt cache prefix (`{{NOW_ISO}}` at the start), the capability bloat (`issue_wire_payout`, `delete_customer_record`), and the shared admin token.
+**Windows (PowerShell):**
+
+```powershell
+claude -p "Audit src/api/claims_agent_config.json against our CLAUDE.md architecture standards" `
+  --output-format json `
+  --json-schema '{"type":"object","properties":{"findings":{"type":"array","items":{"type":"object","properties":{"defect_category":{"type":"string"},"severity":{"type":"string","enum":["critical","high","medium"]},"issue":{"type":"string"},"remediation":{"type":"string"}},"required":["defect_category","severity","issue","remediation"]}}},"required":["findings"]}'
+```
+
+4. Compare the findings with the list you made.
+
+**Success criteria**
+
+- The JSON output lists four defects: the unpinned alias (`claude-sonnet-latest`), the timestamp at the start of the cached prefix, the unneeded `issue_wire_payout` and `delete_customer_record` tools, and the shared admin token
+- The findings appear in the `structured_output` field of the JSON result, ready for a pipeline to parse
+- The command returns and exits without waiting for input, which is what a CI step needs
 
 ## Congratulations!
 
 In this lab, you have:
-- Documented Architectural Decision Records (ADRs) and tailored SLA communications by stakeholder group.
-- Standardized team repositories with `CLAUDE.md`, path-scoped `.claude/rules/`, commands, and isolated skills.
-- Diagnosed production telemetry alerts across retrieval, caching, hooks, and CI layers.
-- Run non-interactive architectural checks with Claude Code in CI/CD pipelines.
+- Chosen between architecture options with data, documented the decision in an ADR, and defended it to different audiences.
+- Standardized Claude Code for a team with `CLAUDE.md`, path-scoped rules, a forked skill, and enforced permissions.
+- Triaged production incidents by mapping each symptom to the layer that changed.
+- Run non-interactive architecture checks with Claude Code in a CI pipeline.

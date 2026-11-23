@@ -90,6 +90,11 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - **Protocol selection**: weighing MCP vs direct API/CLI vs Agent-to-Agent (A2A) orchestration
 - **Governance and regulations**: GDPR, HIPAA, FedRAMP, least-privilege capability removal, and lifecycle management
 
+<!-- below-columns -->
+
+> [!NOTE]
+> The Foundations exam calls the subagent-spawning tool `Task`. In current Claude Code and Agent SDK releases it is named `Agent`. This course uses `Task` where it quotes exam language.
+
 ---
 
 <!-- layout: navigation -->
@@ -134,14 +139,172 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ---
 
+<!-- layout: card-layout -->
+# How to Dissect a CCAR-P Scenario Question
+
+### 1. Find the Binding Constraint
+- Read the stem for the one requirement that cannot bend: money moving, regulated data, a latency SLA, a cost ceiling, or an executive commitment.
+- The constraint tells you how strong the fix must be. A compliance or financial rule needs a structural control, not a prompt.
+
+### 2. Locate the Layer That Changed
+- Map the symptom to a layer: business requirement, retrieval, prompt and context, model, integration and tools, or operations.
+- Clues such as “after a document refresh” or “after the new prompt shipped” point to exactly one layer.
+
+### 3. Eliminate by Control Strength
+- Remove answers that monitor a risk (logging), add friction (confirmation prompts), or hope for better behavior (bigger model, stronger wording) when a preventive option exists.
+- Remove answers that fix a different layer than the one that changed.
+
+### 4. Choose the Proportionate Fix
+- Among the survivors, pick the smallest change that fully meets the constraint.
+- Rebuilding the architecture, fine-tuning, or adding a new agent is rarely the first answer.
+
+---
+
+<!-- layout: 2-column -->
+# Worked Example: A Professional-Level Question
+
+### The Question
+- **Stem:** A bank’s internal research assistant answers analyst questions from 40,000 policy and product documents. Legal now requires that analysts in the retail division never see answers drawn from investment-banking documents. Retrieval quality is otherwise good. What is the best change?
+- **A.** Add a system prompt rule: “Never use investment-banking documents for retail analysts”
+- **B.** Filter retrieval by the caller’s division metadata before chunks reach the context window
+- **C.** Log every answer and have compliance review the logs weekly
+- **D.** Move to a larger model that follows confidentiality instructions more reliably
+
+### Applying the Four Steps
+- **Constraint:** a legal access rule, so it needs 100% enforcement
+- **Layer:** retrieval decides what Claude can see; the model and prompt are not the problem
+- **Eliminate:** A and D are probabilistic; C is detective and finds leaks after they happen
+- **Answer: B.** An ACL pre-filter is preventive: unauthorized chunks never reach the model
+
+<!-- below-columns -->
+
+> [!TIP]
+> Most CCAR-P questions are architecture questions disguised as model questions. When an option changes *what the model can see or do*, it usually beats an option that asks the model to behave.
+
+---
+
+# Weighted Study Plan
+
+| Domain | Weight | Approx. Items | Where in This Course | Study Priority |
+| :--- | :---: | :---: | :--- | :--- |
+| **3: Integration** | 19% | 12 | Chapter 4, Lab 2 | Highest: RAG, protocols, auth, observability |
+| **1: Solution Design and Architecture** | 17% | 11 | Chapter 2, Lab 1 | High: pattern selection and decomposition |
+| **4: Evaluation, Testing, and Optimization** | 16% | 10 | Chapter 5, Lab 3 | High: datasets, A/B, diagnosis |
+| **5: Governance, Safety, and Risk** | 14% | 9 | Chapter 6, Lab 3 | Medium: control types, HITL, compliance |
+| **6: Stakeholder Communication and Lifecycle** | 14% | 9 | Chapter 7, Lab 4 | Medium: discovery, SLAs, ADRs |
+| **2: Models, Prompting, and Context** | 13% | 8 | Chapter 3, Lab 2 | Medium: model trade-offs, caching, Skills |
+| **7: Developer Productivity** | 7% | 4 | Chapter 8, Lab 4 | Lower: Claude Code team setup |
+
+---
+
 # Exam Policies, Retakes, and Pacing Strategy
 
 - **Pacing**: 63 items in 120 minutes gives you roughly **1 minute 50 seconds per item**; flag lengthy multi-requirement items and never leave blanks
+- **Multiple-response items**: each item states how many options to select; select exactly that many
 - **Retake waiting periods**:
-  - 14 days after the 1st failed attempt
-  - 30 days after the 2nd failed attempt
-  - 90 days after the 3rd failed attempt (maximum 4 attempts within a rolling 12-month period)
+  - 14 days after the 1st failed attempt, 30 days after the 2nd, 90 days after the 3rd
+  - Maximum 4 attempts within a rolling 12-month period
 - **Rescheduling rule**: cancel or reschedule at least 24 hours before your appointment via Pearson VUE to avoid forfeiting the exam fee
+
+---
+
+# Demo: Using the Claude API
+
+If you already finished Lab 0, open `ccarp-labs` with the virtual environment activated and skip to Step 6.
+
+**Step 1. Create the `ccarp-labs` folder**
+
+**macOS:**
+
+```bash
+cd ~
+mkdir ccarp-labs
+cd ccarp-labs
+```
+
+**Windows (PowerShell):**
+
+```powershell
+cd $HOME
+mkdir ccarp-labs
+cd ccarp-labs
+```
+
+**Step 2. Create a virtual environment and activate it**
+
+**macOS:**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+**Windows (PowerShell):**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+When the environment is active, the prompt starts with `(.venv)`. If Windows says that running scripts is disabled, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer **Y**, and run the activate command again.
+
+**Step 3. Install the packages for these demos**
+
+```bash
+pip install anthropic python-dotenv
+```
+
+**Step 4. Create a file named `.env` with your API key**
+
+```text
+ANTHROPIC_API_KEY=sk-ant-paste-your-key-here
+```
+
+**Step 5. Create a file named `.gitignore`**
+
+```text
+.env
+.venv/
+```
+
+**Step 6. Create `demo_01_haiku.py` and paste this code**
+
+```python
+# demo_01_haiku.py - one Messages API call
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-haiku-5-5",
+    max_tokens=1028,
+    output_config={"effort": "low"},  # keep this short reply from being spent on thinking
+    messages=[{
+        "role": "user",
+        "content": "Write a Haiku about the Claude Certified Architect - Professional exam.",
+    }],
+)
+
+text = "".join(block.text for block in response.content if block.type == "text")
+print(text)
+print("usage:", response.usage.input_tokens, "in /", response.usage.output_tokens, "out")
+```
+
+**Step 7. Run it**
+
+```bash
+python demo_01_haiku.py
+```
+
+**Step 8. Examine the output**
+
+- The terminal prints a haiku: three short lines whose wording varies run to run
+- The last line shows the input and output token counts for the call
+
+> [!NOTE]
+> You sent one prompt and printed Claude’s reply and its token usage. Every later demo reads the `usage` object to make an architectural trade-off visible. This folder, virtual environment, and `.env` file are what every later demo uses. Demos that run Claude Code use your Claude subscription instead of the key.
 
 ---
 

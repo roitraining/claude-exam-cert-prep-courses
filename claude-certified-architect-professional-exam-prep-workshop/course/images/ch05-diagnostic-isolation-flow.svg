@@ -35,7 +35,7 @@
   <rect x="630" y="162" width="235" height="150" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
   <text x="747" y="194" text-anchor="middle" fill="#581c87" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700">Root Cause Check:</text>
   <text x="747" y="222" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">• Model tier too small (Haiku)</text>
-  <text x="747" y="246" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">• Extended thinking disabled</text>
+  <text x="747" y="246" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">• Effort set too low</text>
   <text x="747" y="270" text-anchor="middle" fill="#6b21a8" font-family="Inter, system-ui, sans-serif" font-size="14">• Unpinned model version shift</text>
 
   <!-- Layer 4: Tool / Integration Layer -->

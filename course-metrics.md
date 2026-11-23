@@ -1,6 +1,6 @@
 # Course Metrics
 
-Slide counts below include **content slides where the instructor talks** (objectives, teaching slides, Do Now debriefs, and What You Learned). Title slides, navigation slides, Demo slides, Lab/Do Now activity slides, Quiz slides, and Questions and Answers slides are excluded from the lecture slide count. The Associate and Architect Professional tables have not been recounted under this rule and still include chapter title slides.
+Slide counts below include **content slides where the instructor talks** (objectives, teaching slides, Do Now debriefs, and What You Learned). Title slides, navigation slides, Demo slides, Lab/Do Now activity slides, Quiz slides, and Questions and Answers slides are excluded from the lecture slide count. The Associate table has not been recounted under this rule and still includes chapter title slides.
 
 - **Lecture Time** = `Slide Count × 3 min`
 - **Activity Time** = Lab time + `2 min` per Demo + `2 min` per Do Now
@@ -70,16 +70,16 @@ Slide counts below include **content slides where the instructor talks** (object
 
 | Chapter # | Slide Count | Lecture Time | Activity Time | Quiz Time |
 | :--- | :---: | :---: | :---: | :---: |
-| **00: Introduction** | 7 | 21 min | 0 min | 0 min |
-| **01: Architect Professional Overview** | 10 | 30 min | 0 min | 0 min |
-| **02: Solution Design and Architecture** | 12 | 36 min | 45 min | 15 min |
-| **03: Claude Models, Prompting, and Context** | 11 | 33 min | 0 min | 15 min |
-| **04: Integration** | 12 | 36 min | 45 min | 15 min |
-| **05: Evaluation, Testing, and Optimization** | 10 | 30 min | 0 min | 15 min |
-| **06: Governance, Safety, and Risk Management** | 9 | 27 min | 45 min | 15 min |
-| **07: Stakeholder Communication and Lifecycle** | 9 | 27 min | 0 min | 15 min |
-| **08: Developer Productivity and Enablement** | 8 | 24 min | 60 min | 15 min |
+| **00: Introduction** | 6 | 18 min | 20 min | 0 min |
+| **01: Architect Professional Overview** | 12 | 36 min | 2 min | 0 min |
+| **02: Solution Design and Architecture** | 21 | 63 min | 49 min | 15 min |
+| **03: Claude Models, Prompting, and Context** | 19 | 57 min | 4 min | 15 min |
+| **04: Integration** | 25 | 75 min | 49 min | 15 min |
+| **05: Evaluation, Testing, and Optimization** | 18 | 54 min | 4 min | 15 min |
+| **06: Governance, Safety, and Risk Management** | 18 | 54 min | 47 min | 15 min |
+| **07: Stakeholder Communication and Lifecycle** | 21 | 63 min | 2 min | 15 min |
+| **08: Developer Productivity and Enablement** | 14 | 42 min | 62 min | 15 min |
 | **09: Final Practice Exam** | 6 | 18 min | 0 min | 30 min |
-| **Total** | **94** | **282 min (4.7 hrs)** | **195 min (3.3 hrs)** | **135 min (2.3 hrs)** |
+| **Total** | **160** | **480 min (8.0 hrs)** | **239 min (4.0 hrs)** | **135 min (2.3 hrs)** |
 
-**Combined Classroom Time (Lecture + Activity + Quiz):** `612 min` (`10.2 hours`)
+**Combined Classroom Time (Lecture + Activity + Quiz):** `854 min` (`14.2 hours`)

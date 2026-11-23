@@ -12,13 +12,13 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Chapter 8: Objectives
 
-- Standardize Claude Code configurations across engineering teams
-- Design AI-assisted workflows for refactoring and CI/CD reviews
+- Standardize and govern Claude Code configuration across engineering teams
+- Design AI-assisted workflows for refactoring, CI/CD reviews, and productivity measurement
 - Triage and resolve production AI incidents systematically
 
 ---
 
-# Domain 7: Developer Productivity and Operational Enablement
+# Domain 7: Developer Productivity and Operational Enablement (7% of Exam)
 
 | Task # | Task Statement |
 | :--- | :--- |
@@ -49,11 +49,130 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - Loads domain conventions automatically when editing matching files anywhere in the repository without bloating unrelated sessions.
 
 ### Shared Commands and Isolated Skills
-- Version-control team workflows in `.claude/commands/` and specialized tasks in `.claude/skills/<name>/SKILL.md`.
+- Version-control team workflows in `.claude/commands/` and specialized tasks in `.claude/skills/<name>/SKILL.md`; in current releases, commands and skills are merged, and both create a `/name` command.
 - Set `context: fork` and `allowed-tools` on verbose analysis skills so main developer sessions stay clean and safe.
 
 ### Governed Team MCP Servers (`.mcp.json`)
-- Configure approved team MCP servers in project `.mcp.json` using `${ENV_VAR}` secret expansion and enterprise permission allowlists in `settings.json`.
+- Configure approved team MCP servers in project `.mcp.json` using `${ENV_VAR}` secret expansion, and enforce which servers are allowed through settings.
+
+---
+
+# Settings Scopes and Precedence
+
+| Scope | Location | Shared With | Use It For |
+| :--- | :--- | :--- | :--- |
+| **Managed (enterprise)** | Managed settings deployed by IT or the admin console | Everyone in the organization; users cannot override | Security policy: denied commands and files, allowed MCP servers, telemetry |
+| **Command line** | Flags such as `--permission-mode` or `--allowedTools` | One session | Temporary overrides and CI runs |
+| **Local project** | `.claude/settings.local.json` (not committed) | One developer in one repo | Personal experiments |
+| **Shared project** | `.claude/settings.json` (committed) | Everyone who clones the repo | Team permissions, hooks, and project conventions |
+| **User** | `~/.claude/settings.json` | One developer across all repos | Personal preferences |
+
+- **Higher scopes win**, from managed at the top to user at the bottom, and a **deny** rule at any scope blocks the action even when another scope allows it
+
+> [!IMPORTANT]
+> Put team rules in committed project files, and put non-negotiable security policy in managed settings. Instructions in `CLAUDE.md` are guidance Claude usually follows; permission rules are enforced.
+
+---
+
+# Permissions as Team Policy
+
+- **Three rule lists**: `allow` runs without asking, `ask` always prompts, and `deny` blocks outright; deny wins over allow
+- **Scope rules narrowly**: allow the exact test and lint commands, and deny secrets and destructive commands
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run test:*)",
+      "Bash(npm run lint)"
+    ],
+    "ask": [
+      "Bash(git push:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./secrets/**)",
+      "Bash(curl:*)",
+      "Bash(rm -rf:*)"
+    ]
+  }
+}
+```
+
+---
+
+# Demo: A Project Deny Rule
+
+This demo runs Claude Code, so it uses your Claude subscription. In a terminal in `ccarp-labs`:
+
+**Step 1. Create a demo project with a fake secret**
+
+**macOS:**
+
+```bash
+mkdir -p demo-deny/config
+cd demo-deny
+echo "PAYMENTS_TOKEN=demo-not-a-real-secret" > config/payments.env
+```
+
+**Windows (PowerShell):**
+
+```powershell
+mkdir demo-deny\config
+cd demo-deny
+Set-Content config\payments.env "PAYMENTS_TOKEN=demo-not-a-real-secret"
+```
+
+**Step 2. Ask Claude Code to read it, with no rules in place**
+
+```bash
+claude -p "Print the contents of config/payments.env"
+```
+
+**Step 3. Create `.claude/settings.json` in `demo-deny` with a deny rule**
+
+```json
+{
+  "permissions": {
+    "deny": ["Read(./config/payments.env)"]
+  }
+}
+```
+
+**Step 4. Run the same command again**
+
+```bash
+claude -p "Print the contents of config/payments.env"
+```
+
+**Step 5. Examine the output**
+
+- Step 2 prints the fake token: reading project files is allowed by default
+- Step 4 does not print it: Claude reports that it cannot read the file
+- The only change was one committed settings file, which every teammate and CI runner now inherits
+
+> [!NOTE]
+> A line in `CLAUDE.md` saying “never read payments.env” is guidance. A deny rule is enforcement. For team policy, choose the control that cannot be talked around. Type `cd ..` to return to `ccarp-labs` when you finish.
+
+---
+
+<!-- layout: 2-column -->
+# Distributing Team Configuration with Plugins
+
+### Repository Files
+- `CLAUDE.md`, `.claude/settings.json`, `.claude/skills/`, `.claude/rules/`, and `.mcp.json` committed to one repo
+- Best when the configuration belongs to that project
+- Every clone gets it automatically
+
+### Plugins from a Marketplace
+- A **plugin** bundles Skills, subagents, hooks, MCP servers, and commands behind one manifest
+- A **marketplace** is a catalog of plugins, such as an internal Git repository your platform team maintains
+- Best when the same standards must reach dozens of repositories; update once, and teams pick up the new version
+
+<!-- below-columns -->
+
+> [!TIP]
+> Pair the two: a platform team publishes the shared review, security, and deployment plugins; each repository adds only what is specific to it, and managed settings enforce the non-negotiables.
 
 ---
 
@@ -72,7 +191,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 ### Interactive Architecture and Refactoring
 - Use **Plan Mode** before executing multi-file migrations, microservice decompositions, or unfamiliar legacy refactoring
 - Delegate broad codebase searches to the **`Explore` subagent** or maintain scratchpad files to prevent context degradation
-- Use `fork_session` to compare alternative implementation designs from a shared discovery baseline
+- Fork a session (`--resume` with `--fork-session` on the CLI, or `fork_session` in the Agent SDK) to compare alternative designs from a shared discovery baseline
 
 ### Automated CI/CD Quality Gates
 - Run headless Claude Code with `claude -p` (`--print`), `--output-format json`, and `--json-schema` for automated PR reviews
@@ -83,6 +202,63 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 > [!TIP]
 > Protect developer trust in automated PR reviews by using explicit categorical reporting rules and temporarily disabling noisy, high false-positive categories while prompts are tuned.
+
+---
+
+# Code: Claude Code as a CI Review Step
+
+- **Non-interactive by design**: `-p` prints one result and exits, so the pipeline never waits for input; the repository’s `CLAUDE.md` and settings apply in CI too
+
+```yaml
+name: ai-pr-review
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Claude Code
+        run: curl -fsSL https://claude.ai/install.sh | bash
+      - name: Review the diff
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          git diff origin/${{ github.base_ref }}...HEAD > pr.diff
+          claude -p "Review pr.diff against CLAUDE.md. Report only correctness and security issues." \
+            --output-format json > review.json
+```
+
+> [!NOTE]
+> Anthropic also publishes a GitHub Action for Claude Code that handles setup and posts review comments. Either way, the key comes from the CI secret store, never from the repository.
+
+---
+
+<!-- layout: 2-column -->
+# Measuring Developer Productivity Gains
+
+### Vanity Metrics
+- Lines of code generated
+- Number of AI suggestions accepted
+- Number of sessions or prompts per developer
+- Each one rises without any improvement in what ships
+
+### Outcome Metrics
+- **Cycle time**: from first commit to production, per change type
+- **Review load**: time to first review and number of review rounds
+- **Quality**: escaped defects, rollback rate, and change failure rate
+- **Developer experience**: survey trends and time spent on toil versus design work
+
+<!-- below-columns -->
+
+> [!IMPORTANT]
+> Measure a baseline before rollout and compare like with like. A productivity claim without a baseline and a quality metric is not evidence.
 
 ---
 
@@ -105,7 +281,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - Correlate sudden quality drops with recent operational events: a knowledge-base document refresh points to **retrieval/indexing**, while a sudden spike in TTFT and input cost points to a **broken prompt cache prefix**.
 
 ### 3. Inspect Structured Tool Telemetry
-- Check MCP `isError` rates by `errorCategory`. A spike in `transient` errors requires backoff or circuit breaking, whereas `validation` errors indicate a schema or tool-description mismatch.
+- Check tool `isError` rates by the error category your tools return. A spike in `transient` errors requires backoff or circuit breaking, whereas `validation` errors indicate a schema or tool-description mismatch.
 
 ### 4. Execute Safe Rollbacks and Degradations
 - Use pinned model IDs and versioned prompt registries to roll back a regressed prompt or index immediately, or route affected intents to human queues while root-causing.
@@ -120,6 +296,36 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 | **TTFT doubles and input token cost spikes 4x overnight** | Check `cache_read_input_tokens` metric and diff recent system prompt commits | Move newly added dynamic per-request variables out of the static prefix |
 | **Agent skips mandatory identity verification in 10% of turns** | Check whether verification relies on prompt prose instead of a code gate | Enforce a deterministic `PreToolUse` hook blocking downstream tools |
 | **CI pipeline job hangs indefinitely on PR review step** | Check CLI invocation flags in CI workflow YAML | Add `-p` (`--print`) flag to run Claude Code in non-interactive mode |
+| **Bursts of 429 errors at peak hours** | Compare request and token rates with your rate limits per model | Retry with backoff that honors `retry-after`, smooth traffic with a queue, or request higher limits |
+| **Some requests return no answer and `stop_reason` is `refusal`** | Review which inputs trigger it and whether they are legitimate | Handle `refusal` explicitly: rephrase, fall back to another model, or route to a human |
+| **Developers report a team MCP server’s tools are missing** | Run `/mcp` for server status, then `claude --debug` for connection errors | Fix the server URL, credentials, or allowlist entry, then reconnect |
+
+---
+
+# Worked Exam Question: Keeping Secrets Out of Sessions
+
+A platform team supports 300 developers using Claude Code across 120 repositories. Security requires that Claude Code never reads files under `secrets/` or runs `curl` in any repository, and that individual developers cannot turn this off. What is the best approach?
+
+- **A.** Add “Never read secrets/ or run curl” to every repository’s `CLAUDE.md`
+- **B.** Ask each developer to add deny rules to `~/.claude/settings.json`
+- **C.** Deploy managed settings with deny rules for `Read(./secrets/**)` and `Bash(curl:*)`
+- **D.** Add a `PreToolUse` hook to each repository that logs secret-file reads for weekly review
+
+---
+
+<!-- layout: 2-column -->
+# Worked Exam Question: Reasoning
+
+### Applying the Four Steps
+- **Constraint:** organization-wide enforcement that users cannot override
+- **Layer:** Claude Code configuration scope
+- **Eliminate:** A is guidance, not enforcement; B is per user and can be removed; D is detective and per repository
+- **Answer: C.** Managed settings sit at the top of the precedence order and apply everywhere
+
+### Why It Matters
+- Match the scope of the setting to the scope of the requirement
+- Permission rules enforce; `CLAUDE.md` advises
+- Logging is not a substitute for blocking
 
 ---
 
@@ -140,9 +346,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- layout: 2-column -->
 # What You Learned
 
-### Team Enablement and CI/CD
-- Standardized Claude Code configurations across engineering teams
-- Designed AI-assisted workflows for refactoring and CI/CD reviews
+### Team Enablement and Workflows
+- Standardized and governed Claude Code configuration across engineering teams
+- Designed AI-assisted workflows for refactoring, CI/CD reviews, and productivity measurement
 
 ### Production Operations
 - Triaged and resolved production AI incidents systematically

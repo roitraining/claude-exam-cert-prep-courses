@@ -58,24 +58,24 @@
 # Schedule
 
 ### Day One
-- **9:00** - Overview
-- **9:45** - Solution Design and Architecture
-- **11:15** - Lab: Designing a Multi-Agent Architecture
-- **12:00** - Lunch
-- **1:00** - Claude Models, Prompting, and Context Engineering
-- **2:30** - Integration
-- **4:00** - Lab: Prompt Engineering and RAG Integration
+- **9:00** - Introduction, Overview, and Lab 0 Setup
+- **10:15** - Solution Design and Architecture
+- **11:45** - Lab: Designing a Multi-Agent Architecture
+- **12:30** - Lunch
+- **1:30** - Claude Models, Prompting, and Context Engineering
+- **2:45** - Integration
+- **4:15** - Lab: Prompt Engineering and RAG Integration
 
 ### Day Two
 - **9:00** - Evaluation, Testing, and Optimization
 - **10:15** - Governance, Safety, and Risk Management
-- **11:15** - Lab: Evaluation Pipelines and Safety Guardrails
-- **12:00** - Lunch
-- **1:00** - Stakeholder Communication and Lifecycle Management
-- **2:00** - Developer Productivity and Operational Enablement
-- **3:00** - Lab: Lifecycle Architecture Review and Team Enablement
-- **4:00** - Final Practice Exam
-- **4:45** - Course Wrap-Up
+- **11:30** - Lab: Evaluation Pipelines and Safety Guardrails
+- **12:15** - Lunch
+- **1:15** - Stakeholder Communication and Lifecycle Management
+- **2:30** - Developer Productivity and Operational Enablement
+- **3:15** - Lab: Lifecycle Architecture Review and Team Enablement
+- **4:15** - Final Practice Exam
+- **4:50** - Course Wrap-Up
 
 ---
 
@@ -96,6 +96,14 @@
 - At least 3 years of experience in systems architecture or platform engineering
 - At least 6 months of hands-on experience with Claude or comparable LLM systems in production
 - Experience delivering end-to-end systems from discovery to deployment
-- To complete the labs you need access to Claude, Claude Code installed and authenticated, and a code or text editor such as VS Code
+- For the labs and demos: a paid Claude plan with Claude Code installed, a Claude Console API key with a few dollars of credit (created in Lab 0), Python 3.10 or newer, and a code editor such as VS Code
 
 ![Prerequisites](images/prerequisites.png)
+
+---
+
+# Lab 0: Validating Lab Prerequisites
+
+**Time:** 20 minutes
+
+- [Open Lab](https://labv.roitraining.com/?lab=https://github.com/roitraining/claude-exam-cert-prep-courses/tree/main/claude-certified-architect-professional-exam-prep-workshop/labs/lab-00-validating-lab-prerequisites)
