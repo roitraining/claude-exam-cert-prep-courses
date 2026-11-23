@@ -180,7 +180,7 @@ Write:
 
 # Presenting a Trade-Off: The Option Comparison
 
-| | **Option A: Sonnet for All Traffic** | **Option B: Haiku Router, Sonnet for Complex Cases** | **Option C: Opus for All Traffic** |
+| | Option A: Sonnet for All Traffic | Option B: Haiku Router, Sonnet for Complex Cases | Option C: Opus for All Traffic |
 | :--- | :--- | :--- | :--- |
 | **Accuracy on eval set** | 93% | 92% (router misroutes 2% of complex cases) | 95% |
 | **p95 latency** | 3.1 s | 1.4 s for 70% of traffic, 3.3 s for the rest | 5.8 s, over the 4 s SLA |
