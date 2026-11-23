@@ -13,7 +13,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Chapter 4: Objectives
 
 - Design RAG pipelines with appropriate chunking, indexing, and retrieval strategies
-- Select between MCP, Direct API/CLI, and Agent-to-Agent protocols, and between progressive discovery and monolithic context
+- Choose between MCP, Direct API/CLI, and Agent-to-Agent protocols, and between progressive discovery and monolithic context
 - Eliminate capability bloat and close authentication and authorization gaps
 - Justify accuracy-latency configuration decisions and design observability at scale
 
@@ -47,9 +47,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- layout: stacked -->
 # Designing Enterprise RAG Pipelines
 
-- **Structure-aware and contextual chunking**: split documents along semantic headings or table boundaries rather than arbitrary character counts, and prepend document metadata (title, effective date, section path) to each chunk before indexing
-- **Hybrid retrieval**: combine **dense vector embeddings** (for conceptual semantic similarity) with **BM25 lexical search** (for exact product codes, SKUs, error IDs, and legal clauses)
-- **Reranking and metadata pre-filtering**: enforce tenant/role ACL filters at query time and rerank top candidates before injecting into Claude’s context window
+- **Structure-aware and contextual chunking**: split on headings and table boundaries, not character counts, and prepend metadata (title, effective date, section path) to each chunk
+- **Hybrid retrieval**: combine **dense vector embeddings** (for meaning) with **BM25 lexical search** (for exact product codes, SKUs, error IDs, and legal clauses)
+- **Reranking and metadata pre-filtering**: apply tenant and role ACL filters at query time, and rerank the top candidates before they reach Claude
 
 ![Enterprise RAG Pipeline Architecture](images/ch04-rag-pipeline-architecture.svg)
 
@@ -59,8 +59,8 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Two Ways to Search: Vector Embeddings vs BM25
 
 ### Vector Embedding Search (Semantic)
-- **What it is**: an embedding model turns each chunk and each question into a vector, a long list of numbers that captures meaning
-- **How it ranks**: returns the chunks whose vectors sit closest to the question’s vector, even when they share no words
+- **What it is**: an embedding model turns each chunk and question into a vector, a list of numbers that captures meaning
+- **How it ranks**: returns the chunks closest to the question’s vector, even when they share no words
 - **Strength**: “How do I get back into my account?” finds a chunk titled “Resetting your password”
 - **Weakness**: exact codes blur together; `ERR-4092-B` and `ERR-4093-B` embed almost identically, so the wrong one can rank first
 
@@ -73,7 +73,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- below-columns -->
 
 > [!TIP]
-> Hybrid retrieval runs both searches and merges the two ranked lists, so each question gets meaning-based recall and exact-term precision. Most enterprise RAG systems need both.
+> Hybrid retrieval runs both searches and merges the ranked lists, combining meaning-based recall with exact-term precision. Most enterprise RAG systems need both.
 
 ---
 
@@ -82,7 +82,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ### Small Chunks: 100 to 300 Tokens
 - **Precise matches**: each chunk is about one idea, so similarity scores are sharp
-- **Lost context**: “the limit is $5,000” loses which product and which year it applies to
+- **Lost context**: “the limit is $5,000” loses which product and year it applies to
 - **Good for**: FAQs, glossaries, short policy clauses, and catalog entries
 
 ### Large Chunks: 800 to 1,500 Tokens
@@ -99,9 +99,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Contextual Retrieval: Restore Missing Context
 
-- **The problem**: a chunk that says “Revenue grew 3% over the prior quarter” does not say which company or which quarter, so neither embeddings nor BM25 can match it to the question
-- **The technique**: before indexing, have Claude write one or two sentences that place each chunk within its document, and prepend them to the chunk for both the embedding and the BM25 index
-- **Make it affordable**: the full document is the same for every chunk, so prompt caching cuts the cost of generating the context
+- **The problem**: a chunk that says “Revenue grew 3% over the prior quarter” does not say which company or quarter, so neither embeddings nor BM25 can match it
+- **The technique**: before indexing, have Claude write one or two sentences placing each chunk in its document, and prepend them for both the embedding and the BM25 index
+- **Make it affordable**: every chunk shares the same document, so prompt caching cuts the cost
 - **The payoff**: Anthropic reported that contextual embeddings plus contextual BM25 cut failed retrievals by about half, and by about two-thirds when combined with reranking
 
 ```text
@@ -117,19 +117,19 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 
 ### Version the Embedding Model
 - Store the embedding model and version with every vector.
-- Queries embedded with a new model cannot be compared with documents embedded by an old one: change the model, re-embed everything.
+- Vectors from different models cannot be compared: change the model, re-embed everything.
 
 ### Refresh with Blue/Green Indexes
-- Build the refreshed index beside the live one, run the retrieval evaluation against it, and switch traffic only when it passes.
+- Build the new index beside the live one, run the retrieval evaluation, and switch traffic only when it passes.
 - Keep the previous index for instant rollback.
 
 ### Prefer Incremental Updates
-- Re-index only changed documents, using content hashes to detect changes.
+- Re-index only changed documents, detected by content hash.
 - Remove superseded versions so stale policy chunks cannot outrank current ones.
 
 ### Support Deletion
 - Index by document ID so you can delete every chunk of a document on request.
-- This is how a RAG system honors retention rules and data-subject erasure requests.
+- This is how RAG honors retention rules and erasure requests.
 
 ---
 
@@ -137,19 +137,19 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 # Matching Retrieval to Data and Query Shape
 
 ### Dense Vector Retrieval
-- Best for natural language conceptual queries where users phrase ideas differently from the source document.
-- Struggles on exact alphanumeric identifiers (such as `ERR-4092-B` or part numbers) unless paired with lexical search.
+- Best for conceptual questions phrased differently from the source.
+- Struggles on exact identifiers such as `ERR-4092-B` unless paired with lexical search.
 
 ### Lexical / Keyword Search (BM25)
-- Excels at exact phrase matching, legal citations, function names, and regulatory article numbers.
-- Combine with vector search via Reciprocal Rank Fusion (RRF) for resilient hybrid retrieval.
+- Excels at exact phrases, legal citations, function names, and article numbers.
+- Combine with vector search through Reciprocal Rank Fusion (RRF) for hybrid retrieval.
 
 ### Metadata and Structured Filtering
 - Filter by `tenant_id`, `department`, `effective_date`, or `document_status == "active"` **before** or **during** vector search.
-- Prevents stale or unauthorized documents from ever entering the top-K context window.
+- Keeps stale or unauthorized documents out of the top-K.
 
 ### Relational / Graph Lookup
-- When queries require exact aggregations, joins, or multi-hop entity relationships, expose a parameterized SQL or graph tool rather than relying on text chunk similarity.
+- For exact aggregations, joins, or multi-hop relationships, expose a parameterized SQL or graph tool instead of chunk similarity.
 
 ---
 
@@ -170,14 +170,14 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 # Progressive Discovery vs Monolithic Context Strategy
 
 ### Monolithic Context Strategy
-- Loads the entire knowledge corpus or policy manual directly into the prompt prefix (paired with **Prompt Caching**)
-- **Use when**: the corpus is relatively small (such as an 8,000 to 50,000 token policy guide), changes infrequently, and is needed on nearly every request
-- Eliminates retrieval miss risk completely
+- Loads the whole corpus or policy manual into the prompt prefix (paired with **Prompt Caching**)
+- **Use when**: the corpus is small (such as an 8,000 to 50,000 token policy guide), changes rarely, and is needed on nearly every request
+- Eliminates retrieval misses
 
 ### Progressive Discovery Strategy
-- Starts with lightweight catalog metadata (such as MCP resources, table of contents, or high-level summaries) and retrieves detailed chunks or invokes tools on demand
-- **Use when**: the knowledge base spans millions of documents, changes frequently, or each user query touches only a tiny fraction of the corpus
-- Prevents context window bloat and attention dilution
+- Starts with lightweight catalog metadata (MCP resources, a table of contents, or summaries) and retrieves chunks or calls tools on demand
+- **Use when**: the knowledge base spans millions of documents, changes often, or each query needs a tiny fraction of it
+- Prevents context bloat and attention dilution
 
 ---
 
@@ -210,18 +210,18 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 
 ### Model Context Protocol
 - Open client-server protocol connecting an agent to **tools**, **resources**, and **prompts**
-- **Best when**: the same capabilities must be reused across multiple Claude applications, Claude Code, and agent workflows while maintained independently
+- **Best when**: the same capabilities are reused across several Claude applications, Claude Code, and agent workflows, and maintained independently
 - Decouples tool implementation from agent orchestration
 
 ### Direct API / CLI Integration
-- Point-to-point REST or gRPC calls wrapped as function tools, or command-line tools the agent runs through a shell
+- Point-to-point REST or gRPC calls wrapped as function tools, or CLIs the agent runs in a shell
 - **Best when**: one application needs tightly coupled, low-latency access to one service, or a well-known CLI (`git`, `gh`, a cloud CLI) already does the job
 - A known CLI often costs fewer context tokens than a large MCP tool catalog
 
 ### Agent-to-Agent (A2A)
-- Open protocol for agents built by different teams or vendors to discover each other (agent cards) and delegate tasks with a defined lifecycle
+- Open protocol for agents from different teams or vendors to discover each other (agent cards) and delegate tasks with a defined lifecycle
 - **Best when**: a workflow crosses organizational or platform boundaries and each agent is owned and operated independently
-- Not the same as subagents inside one application, which are in-process delegation
+- Not the same as subagents, which are in-process delegation within one application
 
 ---
 
@@ -244,14 +244,14 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 # MCP in Practice: Local and Remote Servers
 
 ### Local Servers (stdio)
-- Run as a process on the same machine as the client, such as a developer’s laptop running Claude Code
+- Run as a process on the client’s machine, such as a developer’s laptop running Claude Code
 - Configured per project in `.mcp.json`, with secrets expanded from environment variables
 - Inherit the local user’s permissions, so scope them to development use
 
 ### Remote Servers (Streamable HTTP)
-- Run as a shared service that many clients and users connect to over HTTPS
+- Run as a shared service that many users connect to over HTTPS
 - Require real authentication and authorization (next section), plus rate limits and monitoring
-- Claude API requests can connect to remote MCP servers directly through the MCP connector, without writing a client
+- The Claude API can call remote MCP servers directly through the MCP connector, with no client code
 
 <!-- below-columns -->
 
@@ -276,7 +276,7 @@ Indexed chunk:   "From ACME Corp's Q2 2026 10-Q, section on financial results.
 ### The Hidden Cost of Capability Bloat
 - Every attached tool’s name, description, and schema is sent with every request
 - Connecting several MCP servers can load tens of thousands of tokens of tool definitions before the user says a word
-- More tools also means more similar descriptions to choose between, so tool selection errors rise
+- More tools means more similar descriptions to choose between, so selection errors rise
 
 ### The Fixes, in Order
 - **Remove what the role never uses**: the least-privilege fix is also the cheapest
@@ -362,29 +362,29 @@ python demo_05_tool_tokens.py
 
 ### The Capability Bloat Anti-Pattern
 - A customer-support agent is configured with `read_ticket`, `draft_reply`, `issue_refund`, and `delete_user_account`
-- Support staff using this agent only ever need to read tickets and draft replies
-- Leaving `issue_refund` and `delete_user_account` attached creates severe prompt-injection and accidental-execution risk
+- Support staff only ever read tickets and draft replies
+- Leaving `issue_refund` and `delete_user_account` attached creates serious injection and accidental-execution risk
 
 ### The Least-Privilege Fix
 - **Remove `issue_refund` and `delete_user_account` from the agent’s configuration entirely**
 - **Why other options fail on the exam**:
-  - Adding audit logging is only a *detective* control after damage occurs
-  - Adding a confirmation prompt is a *compensating* control that still leaves the capability exposed
+  - Audit logging is a *detective* control that acts after damage occurs
+  - A confirmation prompt is a *compensating* control that leaves the capability exposed
   - Switching to a larger model does not reduce authorization scope
 
 <!-- below-columns -->
 
 > [!IMPORTANT]
-> CCAR-P Exam Rule: Least privilege means **removing capabilities the role does not require** to eliminate the attack surface, plus keeping per-agent tool counts small (4 to 5 tools) to avoid capability bloat.
+> CCAR-P Exam Rule: Least privilege means **removing capabilities the role does not need**, and keeping each agent to a small toolset (4 to 5 tools).
 
 ---
 
 # Authentication and Identity Propagation
 
-- **Prevent the “Confused Deputy” vulnerability**: never execute backend tools using a single shared superuser service account when acting on behalf of an end user
-- **Propagate caller identity**: pass short-lived, user-scoped OAuth/JWT tokens or verified user claims to the tool execution layer so backend RBAC/ABAC policies enforce row-level security
+- **Prevent the “Confused Deputy” vulnerability**: never run backend tools under a shared superuser account when acting for an end user
+- **Propagate caller identity**: pass short-lived, user-scoped OAuth/JWT tokens or verified claims to the tool layer so backend RBAC/ABAC policies enforce row-level security
 - **Minimize scopes**: grant each tool the narrowest scope it needs (`tickets:read`, not `admin:*`), and isolate tenants at the data layer, not in the prompt
-- **Environment-scoped secrets**: inject credentials via environment variables (such as `${SERVICE_TOKEN}` in `.mcp.json`) or secret managers; never pass raw API keys inside LLM prompts or tool arguments
+- **Environment-scoped secrets**: inject credentials through environment variables (such as `${SERVICE_TOKEN}` in `.mcp.json`) or a secret manager; never put raw API keys in prompts or tool arguments
 
 ---
 
@@ -392,13 +392,13 @@ python demo_05_tool_tokens.py
 # Securing Remote MCP Servers
 
 ### Authorization Requirements
-- Remote MCP servers use **OAuth 2.1** authorization: the client obtains a token for the user, and the server validates it on every request
-- **Validate the audience**: a server accepts only tokens issued for it, not tokens minted for some other service
-- **No token passthrough**: the server must not forward the client’s token to upstream APIs; it obtains its own scoped credentials for those calls
+- Remote MCP servers use **OAuth 2.1**: the client obtains a token for the user, and the server validates it on every request
+- **Validate the audience**: a server accepts only tokens issued for it
+- **No token passthrough**: the server must not forward the client’s token upstream; it uses its own scoped credentials
 
 ### Operational Controls
 - **Allowlist servers**: approve which MCP servers teams may connect to, and pin versions
-- **Review tool descriptions**: a malicious or compromised server can hide instructions in its tool descriptions or results
+- **Review tool descriptions**: a compromised server can hide instructions in its descriptions or results
 - **Log every tool call** with user identity, arguments, and result status, so security can reconstruct who did what
 
 <!-- below-columns -->
@@ -460,14 +460,14 @@ Read this agent configuration for an internal HR assistant that answers employee
 # Balancing Accuracy-Latency Trade-Offs
 
 ### Parallel Calls
-- Emit independent tool calls and subagent delegations in a single turn so network I/O executes concurrently rather than sequentially.
+- Emit independent tool calls and subagent delegations in one turn so they run concurrently, not in sequence.
 
 ### Retrieval Depth
-- Fetching top-50 chunks increases input token count, time-to-first-token (TTFT), and “lost in the middle” noise.
-- Retrieve top-25 fast, then apply a compact cross-encoder reranker to pass only the top-5 highest-signal chunks to Claude.
+- Fetching the top 50 chunks raises input tokens, time to first token (TTFT), and “lost in the middle” noise.
+- Retrieve the top 25 quickly, then let a compact cross-encoder reranker pass only the best 5 to Claude.
 
 ### Streaming
-- Stream responses to users to minimize perceived latency while running fast input guardrails in parallel with initial context retrieval.
+- Stream responses to cut perceived latency, and run fast input guardrails in parallel with retrieval.
 
 ---
 
@@ -488,12 +488,12 @@ Read this agent configuration for an internal HR assistant that answers employee
 
 # Observability and Monitoring Strategies at Scale
 
-- **Distributed tracing across agent turns**: assign a correlation `trace_id` to every user request and record child spans for every retrieval query, prompt cache check, model call, hook execution, and MCP tool invocation
+- **Distributed tracing across agent turns**: give every request a `trace_id`, with a child span for each retrieval, cache check, model call, hook, and MCP tool call
 - **Key production metrics to monitor**:
-  - **Latency breakdown**: TTFT, tokens per second, tool execution duration, and total multi-turn wall-clock time
+  - **Latency breakdown**: TTFT, tokens per second, tool duration, and total wall-clock time
   - **Token and cache efficiency**: `cache_read_input_tokens` vs `cache_creation_input_tokens` hit rates
-  - **Tool health**: `isError` rates segmented by the error category your tools return (transient, validation, business, permission)
-  - **Quality signals**: escalation rate, user thumbs-down rate, and retrieval similarity score drop-offs
+  - **Tool health**: `isError` rates by error category (transient, validation, business, permission)
+  - **Quality signals**: escalation rate, thumbs-down rate, and drops in retrieval similarity scores
 
 ---
 
@@ -501,19 +501,19 @@ Read this agent configuration for an internal HR assistant that answers employee
 # Observability at Scale: Sampling, Privacy, and Cost
 
 ### Sample Deliberately
-- At millions of requests, full prompts and responses for every request cost more than the model calls.
-- Keep metrics for 100% of traffic, and full traces for every error, slow request, and escalation, plus a random sample of the rest.
+- At millions of requests, storing every full prompt and response costs more than the model calls.
+- Keep metrics for 100% of traffic, full traces for every error, slow request, and escalation, and a random sample of the rest.
 
 ### Redact Before You Store
 - Prompts and responses contain the same PII and PHI as your source systems.
-- Redact or tokenize sensitive fields before logging, and apply the same retention limits as the source data.
+- Redact or tokenize sensitive fields before logging, with the same retention limits as the source.
 
 ### Use Standard Telemetry
 - Export spans with OpenTelemetry so model calls appear in the same traces as your services.
 - Tag every span with tenant, route, model, and prompt version.
 
 ### Attribute Cost
-- Report spend by tenant, feature, and model from tagged usage data and the provider’s usage and cost reporting.
+- Report spend by tenant, feature, and model from tagged usage data and the provider’s cost reports.
 - Unattributed spend is how one runaway agent loop goes unnoticed for a month.
 
 ---

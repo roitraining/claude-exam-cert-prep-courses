@@ -47,7 +47,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ### Claude Haiku
 - `claude-haiku-5-5`: **$0.10 / $0.50** per million input / output tokens (prompts up to 100K tokens)
-- Lowest latency and cost: high-volume routing, classification, PII and injection screening, simple extraction, and lightweight subagents
+- Lowest latency and cost: high-volume routing, classification, PII and injection screening, simple extraction, and light subagents
 - Weakest on deep multi-hop reasoning and subtle policy judgment
 
 ### Claude Sonnet
@@ -63,7 +63,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- below-columns -->
 
 > [!NOTE]
-> All three current tiers have a 1M-token context window, so context size rarely decides the tier anymore: quality, latency, and price do. Prices change; confirm them on the pricing page before you build a business case.
+> All three tiers have a 1M-token context window, so quality, latency, and price decide the tier, not context size. Prices change; confirm them on the pricing page before building a business case.
 
 ---
 
@@ -72,20 +72,20 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ### How Adaptive Thinking Works
 - **Thinking is adaptive**: Claude decides when and how much to reason before answering or calling a tool
-- **Effort is the control**: `output_config={"effort": "low"}` through `"medium"`, `"high"`, `"xhigh"`, and `"max"` sets how thoroughly Claude thinks and how many tokens it spends
+- **Effort is the control**: `output_config={"effort": "low"}` through `"medium"`, `"high"`, `"xhigh"`, and `"max"` sets how much Claude thinks and how many tokens it spends
 - **Fixed thinking budgets are gone**: `budget_tokens` is rejected on current models; if an exam item says “thinking budget,” read it as effort
-- **Defaults differ by model**: set effort explicitly in production rather than relying on a default
+- **Defaults differ by model**: set effort explicitly in production
 
 ### Choosing an Effort Level
-- **Low**: classification, routing, guardrail screening, simple lookups, and subagents doing narrow tasks
+- **Low**: classification, routing, guardrail screening, simple lookups, and narrow subagent tasks
 - **Medium to high**: most production agents and RAG synthesis
-- **High to max**: agentic coding, long multi-step plans, and reconciling conflicting sources, where correctness is worth the latency
-- **Trade-off**: higher effort means more output tokens, higher cost, and a longer time to the final answer
+- **High to max**: agentic coding, long plans, and reconciling conflicting sources, where correctness is worth the wait
+- **Trade-off**: higher effort means more output tokens, more cost, and a slower final answer
 
 <!-- below-columns -->
 
 > [!WARNING]
-> Exam Trap: Never blindly downsize to the smallest model to save money regardless of task fit, and never run the largest model at maximum effort on high-volume, trivial classification.
+> Exam Trap: Never downsize to the smallest model regardless of task fit, and never run the largest model at maximum effort on high-volume, trivial classification.
 
 ---
 
@@ -96,18 +96,18 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - Haiku screens and routes 100% of traffic (intent, PII, prompt injection)
 - Sonnet handles standard multi-tool workflows
 - Opus handles the rare ambiguous synthesis or planning request
-- Works well when a large share of traffic is genuinely trivial and Haiku’s 20x lower price dominates
+- Works when much of the traffic is trivial and Haiku’s 20x lower price dominates
 
 ### What to Measure First
-- **Try one strong model at lower effort**: it often matches a cascade’s quality with far less routing code
-- **Caches are model-scoped**: traffic split across three models builds three separate caches and loses cache reuse
+- **Try one strong model at lower effort**: it often matches a cascade with far less routing code
+- **Caches are model-scoped**: traffic split across three models builds three separate caches
 - **Judge cost per completed task**: a cheaper request that needs retries or escalation is not cheaper
-- **Routing errors are quality errors**: a misrouted hard request answered by a small model is a wrong answer, not a saving
+- **Routing errors are quality errors**: a hard request misrouted to a small model is a wrong answer, not a saving
 
 <!-- below-columns -->
 
 > [!TIP]
-> On the exam, a tiered routing answer is right when the scenario names high volume, simple requests, and a cost or latency constraint. It is wrong when the scenario’s problem is answer quality on hard cases.
+> On the exam, tiered routing is right when the scenario names high volume, simple requests, and a cost or latency constraint. It is wrong when the problem is answer quality on hard cases.
 
 ---
 
@@ -168,10 +168,10 @@ python demo_03_model_tiers.py
 
 - Haiku answers fastest, and its cost is roughly one hundredth of Opus’s for the same request
 - Opus spends more output tokens, because it thinks more even at low effort
-- The models may not agree: this message sits on the boundary between `refund_request` and `billing_dispute`, and different tiers can pick different labels
+- The models may disagree: this message sits between `refund_request` and `billing_dispute`, and tiers can pick different labels
 
 > [!NOTE]
-> A bigger model is not an answer key. Which label is right is decided by your labeled evaluation set and your business definitions, and on a boundary case like this, clearer category definitions or a few-shot example usually help more than a more expensive model.
+> A bigger model is not an answer key. Your labeled evaluation set and business definitions decide which label is right, and on a boundary case like this, clearer definitions or a few-shot example help more than a pricier model.
 
 ---
 
@@ -188,16 +188,16 @@ python demo_03_model_tiers.py
 # Designing Production System Prompts and Templates
 
 ### Role and Guardrails
-- Define the agent’s role, domain boundaries, allowed actions, and explicit refusal/escalation rules in the `system` parameter.
-- Specify negative constraints alongside positive actions (for example, “Never extrapolate policy rules not explicitly present in `<policy_document>`”).
+- Define the role, domain boundaries, allowed actions, and refusal and escalation rules in the `system` parameter.
+- Pair positive actions with negative constraints (for example, “Never extrapolate policy rules not present in `<policy_document>`”).
 
 ### XML Structural Delimiters
-- Use distinct XML tags (`<policy_document>`, `<customer_context>`, `<untrusted_user_input>`, `<retrieved_chunks>`) to separate trusted instructions from untrusted external content.
-- Reduces the risk that instructions hidden in retrieved documents override system directives; pair it with structural controls, because tags alone are not a guarantee.
+- Use distinct XML tags (`<policy_document>`, `<customer_context>`, `<untrusted_user_input>`, `<retrieved_chunks>`) to separate trusted instructions from untrusted content.
+- Lowers the risk that instructions hidden in documents override yours; pair tags with structural controls, because tags alone are no guarantee.
 
 ### Modular Prompt Templates
-- Version-control prompt templates with typed variable slots rather than concatenating ad-hoc strings in application code.
-- Enables independent A/B evaluation and clean rollback when a prompt edit causes a regression.
+- Version-control templates with typed slots instead of concatenating strings in application code.
+- Enables A/B evaluation and clean rollback when an edit causes a regression.
 
 ---
 
@@ -234,7 +234,7 @@ Return the claim_summary schema. Keep "summary" under 120 words.
 
 ### Weak: Asking Nicely, or Prefilling
 - “Respond only in valid JSON” in the prompt is followed most of the time, not every time
-- Prefilling the start of the assistant’s reply (such as `{`) is rejected with an error on current Claude models
+- Prefilling the assistant’s reply (such as `{`) is rejected with an error on current models
 - Parsing free text with regular expressions breaks on the first unusual answer
 
 ### Strong: Constrain the Output
@@ -253,17 +253,17 @@ Return the claim_summary schema. Keep "summary" under 120 words.
 # Matching Prompting Techniques to Task Needs
 
 ### Zero-Shot Prompting
-- Direct instructions with explicit criteria and output schema, without demonstration examples
+- Direct instructions with explicit criteria and an output schema, no examples
 - Lowest token overhead
-- **Use when**: the task is well-defined and structured output schemas already constrain the format
+- **Use when**: the task is well defined and a schema already constrains the format
 
 ### Few-Shot Prompting
-- Includes 2 to 4 canonical input/output examples demonstrating edge-case judgment and target formatting
-- **Use when**: zero-shot output formatting is inconsistent, or the model needs calibrated examples for ambiguous boundary decisions
+- Adds 2 to 4 input and output examples that show edge-case judgment and the target format
+- **Use when**: zero-shot formatting is inconsistent, or the model needs examples for ambiguous boundary decisions
 
 ### Chain-of-Thought / Thinking
-- Has the model reason step by step before the final answer: adaptive thinking on current models, or explicit `<thinking>` steps in the prompt
-- **Use when**: solving multi-constraint logic, reconciling conflicting sources, or auditing complex code paths
+- The model reasons step by step before answering: adaptive thinking on current models, or explicit `<thinking>` steps in the prompt
+- **Use when**: multi-constraint logic, conflicting sources, or complex code paths
 
 ---
 
@@ -273,12 +273,12 @@ Return the claim_summary schema. Keep "summary" under 120 words.
 ### Few-Shot Fixes Boundary Judgment
 - **Symptom**: a ticket classifier labels “I want my money back for the duplicate charge” as `billing_dispute` half the time and `refund_request` the other half
 - **Why instructions fail**: the definitions overlap; more adjectives do not draw the line
-- **Fix**: three short examples that sit right on the boundary, each with a one-line reason for its label
+- **Fix**: three short examples right on the boundary, each with a one-line reason
 
 ### Reasoning Fixes Constraint Logic
 - **Symptom**: an eligibility checker misses that a policy’s waiting period, a pre-existing-condition clause, and a state rule interact
 - **Why examples fail**: no small set of examples covers every combination of constraints
-- **Fix**: raise effort, or instruct Claude to check each constraint in turn and state which one decides the outcome
+- **Fix**: raise effort, or tell Claude to check each constraint in turn and say which one decides
 
 <!-- below-columns -->
 
@@ -300,8 +300,8 @@ Return the claim_summary schema. Keep "summary" under 120 words.
 # Ordering Prefixes for Prompt Caching
 
 - **How Prompt Caching works**: Claude caches identical request prefixes across calls (`tools` -> `system` -> early `messages`) when marked with `cache_control`
-- **Solves both latency and cost**: when an app sends the same 8,000-token system prompt and policy document on every turn, placing static content **first** and enabling prompt caching slashes both TTFT latency and per-request input token cost
-- **Prefix stability rule**: any dynamic text (such as `current_timestamp` or `request_uuid`) placed at the top of the system prompt breaks the prefix match and invalidates the cache
+- **Solves both latency and cost**: when an app sends the same 8,000-token system prompt and policy on every turn, putting static content **first** and enabling caching cuts both TTFT and input cost
+- **Prefix stability rule**: dynamic text (such as `current_timestamp` or `request_uuid`) at the top of the system prompt breaks the prefix match and the cache
 
 ![Prompt Caching Prefix Layout](images/ch03-prompt-caching-layout.svg)
 
@@ -309,7 +309,7 @@ Return the claim_summary schema. Keep "summary" under 120 words.
 
 # Implementing Prompt Caching Breakpoints
 
-- **Keep static blocks at the front** and place dynamic user turns at the end of the payload:
+- **Keep static blocks at the front** and dynamic user turns at the end:
 
 ```python
 response = client.messages.create(
@@ -406,7 +406,7 @@ python demo_04_cache_prefix.py
 - Call 4 reads the cache again, because the timestamp moved after the cached prefix
 
 > [!NOTE]
-> This is the exam’s prompt caching question and the most common production cache bug in one run. Static content first, dynamic content last, and verify with the `usage` fields.
+> This is the exam’s caching question and the most common production cache bug in one run. Static content first, dynamic content last, and verify with the `usage` fields.
 
 ---
 
@@ -414,28 +414,28 @@ python demo_04_cache_prefix.py
 # Managing Token Usage in Long-Running Agents
 
 ### Large Windows Still Dilute Attention
-- A 1M-token window lets you load more, but every irrelevant token costs money, adds latency, and competes for attention.
-- Retrieve or load what the current step needs instead of everything that might matter.
+- A 1M-token window holds more, but every irrelevant token costs money, adds latency, and competes for attention.
+- Load what the current step needs, not everything that might matter.
 
 ### Clear Old Tool Results
-- Context editing removes stale tool results and old thinking from the conversation before each request.
-- Prune verbose tool outputs to the fields the agent needs before you append them.
+- Context editing removes stale tool results and old thinking before each request.
+- Trim tool outputs to the fields the agent needs before appending them.
 
 ### Compact Long Conversations
-- Server-side compaction summarizes earlier history when the conversation nears a threshold.
+- Server-side compaction summarizes earlier history near a threshold.
 - Keep exact IDs, amounts, and dates in a persistent facts block so summaries cannot drop them.
 
 ### Measure and Persist
-- Use the token counting endpoint to budget prompts and tool definitions before you send them.
-- Use the memory tool or files for knowledge that must outlive one conversation.
+- Use the token counting endpoint to budget prompts and tool definitions before sending.
+- Use the memory tool or files for knowledge that outlives one conversation.
 
 ---
 
 <!-- layout: stacked -->
 # Skills: Expertise Loaded on Demand
 
-- **A Skill is a folder**: `SKILL.md` with a name and description, plus optional reference files and scripts, that teaches Claude a repeatable task
-- **Loads in three levels**: metadata is always present, instructions load when the task matches, and resources load only when a step needs them
+- **A Skill is a folder**: `SKILL.md` with a name and description, plus optional files and scripts, that teaches Claude a repeatable task
+- **Loads in three levels**: metadata is always present, instructions load when the task matches, and resources load when a step needs them
 - **Runs across surfaces**: Claude Code, claude.ai, the Agent SDK, and the Claude API (through the code execution container); treat third-party Skills like code, because their scripts execute
 
 ![Skills Progressive Disclosure](images/ch03-skills-progressive-disclosure.svg)
@@ -452,7 +452,7 @@ python demo_04_cache_prefix.py
 | **MCP servers** | Tools, resources, and prompts behind a protocol | Sharing live data and actions across applications | Tool definitions cost tokens on every request (Chapter 4) |
 
 > [!TIP]
-> These strategies combine. A typical enterprise agent caches its static system prompt, pulls rules from a prompt registry, loads Skills on demand, and reaches data through MCP.
+> These combine. A typical enterprise agent caches its system prompt, pulls rules from a registry, loads Skills on demand, and reaches data through MCP.
 
 ---
 

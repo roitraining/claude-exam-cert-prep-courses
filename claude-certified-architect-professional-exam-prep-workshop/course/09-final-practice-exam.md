@@ -83,14 +83,14 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Final Exam-Day Checklist
 
 ### Before Launching Pearson VUE
-- Verify your government-issued ID matches your Anthropic Partner Academy registration name exactly
-- Clear your desk of all notes, phones, watches, and secondary monitors
-- Remember the cut score is **720 on a 100 to 1,000 scale**, determined by your total scaled score
+- Check that your government ID matches your Anthropic Partner Academy name exactly
+- Clear your desk of notes, phones, watches, and extra monitors
+- The passing score is **720 on a 100 to 1,000 scale**
 
 ### Deconstructing Every Question
 - Identify the **primary constraint**: Latency? Cost? Security/Least Privilege? Compliance? Retrieval accuracy?
-- Prefer **preventive architectural controls** (removing unneeded tools, deterministic hooks, ACL pre-filtering) over detective or prompt-only controls
-- Match every failure symptom to the **exact layer** that recently changed
+- Prefer **preventive controls** (removing unneeded tools, code hooks, ACL pre-filtering) over detective or prompt-only ones
+- Match each symptom to the **layer** that just changed
 
 ---
 

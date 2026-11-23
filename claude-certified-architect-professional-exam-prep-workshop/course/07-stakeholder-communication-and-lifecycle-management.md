@@ -46,19 +46,19 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Conducting Structured AI Discovery
 
 ### 1. Problem Suitability Assessment
-- Determine which parts of the workflow genuinely require LLM reasoning versus deterministic business rules or traditional SQL/code.
-- Reject forcing an autonomous agent onto a process that is a fixed 3-step deterministic form validation.
+- Decide which parts of the workflow need LLM reasoning and which need business rules, SQL, or code.
+- Do not force an autonomous agent onto a fixed 3-step form validation.
 
 ### 2. Data Readiness Audit
-- Inventory source document quality, update frequency, access control lists (ACLs), and regulatory classification (PII, PHI, PCI, confidential IP).
-- Poorly maintained or contradictory source documents must be flagged before promising high RAG accuracy.
+- Inventory source quality, update frequency, access control lists (ACLs), and data classification (PII, PHI, PCI, confidential IP).
+- Flag stale or contradictory sources before promising high RAG accuracy.
 
 ### 3. Error Cost and Risk Tolerance
-- Quantify the business cost of a false positive vs a false negative (for example, an internal draft summary vs an autonomous customer refund).
-- High-consequence actions dictate deterministic hooks or mandatory Human-in-the-Loop (HITL) sign-off.
+- Quantify the cost of a false positive vs a false negative (for example, an internal draft summary vs an automatic customer refund).
+- High-consequence actions need code hooks or mandatory human-in-the-loop (HITL) sign-off.
 
 ### 4. Baseline Metrics and Target SLAs
-- Measure current human benchmark performance, ticket volume, latency expectations, and unit cost targets before locking in the architecture.
+- Measure current human performance, volume, latency expectations, and unit cost targets before locking in the architecture.
 
 ---
 
@@ -119,7 +119,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - **Scope**: extract and validate invoice data and propose a three-way match; no payment action in the AI path
 - **Success**: field accuracy of at least 98% on critical fields, backlog under 1 day, payment errors below 1%
 - **Controls**: ERP match logic in code; human approval over $10,000 and on any mismatch
-- **Out of scope for phase 1**: vendor dispute emails, which are a separate, riskier problem
+- **Out of scope for phase 1**: vendor dispute emails, a separate and riskier problem
 
 ---
 
@@ -147,7 +147,7 @@ Write:
 ### SLA Judgment
 - **Commit to**: latency, availability, and a measured quality floor on the agreed evaluation set
 - **Refuse**: “The AI will never give a wrong answer.” Quality is a measured rate, backed by code gates and human review where errors are costly
-- **Exam takeaway**: the right answer converts an ambition into measurable criteria before choosing an architecture
+- **Exam takeaway**: the right answer turns an ambition into measurable criteria before choosing an architecture
 
 ---
 
@@ -165,12 +165,12 @@ Write:
 
 ### Business Leaders
 - Focus on **business value pillars**: cost per resolved case, cycle-time reduction, revenue protection, and time-to-market
-- Frame model and pattern choices in terms of ROI, customer experience impact, and phased rollout milestones
-- Avoid low-level token or embedding jargon
+- Frame model and pattern choices as ROI, customer experience, and rollout milestones
+- Avoid token and embedding jargon
 
 ### Security and Compliance
-- Focus on **trust boundaries**, data retention (Zero Data Retention / BAA), GDPR/HIPAA/FedRAMP alignment, and least-privilege tool scoping
-- Demonstrate how deterministic hooks and audit trails prevent unauthorized actions even if a prompt injection occurs
+- Focus on **trust boundaries**, data retention (Zero Data Retention, BAA), GDPR, HIPAA, and FedRAMP alignment, and least-privilege tools
+- Show how code hooks and audit trails block unauthorized actions even if an injection succeeds
 
 ### Engineering and Operations
 - Focus on **API contracts**, structured JSON schemas, p50/p99 latency budgets, prompt caching strategy, error taxonomy (`isError`), and CI/CD eval gates
@@ -188,7 +188,7 @@ Write:
 | **Operational complexity** | Low | Medium: a router to evaluate and monitor | Low |
 | **Recommendation** | | **Chosen**: meets the SLA at the lowest cost; misroutes are tracked as a quality metric | |
 
-- **Show the rejected options and the numbers**: stakeholders trust a recommendation when they can see what it was compared against and why the others lost
+- **Show the rejected options and the numbers**: stakeholders trust a recommendation when they see what it beat and why
 
 ---
 
@@ -221,15 +221,15 @@ Write:
 # Non-Determinism and Realistic SLAs
 
 ### Managing Probabilistic Reality
-- Stakeholders accustomed to traditional software often expect 100% deterministic outputs on every edge case
-- Educate stakeholders that LLM outputs follow a **statistical quality distribution** measured on evaluation benchmarks
-- Show how **hybrid architectures** pair probabilistic LLM comprehension with 100% deterministic code gates for financial and compliance boundaries
+- Stakeholders used to traditional software often expect 100% deterministic outputs on every edge case
+- Explain that LLM output quality is a **statistical distribution** measured on evaluation sets
+- Show how **hybrid architectures** pair probabilistic LLM comprehension with 100% deterministic code gates for financial and compliance rules
 
 ### Defining Realistic Production SLAs
 - Specify **tiered SLAs**:
   - **Latency**: p50 and p95 Time to First Token (TTFT) and end-to-end completion time
-  - **Quality floor**: minimum faithfulness and escalation precision on the golden evaluation suite
-  - **Graceful degradation**: clear fallback behavior (such as routing to human queues or secondary regions) during upstream rate limits or outages
+  - **Quality floor**: minimum faithfulness and escalation precision on the golden set
+  - **Graceful degradation**: defined fallbacks (human queues, secondary regions) during rate limits or outages
 
 ---
 
@@ -245,7 +245,7 @@ Write:
 ### Quality SLOs and Error Budgets
 - **SLO example**: at least 95% of sampled answers rated correct each week
 - **Error budget**: the 5% allowance; when it is spent, changes pause until quality recovers
-- Report SLOs on the same dashboard as latency and availability, so quality is managed like uptime
+- Report SLOs beside latency and availability, so quality is managed like uptime
 
 ---
 
@@ -278,8 +278,8 @@ Write:
 # Supporting the Full AI System Lifecycle
 
 - **Five lifecycle phases**: **Discovery** -> **Design and Eval Baseline** -> **Governance Hardening** -> **Operational Handoff** -> **Continuous Monitoring and Iteration**
-- **Never skip the Eval Baseline**: build the golden evaluation dataset during Phase 2 before scaling implementation
-- **Planned iteration**: treat model releases, prompt refinements, and knowledge-base refreshes as versioned lifecycle events governed by regression testing
+- **Never skip the Eval Baseline**: build the golden dataset in Phase 2, before scaling implementation
+- **Planned iteration**: treat model releases, prompt changes, and knowledge-base refreshes as versioned events gated by regression tests
 
 ![Enterprise AI Solution Lifecycle](images/ch07-ai-system-lifecycle.svg)
 
@@ -289,17 +289,17 @@ Write:
 # Essential Architecture and Handoff Documentation
 
 ### Architectural Decision Records (ADRs)
-- Document **why** specific choices were made: why Sonnet was chosen over Opus, why MCP was chosen over direct REST, or why a tool was removed for least privilege.
+- Record **why** choices were made: Sonnet over Opus, MCP over direct REST, or a tool removed for least privilege.
 - Include the rejected alternatives and quantitative trade-offs.
 
 ### Prompt and Model Version Manifests
-- Pin an explicit model ID (for example, `claude-sonnet-5-5`, never a moving alias), system prompt versions, JSON schemas, and embedding model versions in source control.
+- Pin the model ID (for example, `claude-sonnet-5-5`, never a moving alias), prompt versions, JSON schemas, and embedding model versions in source control.
 
 ### Operational Runbooks
-- Provide on-call teams with step-by-step diagnostic playbooks: how to inspect trace logs, verify prompt cache hit rates, isolate RAG index failures, and trigger an immediate prompt/model rollback.
+- Give on-call teams step-by-step playbooks: inspect traces, check cache hit rates, isolate RAG index failures, and roll back a prompt or model.
 
 ### Model Upgrade Playbooks
-- When a new Claude model version is released, run side-by-side evaluations against the golden dataset to check for behavioral shifts before switching production traffic.
+- When a new model ships, evaluate it side by side on the golden set to catch behavior shifts before switching traffic.
 
 ---
 
@@ -350,15 +350,15 @@ A Haiku classifier routes simple intents to a Haiku responder; everything else g
 # Planning for Model Deprecation and Migration
 
 ### Why It Is a Lifecycle Event
-- Claude models are deprecated and retired on a published schedule, so every production system will migrate
-- New models can change output length, tone, tool-use habits, and how strictly they follow emphatic instructions
+- Claude models are retired on a published schedule, so every production system will migrate
+- New models can change output length, tone, tool use, and how strictly they follow emphatic instructions
 - A migration touches cost, latency, quality, and sometimes the API parameters your code sends
 
 ### The Migration Playbook
-- Track deprecation notices and schedule the migration well before the retirement date
-- Run the golden set on the current and candidate model side by side, then retune prompts and effort
+- Track deprecation notices and migrate well before the retirement date
+- Run the golden set on the current and candidate models side by side, then retune prompts and effort
 - Re-baseline cost with token counting, because tokenizers can change between generations
-- Roll out through shadow and canary stages with the old model ID kept as the rollback path
+- Roll out through shadow and canary stages, keeping the old model ID as the rollback path
 
 ---
 

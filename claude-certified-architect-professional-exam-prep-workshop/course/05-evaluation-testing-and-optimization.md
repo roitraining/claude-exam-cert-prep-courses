@@ -48,19 +48,19 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ### 1. Accuracy
 - Measure answer correctness, context precision and recall (for RAG), and citation faithfulness (zero unsupported claims).
-- Segment by document type, intent, and edge-case tier rather than relying on one aggregate score.
+- Segment by document type, intent, and edge-case tier, not one aggregate score.
 
 ### 2. Latency
-- Track time to first token (TTFT) for interactive responsiveness and p50/p95/p99 end-to-end duration across multi-turn agent loops.
+- Track time to first token (TTFT) for responsiveness, and p50/p95/p99 end-to-end duration across agent loops.
 
 ### 3. Cost Efficiency
-- Measure total cost per successful task completion, including retries, subagent calls, and reranking, not just unit token price.
+- Measure cost per completed task, including retries, subagent calls, and reranking, not just token price.
 
 ### 4. Safety
-- Measure harmful or policy-violating output rates alongside false-refusal rates on benign requests: an over-cautious system also fails users.
+- Measure harmful output rates alongside false refusals on benign requests: an over-cautious system also fails users.
 
 ### 5. Security
-- Measure resistance to prompt injection, data exfiltration, and tool misuse with an adversarial test suite, including attacks hidden in retrieved documents and tool results.
+- Test resistance to prompt injection, data exfiltration, and tool misuse with an adversarial suite, including attacks hidden in documents and tool results.
 
 ---
 
@@ -82,19 +82,19 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Designing Evaluation Datasets
 
 ### Source from Reality
-- Start with sampled production traffic or historical cases; add SME-written cases for rare but critical scenarios.
-- Use Claude to generate synthetic variations, then have experts review them before they count.
+- Start with sampled production traffic or historical cases; add expert-written cases for rare, critical scenarios.
+- Generate synthetic variations with Claude, and have experts review them before they count.
 
 ### Stratify on Purpose
 - Cover every intent, document type, language, and customer segment in proportion to risk, not just volume.
-- Deliberately include edge cases, ambiguous inputs, adversarial inputs, and questions with no answer in the sources.
+- Include edge cases, ambiguous and adversarial inputs, and questions the sources cannot answer.
 
 ### Separate the Sets
 - A **development set** for iterating on prompts, a **held-out test set** that is scored but never tuned against, and a **regression set** of every past production failure.
 - Tuning on the test set produces scores that do not survive production.
 
 ### Version Everything
-- Version datasets, labels, and grader rubrics alongside prompts and model IDs, so any score can be reproduced and compared.
+- Version datasets, labels, and rubrics with prompts and model IDs, so any score can be reproduced.
 
 ---
 
@@ -103,16 +103,16 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ### Deterministic Code Graders
 - Fast, zero-cost, 100% reproducible checks
-- JSON Schema / Pydantic validation, exact regex/keyword matches, tool-call sequence assertions, and math verification
+- Schema validation, regex and keyword matches, tool-call sequence assertions, and math checks
 - Run on **every commit in CI/CD**
 
 ### LLM-as-a-Judge Graders
-- Uses a strong model with an explicit rubric and pairwise or 1-to-5 scale criteria to grade tone, faithfulness, and completeness
-- **Must be calibrated** against a golden set of human-labeled examples to verify judge alignment
+- A strong model grades tone, faithfulness, and completeness against an explicit rubric, pairwise or on a 1-to-5 scale
+- **Must be calibrated** against human-labeled examples
 
 ### Human Expert Review
-- Domain experts label golden evaluation datasets, audit ambiguous edge cases, and review stratified samples of production traffic
-- Provides the ground truth that calibrates automated LLM judges
+- Experts label golden datasets, audit ambiguous cases, and review stratified samples of production traffic
+- Provides the ground truth that calibrates LLM judges
 
 ---
 
@@ -120,16 +120,16 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Calibrating LLM-as-a-Judge
 
 ### Known Judge Biases
-- **Position bias**: in pairwise comparisons, the judge favors whichever answer appears first (or second)
-- **Verbosity bias**: longer, more detailed-looking answers score higher regardless of correctness
-- **Self-preference**: a judge can favor outputs written in its own style or by the same model
+- **Position bias**: in pairwise comparisons, the judge favors the first (or second) answer
+- **Verbosity bias**: longer answers score higher regardless of correctness
+- **Self-preference**: a judge can favor outputs in its own style or from the same model
 - **Vague rubrics**: “rate quality 1 to 10” produces scores that drift and cannot be reproduced
 
 ### Mitigations
 - Run pairwise comparisons in both orders and count only consistent wins
 - Grade against specific, binary rubric items (“cites a source for every number: yes or no”)
-- Ask the judge for its reasoning before its score, and use a different model or prompt than the system under test
-- Measure agreement with human labels on 100 or more cases before trusting the judge, and re-check after any rubric change
+- Ask for reasoning before the score, and use a different model or prompt from the system under test
+- Measure agreement with human labels on 100 or more cases before trusting the judge, and again after any rubric change
 
 ---
 
@@ -146,13 +146,13 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Conducting A/B Testing and Iterative Improvements
 
 ### Offline Pre-Deployment Eval Gates
-- Pin an explicit model ID (such as `claude-sonnet-5-5`) and run your golden dataset benchmark before promoting any prompt, chunking, or tool change
-- Block deployment if faithfulness drops or p95 latency breaches the SLA threshold
+- Pin an explicit model ID (such as `claude-sonnet-5-5`) and run the golden set before promoting any prompt, chunking, or tool change
+- Block deployment if faithfulness drops or p95 latency breaks the SLA
 - Change **one variable at a time** (prompt vs retrieval top-K vs model tier) so attribution is unambiguous
 
 ### Online Production Validation
-- **Shadow testing**: run the candidate pipeline asynchronously on a copy of live traffic and compare outputs without exposing users
-- **Canary and A/B testing**: route 5% to 10% of traffic to the new configuration and compare business KPIs (first-contact resolution, user acceptance rate, escalation rate)
+- **Shadow testing**: run the candidate on a copy of live traffic and compare outputs without exposing users
+- **Canary and A/B testing**: route 5% to 10% of traffic to the new configuration and compare business KPIs (first-contact resolution, acceptance rate, escalation rate)
 
 ---
 
@@ -160,9 +160,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # A/B Testing a Non-Deterministic System
 
 ### Why One Run Proves Nothing
-- The same prompt can produce different outputs on different runs, and current models do not accept settings such as `temperature` that would force identical outputs
-- A borderline case may pass on one run and fail on the next, so compare **pass rates over several trials**, not single outputs
-- Track consistency as its own metric: an answer that flips between runs is a quality problem even if it is sometimes right
+- The same prompt can produce different outputs, and current models do not accept settings such as `temperature` that would force identical ones
+- A borderline case may pass one run and fail the next, so compare **pass rates over several trials**
+- Track consistency as a metric: an answer that flips between runs is a problem even if it is sometimes right
 
 ### How Many Cases You Need
 - At 85% accuracy on **100 cases**, the 95% margin of error is about **plus or minus 7 points**
@@ -172,7 +172,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- below-columns -->
 
 > [!TIP]
-> When an exam option declares a winner from a handful of examples, or from one run of each prompt, it is a distractor. Look for larger samples, multiple trials, and one variable changed at a time.
+> An exam option that declares a winner from a handful of examples, or one run of each prompt, is a distractor. Look for larger samples, multiple trials, and one variable changed at a time.
 
 ---
 
@@ -230,15 +230,15 @@ python demo_06_judge_variance.py
 - A one-point gap between two prompt versions, each judged once, could be nothing but this noise
 
 > [!NOTE]
-> A vague 1-to-10 rubric turns a judge into a noisy instrument. Score each case several times, compare averages over many cases, and replace open scales with specific yes-or-no rubric items, which are far more stable.
+> A vague 1-to-10 rubric makes a judge noisy. Score each case several times, compare averages over many cases, and use specific yes-or-no rubric items, which are far more stable.
 
 ---
 
 <!-- layout: stacked -->
 # Diagnosing System Regressions Across Layers
 
-- **Correlate symptoms with what changed**: when a RAG system suddenly returns confident but wrong answers right after a document refresh (while latency and model version are unchanged), **investigate the retrieval and indexing step first**
-- **Why retrieval is the culprit**: broken re-indexing, chunk boundary shifts, or mismatched embeddings feed irrelevant or stale chunks to the model, which then synthesizes confident answers from bad context
+- **Correlate symptoms with what changed**: when a RAG system gives confident wrong answers right after a document refresh (with latency and model unchanged), **check retrieval and indexing first**
+- **Why retrieval is the culprit**: a broken re-index, shifted chunk boundaries, or mismatched embeddings feed stale or irrelevant chunks, and the model answers confidently from bad context
 - **Separate retrieval evals from generation evals**: measure whether the right chunk appeared in top-K before blaming the prompt or model
 
 ![Diagnostic Root-Cause Isolation Across Layers](images/ch05-diagnostic-isolation-flow.svg)
@@ -263,13 +263,13 @@ python demo_06_judge_variance.py
 
 ### The Wrong Tier or Effort for the Task
 - **Underpowered**: clean context and a clear prompt, but the model fails multi-constraint reasoning on the hard slice
-- **Overpowered**: Opus at high effort classifying simple tickets, paying many times the cost for no measurable gain
+- **Overpowered**: Opus at high effort classifying simple tickets, at many times the cost for no gain
 - **Fix**: evaluate the hard slice and the easy slice separately, and set tier and effort per route
 
 ### A Prompt Written for a Different Model
-- **After an upgrade**: output length, tone, tool-use frequency, or instruction-following changes, though nothing in your code changed
-- **Over-prescriptive prompts**: emphatic rules written to push an older model (“CRITICAL: ALWAYS…”) can make a newer model over-apply them
-- **Fix**: run the golden set on old and new models side by side, retune the prompt and effort, and only then switch traffic
+- **After an upgrade**: output length, tone, tool use, or instruction-following changes, though your code did not
+- **Over-prescriptive prompts**: emphatic rules written for an older model (“CRITICAL: ALWAYS…”) can make a newer one over-apply them
+- **Fix**: run the golden set on both models side by side, retune prompt and effort, then switch traffic
 
 <!-- below-columns -->
 
@@ -330,7 +330,7 @@ python demo_07_stale_chunk.py
 - Call 3 answers $30, cites v4, and notes that v3 conflicted and was withdrawn
 
 > [!NOTE]
-> The model did nothing wrong in Call 1: it was faithful to bad context. That is why “confident wrong answers after a document refresh” points to retrieval and indexing, and why citations with versions make retrieval failures visible.
+> The model did nothing wrong in Call 1: it was faithful to bad context. That is why “confident wrong answers after a document refresh” points to retrieval, and why versioned citations make retrieval failures visible.
 
 ---
 
@@ -347,18 +347,18 @@ python demo_07_stale_chunk.py
 # Optimizing Cost, Latency, and Token Usage
 
 ### 1. Prompt Caching
-- Keep tools, system instructions, and static reference documents in a deterministic order at the start of the request with `cache_control`.
-- Reduces cached input token costs and cuts TTFT on repeated prefixes.
+- Put tools, system instructions, and static documents first, in a fixed order, with `cache_control`.
+- Cuts input cost and TTFT on repeated prefixes.
 
 ### 2. Model Tier and Effort per Route
-- Use Claude Haiku for high-volume classification, routing, and guardrail checks; reserve Sonnet and Opus for complex synthesis and agentic reasoning.
+- Use Haiku for high-volume classification, routing, and guardrail checks; reserve Sonnet and Opus for complex synthesis and agentic work.
 - Lower effort on simple routes cuts output tokens and latency without changing models.
 
 ### 3. Asynchronous Batch Processing
-- Offload non-blocking workloads (nightly evaluations, bulk extraction, compliance audits) to the **Message Batches API** for a 50% cost reduction.
+- Send non-urgent work (nightly evals, bulk extraction, compliance audits) to the **Message Batches API** for 50% off.
 
 ### 4. Context and Tool Output Pruning
-- Trim verbose tool responses before they enter the conversation, remove unused tools, clear stale tool results, and cap `max_tokens` where outputs are short by design.
+- Trim verbose tool output, remove unused tools, clear stale tool results, and cap `max_tokens` where outputs are short by design.
 
 ---
 
@@ -373,16 +373,16 @@ python demo_07_stale_chunk.py
 | **Plus Message Batches API (50% off)** | $220 | $250 | **$470** |
 | **Haiku 5.5 with caching and batch, if it passes the eval** | about $12 | about $12.50 | **about $25** |
 
-- **The order matters**: caching and batching are free wins that do not change quality; changing the model tier is a quality trade-off that must pass the evaluation set first
+- **The order matters**: caching and batching are free wins that leave quality unchanged; a model change is a quality trade-off that must pass the eval set first
 
 ---
 
 # Production Observability and Drift Detection
 
-- **Monitor cache efficiency**: a sudden drop in `cache_read_input_tokens` indicates a developer accidentally injected dynamic variables (such as a timestamp) into the system prompt prefix
-- **Track token burn per session**: alert on multi-agent loops that exceed expected turn counts or token budgets
-- **Detect data and query drift**: sample production traces weekly (using **stratified random sampling** across intent types) and promote newly discovered failure cases into your regression test suite
-- **Watch quality proxies continuously**: escalation rate, user corrections, abstention rate, and the share of answers with citations; a shift in any of them is an early warning before the next scheduled eval run
+- **Monitor cache efficiency**: a sudden drop in `cache_read_input_tokens` usually means dynamic text (such as a timestamp) slipped into the cached prefix
+- **Track token burn per session**: alert on agent loops that exceed expected turns or token budgets
+- **Detect data and query drift**: sample production traces weekly (**stratified random sampling** across intents) and add new failures to the regression suite
+- **Watch quality proxies continuously**: escalation rate, user corrections, abstention rate, and the share of answers with citations; a shift in any is an early warning before the next eval run
 
 ---
 

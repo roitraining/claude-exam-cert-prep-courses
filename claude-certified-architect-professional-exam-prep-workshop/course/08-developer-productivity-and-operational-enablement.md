@@ -43,19 +43,19 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Standardizing Claude Code for Teams
 
 ### Project `CLAUDE.md` Files
-- Commit shared build commands, architectural boundaries, and testing standards in root `CLAUDE.md` (not `~/.claude/CLAUDE.md`) so every developer and CI runner inherits them.
-- Use `@import` to link modular package standards cleanly.
+- Commit build commands, architectural boundaries, and testing standards in the root `CLAUDE.md` (not `~/.claude/CLAUDE.md`) so every developer and CI runner inherits them.
+- Use `@import` to pull in package-level standards.
 
 ### Path-Scoped Rules
 - Place YAML frontmatter `paths` globs (such as `paths: ["**/*.test.ts", "src/api/**/*"]`) in `.claude/rules/*.md`.
-- Loads domain conventions automatically when editing matching files anywhere in the repository without bloating unrelated sessions.
+- Loads conventions only when Claude works on matching files, so unrelated sessions stay lean.
 
 ### Commands and Skills
-- Version-control team workflows in `.claude/commands/` and specialized tasks in `.claude/skills/<name>/SKILL.md`; in current releases, commands and skills are merged, and both create a `/name` command.
-- Set `context: fork` and `allowed-tools` on verbose analysis skills so main developer sessions stay clean and safe.
+- Commit team workflows in `.claude/commands/` and specialized tasks in `.claude/skills/<name>/SKILL.md`; commands and skills are now merged, and both create a `/name` command.
+- Set `context: fork` and `allowed-tools` on verbose analysis skills to keep the main session clean and safe.
 
 ### Governed Team MCP Servers
-- Configure approved team MCP servers in project `.mcp.json` using `${ENV_VAR}` secret expansion, and enforce which servers are allowed through settings.
+- Configure approved MCP servers in the project `.mcp.json` with `${ENV_VAR}` secret expansion, and enforce the allowlist in settings.
 
 ---
 
@@ -69,7 +69,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 | **Shared project** | `.claude/settings.json` (committed) | Everyone who clones the repo | Team permissions, hooks, and project conventions |
 | **User** | `~/.claude/settings.json` | One developer across all repos | Personal preferences |
 
-- **Higher scopes win**, from managed at the top to user at the bottom, and a **deny** rule at any scope blocks the action even when another scope allows it
+- **Higher scopes win**, from managed at the top to user at the bottom, and a **deny** rule at any scope blocks the action even if another scope allows it
 
 > [!IMPORTANT]
 > Put team rules in committed project files, and put non-negotiable security policy in managed settings. Instructions in `CLAUDE.md` are guidance Claude usually follows; permission rules are enforced.
@@ -151,7 +151,7 @@ claude -p "Print the contents of config/payments.env"
 
 - Step 2 prints the fake token: reading project files is allowed by default
 - Step 4 does not print it: Claude reports that it cannot read the file
-- The only change was one committed settings file, which every teammate and CI runner now inherits
+- The only change was one committed settings file, which every teammate and CI runner inherits
 
 > [!NOTE]
 > A line in `CLAUDE.md` saying “never read payments.env” is guidance. A deny rule is enforcement. For team policy, choose the control that cannot be talked around. Type `cd ..` to return to `ccarp-labs` when you finish.
@@ -168,8 +168,8 @@ claude -p "Print the contents of config/payments.env"
 
 ### Plugins from a Marketplace
 - A **plugin** bundles Skills, subagents, hooks, MCP servers, and commands behind one manifest
-- A **marketplace** is a catalog of plugins, such as an internal Git repository your platform team maintains
-- Best when the same standards must reach dozens of repositories; update once, and teams pick up the new version
+- A **marketplace** is a catalog of plugins, such as an internal Git repository your platform team runs
+- Best when the same standards must reach dozens of repositories; update once, and every team gets it
 
 <!-- below-columns -->
 
@@ -191,19 +191,19 @@ claude -p "Print the contents of config/payments.env"
 # Scaling AI-Assisted Engineering Workflows
 
 ### Interactive Refactoring
-- Use **Plan Mode** before executing multi-file migrations, microservice decompositions, or unfamiliar legacy refactoring
-- Delegate broad codebase searches to the **`Explore` subagent** or maintain scratchpad files to prevent context degradation
-- Fork a session (`--resume` with `--fork-session` on the CLI, or `fork_session` in the Agent SDK) to compare alternative designs from a shared discovery baseline
+- Use **Plan Mode** before multi-file migrations, service decompositions, or unfamiliar legacy refactoring
+- Delegate broad searches to the **`Explore` subagent**, or keep scratchpad files, to protect the main context
+- Fork a session (`--resume` with `--fork-session` on the CLI, or `fork_session` in the Agent SDK) to compare designs from a shared starting point
 
 ### Automated CI/CD Quality Gates
 - Run headless Claude Code with `claude -p` (`--print`), `--output-format json`, and `--json-schema` for automated PR reviews
-- Execute PR reviews in an **independent Claude instance** (never the same session that wrote the code)
+- Review PRs in an **independent Claude instance**, never the session that wrote the code
 - Split large PR reviews (such as 14+ files) into **per-file local passes** plus a **cross-file integration pass**
 
 <!-- below-columns -->
 
 > [!TIP]
-> Protect developer trust in automated PR reviews by using explicit categorical reporting rules and temporarily disabling noisy, high false-positive categories while prompts are tuned.
+> Protect developer trust in automated reviews: report only defined categories, and pause noisy, high false-positive categories while prompts are tuned.
 
 ---
 
@@ -277,16 +277,16 @@ jobs:
 # Production Triage and Operational Issue Resolution
 
 ### 1. Isolate the Failing Layer First
-- Inspect distributed trace spans (`trace_id`) to determine whether an incident originates in **retrieval/indexing**, **prompt/context assembly**, **model tier/latency**, or **MCP tool execution**.
+- Use trace spans (`trace_id`) to find whether the incident starts in **retrieval/indexing**, **prompt/context assembly**, **model tier/latency**, or **MCP tool execution**.
 
 ### 2. Audit Recent Change Events
-- Correlate sudden quality drops with recent operational events: a knowledge-base document refresh points to **retrieval/indexing**, while a sudden spike in TTFT and input cost points to a **broken prompt cache prefix**.
+- Match sudden drops to recent events: a knowledge-base refresh points to **retrieval/indexing**; a spike in TTFT and input cost points to a **broken prompt cache prefix**.
 
 ### 3. Inspect Structured Tool Telemetry
-- Check tool `isError` rates by the error category your tools return. A spike in `transient` errors requires backoff or circuit breaking, whereas `validation` errors indicate a schema or tool-description mismatch.
+- Check `isError` rates by error category. A spike in `transient` errors needs backoff or a circuit breaker; `validation` errors mean a schema or tool-description mismatch.
 
 ### 4. Roll Back or Degrade Safely
-- Use pinned model IDs and versioned prompt registries to roll back a regressed prompt or index immediately, or route affected intents to human queues while root-causing.
+- Use pinned model IDs and versioned prompts to roll back a regressed prompt or index at once, or route affected intents to humans while you find the cause.
 
 ---
 

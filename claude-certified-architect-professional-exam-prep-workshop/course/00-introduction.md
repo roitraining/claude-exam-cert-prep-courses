@@ -82,9 +82,9 @@
 <!-- layout: panel-right -->
 # Who Should Attend
 
-- Solution architects designing and governing enterprise-grade AI solutions on the Claude platform
+- Solution architects designing and governing enterprise AI solutions on Claude
 - AI and ML engineers translating business requirements into scalable production architectures
-- Technical leads and senior software engineers owning end-to-end delivery of Claude-powered systems
+- Technical leads and senior engineers who own delivery of Claude-powered systems
 
 ![Who Should Attend](images/who-should-attend.png)
 

@@ -31,20 +31,20 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Exam Details at a Glance (CCAR-P)
 
 ### Format and Time Limit
-- The CCAR-P exam consists of 63 multiple-choice and multiple-response items completed within 120 minutes.
-- Multiple-response items state explicitly how many options you must select.
+- 63 multiple-choice and multiple-response items in 120 minutes.
+- Multiple-response items state how many options to select.
 
 ### Passing Standard
-- Scored on a criterion-referenced scale from 100 to 1,000 with a passing cut score of 720.
-- Every candidate is evaluated against a fixed professional competency bar, never graded on a curve.
+- Scored on a criterion-referenced scale from 100 to 1,000; the passing score is 720.
+- Every candidate is measured against a fixed bar, not graded on a curve.
 
 ### Score Report Diagnostics
-- Your score report provides an overall pass or fail status with your scaled score.
-- It also breaks down percentage-correct across each of the seven domains to highlight strengths and gaps.
+- The report shows pass or fail and your scaled score.
+- It also shows percentage correct for each of the seven domains, so you can see strengths and gaps.
 
 ### Validity and Renewal
-- The credential is valid for 12 months from the date awarded ($175 USD exam fee).
-- On-time recertification requires completing a free, non-proctored renewal assessment on the Anthropic Partner Academy.
+- The credential is valid for 12 months ($175 USD exam fee).
+- Renew on time with a free, non-proctored assessment on the Anthropic Partner Academy.
 
 ---
 
@@ -65,13 +65,13 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 ### Recommended Experience
 - 3+ years of experience in systems architecture or platform engineering
 - 6+ months of hands-on production experience with Claude or comparable LLM systems
-- Proven track record delivering end-to-end systems from discovery through deployment and operationalization
-- Grounded in software engineering fundamentals: modularity, separation of concerns, and scalability
+- A track record of delivering systems from discovery through deployment and operations
+- Grounded in engineering fundamentals: modularity, separation of concerns, and scalability
 
 ### Enterprise Responsibilities
-- Translating business problems across finance, healthcare, retail, technology, and government into scalable AI architectures
+- Translating business problems in finance, healthcare, retail, technology, and government into scalable AI architectures
 - Balancing trade-offs across accuracy, latency, token cost, safety, compliance, and maintainability
-- Leading stakeholder alignment across engineering, security, legal, compliance, and executive sponsors
+- Aligning engineering, security, legal, compliance, and executive sponsors
 
 ---
 
@@ -87,7 +87,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 ### Professional Focus (CCAR-P)
 - **End-to-end enterprise architecture** aligned to business value pillars and strict SLAs
 - **Production RAG pipelines**: chunking, hybrid retrieval, embedding refreshes, and progressive discovery
-- **Protocol selection**: weighing MCP vs direct API/CLI vs Agent-to-Agent (A2A) orchestration
+- **Protocol selection**: MCP vs direct API/CLI vs Agent-to-Agent (A2A)
 - **Governance and regulations**: GDPR, HIPAA, FedRAMP, least-privilege capability removal, and lifecycle management
 
 <!-- below-columns -->
@@ -109,16 +109,16 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Three Canonical CCAR-P Exam Patterns
 
 ### 1. Least Privilege
-- When a support agent has tools to read tickets, draft replies, issue refunds, and delete accounts, but the role only needs reading and drafting, **remove the refund and delete tools entirely**.
-- Detective logging and confirmation prompts leave unnecessary attack surface in place.
+- A support agent can read tickets, draft replies, issue refunds, and delete accounts, but the role only reads and drafts: **remove the refund and delete tools**.
+- Logging and confirmation prompts leave the attack surface in place.
 
 ### 2. Cache Prefix Order
-- When an application sends the same 8,000-token system prompt and policy document on every request followed by a short user query, **place static content first and enable prompt caching**.
-- Cuts both time-to-first-token (TTFT) latency and per-request cost without truncating policy rules or downsizing models blindly.
+- An app sends the same 8,000-token system prompt and policy on every request, followed by a short query: **put static content first and enable prompt caching**.
+- Cuts time to first token (TTFT) and cost without truncating policy or blindly downsizing the model.
 
 ### 3. RAG Regressions
-- When a RAG system suddenly returns confident but wrong answers right after a document refresh while model version and latency are unchanged, **investigate the retrieval and indexing pipeline first**.
-- Broken re-indexing or mismatched embeddings feed stale or irrelevant chunks to an otherwise healthy model.
+- A RAG system gives confident wrong answers right after a document refresh, with model and latency unchanged: **check retrieval and indexing first**.
+- A broken re-index or mismatched embeddings feed stale chunks to a healthy model.
 
 ---
 
@@ -133,7 +133,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 ### Favor Answers That...
 - Enforce **least privilege** and separation of concerns at the architectural boundary
-- Optimize cost and latency simultaneously using **prompt caching**, **tiered model routing**, and **batch processing**
+- Cut cost and latency together with **prompt caching**, **tiered model routing**, and **batch processing**
 - Diagnose regressions systematically across **retrieval -> context -> prompt -> model -> integration**
 - Align technical designs to measurable **SLAs**, **regulatory frameworks** (GDPR, HIPAA, FedRAMP), and **human-in-the-loop** guardrails
 
@@ -143,16 +143,16 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # How to Dissect a CCAR-P Scenario Question
 
 ### 1. Find the Binding Constraint
-- Read the stem for the one requirement that cannot bend: money moving, regulated data, a latency SLA, a cost ceiling, or an executive commitment.
-- The constraint tells you how strong the fix must be. A compliance or financial rule needs a structural control, not a prompt.
+- Find the one requirement that cannot bend: money moving, regulated data, a latency SLA, a cost ceiling, or an executive commitment.
+- It sets how strong the fix must be. A compliance or financial rule needs a structural control, not a prompt.
 
 ### 2. Locate the Layer That Changed
 - Map the symptom to a layer: business requirement, retrieval, prompt and context, model, integration and tools, or operations.
 - Clues such as “after a document refresh” or “after the new prompt shipped” point to exactly one layer.
 
 ### 3. Eliminate by Control Strength
-- Remove answers that monitor a risk (logging), add friction (confirmation prompts), or hope for better behavior (bigger model, stronger wording) when a preventive option exists.
-- Remove answers that fix a different layer than the one that changed.
+- Drop answers that monitor (logging), add friction (confirmation prompts), or hope (bigger model, stronger wording) when a preventive option exists.
+- Drop answers that fix a layer that did not change.
 
 ### 4. Choose the Proportionate Fix
 - Among the survivors, pick the smallest change that fully meets the constraint.
@@ -179,7 +179,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- below-columns -->
 
 > [!TIP]
-> Most CCAR-P questions are architecture questions disguised as model questions. When an option changes *what the model can see or do*, it usually beats an option that asks the model to behave.
+> Most CCAR-P questions are architecture questions disguised as model questions. An option that changes *what the model can see or do* usually beats one that asks the model to behave.
 
 ---
 
@@ -199,12 +199,12 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 
 # Exam Policies, Retakes, and Pacing Strategy
 
-- **Pacing**: 63 items in 120 minutes gives you roughly **1 minute 50 seconds per item**; flag lengthy multi-requirement items and never leave blanks
-- **Multiple-response items**: each item states how many options to select; select exactly that many
+- **Pacing**: 63 items in 120 minutes is about **1 minute 50 seconds per item**; flag long items and never leave blanks
+- **Multiple-response items**: select exactly as many options as the item states
 - **Retake waiting periods**:
   - 14 days after the 1st failed attempt, 30 days after the 2nd, 90 days after the 3rd
   - Maximum 4 attempts within a rolling 12-month period
-- **Rescheduling rule**: cancel or reschedule at least 24 hours before your appointment via Pearson VUE to avoid forfeiting the exam fee
+- **Rescheduling rule**: cancel or reschedule through Pearson VUE at least 24 hours ahead, or forfeit the fee
 
 ---
 
@@ -304,7 +304,7 @@ python demo_01_haiku.py
 - The last line shows the input and output token counts for the call
 
 > [!NOTE]
-> You sent one prompt and printed Claude’s reply and its token usage. Every later demo reads the `usage` object to make an architectural trade-off visible. This folder, virtual environment, and `.env` file are what every later demo uses. Demos that run Claude Code use your Claude subscription instead of the key.
+> You sent one prompt and printed the reply and its token usage. Later demos read the `usage` object to make trade-offs visible, and all of them use this folder, virtual environment, and `.env` file. Demos that run Claude Code use your Claude subscription instead of the key.
 
 ---
 

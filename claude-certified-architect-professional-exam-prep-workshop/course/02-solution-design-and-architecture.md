@@ -47,9 +47,9 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- layout: stacked -->
 # Designing End-to-End Claude Architectures
 
-- **Four architectural stages**: every production AI solution requires structured **Input Ingestion**, **Contextual Processing**, **Output Validation**, and **Feedback Loops**
-- **Decouple state from reasoning**: keep session state, auth enforcement, and retry counters in deterministic application code rather than inside the LLM prompt
-- **Design feedback loops from day one**: capture user corrections, human-in-the-loop (HITL) overrides, and validation failures to continuously expand your evaluation dataset
+- **Four architectural stages**: every production AI solution needs **Input Ingestion**, **Contextual Processing**, **Output Validation**, and **Feedback Loops**
+- **Decouple state from reasoning**: keep session state, auth, and retry counters in application code, not in the prompt
+- **Design feedback loops from day one**: capture user corrections, human-in-the-loop (HITL) overrides, and validation failures to grow your evaluation dataset
 
 ![End-to-End Enterprise Claude Architecture](images/ch02-end-to-end-architecture.svg)
 
@@ -73,7 +73,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 <!-- below-columns -->
 
 > [!IMPORTANT]
-> Architectural Golden Rule: Start with the simplest, most deterministic architecture that meets the business goal, and add agentic autonomy only where task variability demands it.
+> Architectural Golden Rule: Start with the simplest, most deterministic architecture that meets the business goal, and add autonomy only where task variability demands it.
 
 ---
 
@@ -89,11 +89,11 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - Routine, high-volume tasks rarely justify an agent’s cost per transaction.
 
 ### 3. Viability
-- Is Claude demonstrably good at this task type today? Prove it on an evaluation set before committing the architecture.
+- Is Claude good at this task today? Prove it on an evaluation set before committing to the architecture.
 
 ### 4. Cost of Error
 - Can mistakes be caught and reversed through tests, review, or rollback?
-- If an error is expensive and irreversible, keep the action behind a deterministic gate or human approval, or stay with a workflow.
+- If an error is costly and irreversible, put the action behind a code gate or human approval, or stay with a workflow.
 
 ---
 
@@ -107,15 +107,15 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - **Constraints**: claimant PII and medical notes, state-specific regulations, and an audit trail for every decision
 
 ### The Architecture
-- **Input**: email and upload gateway that normalizes files and attaches `claim_id` and `trace_id`
+- **Input**: a gateway that normalizes files and attaches `claim_id` and `trace_id`
 - **Processing**: a **workflow**: Claude extracts facts into a schema, code validates policy number and coverage dates, Claude drafts a summary with cited source pages
 - **Output**: a structured claim file in the adjuster queue; no payout action exists in the AI path
-- **Feedback**: adjuster corrections to extracted fields flow back into the extraction eval set weekly
+- **Feedback**: adjuster corrections flow into the extraction eval set weekly
 
 <!-- below-columns -->
 
 > [!TIP]
-> Notice what was left out: no autonomous agent, no payout tool, no multi-agent hierarchy. The business goal was faster fact gathering, and a workflow meets it with the lowest risk.
+> Notice what was left out: no autonomous agent, no payout tool, no multi-agent hierarchy. The goal was faster fact gathering, and a workflow meets it with the lowest risk.
 
 ---
 
@@ -128,7 +128,7 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 | **Guardrail or schema validation failure** | Structured application log | Regression test suite | Engineering |
 | **Escalation outcome** | Ticketing or case system | Escalation criteria tuning | Support lead |
 
-- **A loop is only closed when four things exist**: a `trace_id` that links the signal to the exact request, an owner, a review cadence, and an eval gate that every fix must pass before it ships
+- **A loop is closed only when four things exist**: a `trace_id` linking the signal to the request, an owner, a review cadence, and an eval gate every fix must pass
 
 ---
 
@@ -146,8 +146,8 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Selecting the Right Architectural Pattern
 
 ### 1. Augmented LLM
-- Single Claude call enhanced with retrieved context (RAG), scoped tools, and structured output schemas
-- Lowest latency, lowest token cost, and easiest predictability to test
+- One Claude call with retrieved context (RAG), scoped tools, and structured output
+- Lowest latency and cost, and the easiest to test
 - **Best for**: Q and A over docs, single-step data extraction, and ticket classification
 
 ### 2. Workflow (Code-Driven)
@@ -156,8 +156,8 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 - **Best for**: multi-stage document pipelines, regulated onboarding, and multi-pass PR reviews
 
 ### 3. Autonomous Agent
-- Claude dynamically directs its own control flow, tool selection, and iteration count (`stop_reason` loop)
-- Highest flexibility for open-ended problems, but higher latency, cost variance, and compounding error risk
+- Claude directs its own control flow, tool choice, and iteration count (`stop_reason` loop)
+- Most flexible for open-ended problems, with higher latency, cost variance, and compounding errors
 - **Best for**: open-ended codebase debugging, complex research, and ambiguous support resolution
 
 ---
@@ -180,19 +180,19 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 # Four Decomposition Patterns for Complex Problems
 
 ### Prompt Chaining (Sequential)
-- Decompose a task into fixed sequential subtasks where each step’s output feeds the next step.
-- Insert programmatic validation checks between steps to catch errors before they cascade.
+- Split a task into fixed steps, each feeding the next.
+- Add code checks between steps to catch errors before they cascade.
 
 ### Routing (Classification and Dispatch)
-- Classify an incoming request (often with a fast model like Claude Haiku) and route it to a specialized prompt, toolset, or model tier.
-- Prevents prompt bloat from trying to handle 10 unrelated intents in one monolithic prompt.
+- Classify each request (often with Claude Haiku) and route it to a specialized prompt, toolset, or model tier.
+- Avoids one bloated prompt handling 10 unrelated intents.
 
 ### Parallelization
-- **Sectioning**: split independent subtasks (such as reviewing 10 files or checking content guardrails alongside main generation) to run concurrently.
-- **Voting**: run multiple independent passes on high-stakes security reviews to aggregate findings.
+- **Sectioning**: run independent subtasks concurrently, such as reviewing 10 files or running guardrails alongside generation.
+- **Voting**: run several independent passes on high-stakes reviews and combine the findings.
 
 ### Evaluator-Optimizer Loop
-- One Claude instance generates an artifact while a second independent evaluator instance critiques it against explicit rubric criteria until quality thresholds pass.
+- One Claude instance generates an artifact, and a second critiques it against a rubric until it passes.
 
 ---
 
@@ -202,18 +202,18 @@ Claude Certified Architect - Professional: Hands-On Exam Prep Workshop
 ### The Request
 - “Review this new vendor’s contract, SOC 2 report, and financial statements, and tell procurement whether to approve.”
 - Three document types, three expert lenses, one decision, and a 15-minute turnaround target
-- A single prompt that does everything produces shallow coverage and no way to test each part
+- One prompt that does everything gives shallow coverage and no way to test each part
 
 ### The Decomposition
 - **Routing**: classify each uploaded file as contract, security report, or financials
-- **Parallel sectioning**: run legal, security, and financial reviews concurrently, each with its own prompt and output schema
-- **Prompt chaining**: feed the three structured findings into a synthesis step that applies the approval policy
-- **Code gate**: a deterministic check blocks “approve” when any review returns a critical finding
+- **Parallel sectioning**: run legal, security, and financial reviews concurrently, each with its own prompt and schema
+- **Prompt chaining**: feed the three findings into a synthesis step that applies the approval policy
+- **Code gate**: code blocks “approve” when any review returns a critical finding
 
 <!-- below-columns -->
 
 > [!NOTE]
-> Each step can now be evaluated on its own. When approvals go wrong, you can tell whether classification, a specialist review, or the synthesis failed.
+> Each step can now be evaluated on its own. When an approval goes wrong, you can tell which step failed.
 
 ---
 
@@ -232,14 +232,14 @@ For each scenario, choose **Augmented LLM**, **Workflow** (name the decompositio
 # Demo Debrief: Pick the Pattern
 
 ### Answers
-- **1. Augmented LLM**: one call with a structured output schema; use the Message Batches API if results are not needed in real time
+- **1. Augmented LLM**: one call with a structured output schema; use the Message Batches API if results can wait
 - **2. Workflow: prompt chaining**: the order is fixed by regulation, and the ratio is calculated in code, not by Claude
 - **3. Agent**: the path cannot be drawn in advance; give it read-only tools and require human approval for any remediation
 - **4. Workflow: routing**: a fast classifier dispatches to three specialized prompts and knowledge bases
 
 ### Exam Takeaway
 - Ask “Can I draw the flowchart before the request arrives?” If yes, it is a workflow
-- Agents earn their cost only when the next step genuinely depends on what was just discovered
+- Agents earn their cost only when the next step depends on what was just found
 - Distractors put agents and multi-agent hierarchies on problems with fixed steps
 
 ---
@@ -258,14 +258,14 @@ For each scenario, choose **Augmented LLM**, **Workflow** (name the decompositio
 # Multi-Agent Topologies and Trade-Offs
 
 ### Orchestrator-Workers (Hub-and-Spoke)
-- Central coordinator dynamically decomposes unpredictable tasks, delegates to specialized workers, and synthesizes results
-- Workers operate with **isolated context windows** and scoped tools (4 to 5 tools per role)
-- All inter-agent communication and error recovery flow through the coordinator for unified observability
+- A coordinator splits unpredictable tasks, delegates to specialized workers, and synthesizes the results
+- Workers have **isolated context windows** and scoped tools (4 to 5 per role)
+- All communication and error recovery flow through the coordinator, so there is one place to observe
 
 ### Hierarchical and Handoff Topologies
-- **Hierarchical**: domain supervisors manage sub-teams when a system spans dozens of distinct enterprise domains
-- **Handoff pipeline**: triage agent transfers session ownership and a structured state summary to a specialist agent
-- **Watch out**: every extra hop increases p95 latency and token overhead; flatten hierarchies unless tool or context isolation requires them
+- **Hierarchical**: domain supervisors manage sub-teams when a system spans dozens of domains
+- **Handoff pipeline**: a triage agent hands the session and a structured state summary to a specialist
+- **Watch out**: every hop adds p95 latency and tokens; flatten hierarchies unless isolation requires them
 
 <!-- below-columns -->
 
@@ -279,13 +279,13 @@ For each scenario, choose **Augmented LLM**, **Workflow** (name the decompositio
 
 ### Where Multi-Agent Wins
 - **Breadth-first work that splits cleanly**: researching 8 competitors, reviewing 20 independent files, or checking 5 regulatory regimes in parallel
-- **Context isolation**: each worker reads thousands of tokens of raw material and returns a compact summary, keeping the coordinator’s context clean
+- **Context isolation**: each worker reads thousands of tokens and returns a compact summary, keeping the coordinator’s context clean
 - **Different tools or permissions per role**: a read-only research worker and a write-capable worker with an approval gate
 
 ### Where It Loses
-- **Token cost multiplies**: every worker re-reads instructions and context, so a multi-agent run can cost several times a single agent
+- **Token cost multiplies**: every worker re-reads instructions and context, so a run can cost several times a single agent
 - **Tightly coupled tasks suffer**: most coding and design work needs shared, evolving context that summaries between agents lose
-- **More hops, more failure points**: each handoff adds latency, a place for context to be dropped, and another trace to debug
+- **More hops, more failure points**: each handoff adds latency, a chance to drop context, and another trace to debug
 
 <!-- below-columns -->
 
@@ -296,8 +296,8 @@ For each scenario, choose **Augmented LLM**, **Workflow** (name the decompositio
 
 # Designing Multi-Agent Context Contracts
 
-- **Explicit context contracts**: define strict JSON/Pydantic input and output schemas between the coordinator and every worker subagent
-- **Contain blast radius**: enforce per-subagent token budgets, timeouts, and local retry policies so a slow worker never stalls the entire request
+- **Explicit context contracts**: define strict JSON or Pydantic input and output schemas between the coordinator and each worker
+- **Contain blast radius**: set per-worker token budgets, timeouts, and retry policies so one slow worker never stalls the request
 
 ```python
 class ClaimCitation(BaseModel):
@@ -335,17 +335,17 @@ class SubagentResultContract(BaseModel):
 # Aligning Architecture to Business Value Pillars
 
 ### Operational Efficiency and Cost
-- Reduce cost per transaction through prompt caching, Message Batches API (50% discount for async jobs), and tiered model routing.
+- Cut cost per transaction with prompt caching, the Message Batches API (50% off async jobs), and tiered model routing.
 - Measure **cost per successful resolution**, not raw cost per 1,000 tokens.
 
 ### Workforce Productivity
-- Accelerate engineering, legal, and analyst workflows by automating repetitive synthesis and first-draft generation while keeping humans in the decision seat.
+- Speed up engineering, legal, and analyst work by automating repetitive synthesis and first drafts, with humans still deciding.
 
 ### Business Transformation
-- Enable capabilities that were previously impossible at scale, such as 100% contract clause auditing or real-time multilingual support synthesis.
+- Enable what was impossible at scale, such as auditing 100% of contract clauses or real-time multilingual support.
 
 ### Performance and Reliability SLAs
-- Match architectural patterns to strict latency (p50/p99 TTFT and total duration), throughput, and availability targets.
+- Match patterns to latency (p50/p99 TTFT and total duration), throughput, and availability targets.
 
 ---
 
@@ -432,10 +432,10 @@ python demo_02_parallel.py
 
 - The sequential time is roughly the sum of three calls
 - The parallel time is roughly the time of the slowest single call
-- Exact numbers vary run to run, but parallel is consistently a fraction of sequential
+- Numbers vary run to run, but parallel is consistently a fraction of sequential
 
 > [!NOTE]
-> Latency SLAs are arithmetic. Independent work that runs in sequence adds up, while parallel work costs only the slowest branch. The token cost is the same either way: parallelism buys time, not savings.
+> Latency SLAs are arithmetic. Sequential work adds up; parallel work costs only the slowest branch. Token cost is the same either way: parallelism buys time, not savings.
 
 ---
 
