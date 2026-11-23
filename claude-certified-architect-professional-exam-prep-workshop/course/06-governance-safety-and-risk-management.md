@@ -184,7 +184,7 @@ Label each control **P** (preventive), **D** (detective), or **C** (compensating
 
 # Where the Human Sits: Risk and Reversibility
 
-| | **Easily Reversed** | **Hard or Impossible to Reverse** |
+| | Easily Reversed | Hard or Impossible to Reverse |
 | :--- | :--- | :--- |
 | **Low Impact** | **Human out of the loop**: automate, monitor with sampling (draft tags, internal summaries) | **Human on the loop**: automate with alerts and fast rollback (bulk record updates with snapshots) |
 | **High Impact** | **Human on the loop**: automate, review a risk-based queue (claims summaries an adjuster finalizes) | **Human in the loop**: approval before execution (payments, account deletion, legal notices, medical advice) |

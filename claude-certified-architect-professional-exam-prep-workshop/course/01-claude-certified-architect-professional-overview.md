@@ -308,6 +308,66 @@ python demo_01_haiku.py
 
 ---
 
+# Acronyms: Exam and Architecture
+
+A reference for uncommon abbreviations used in this course.
+
+| Term | Meaning | Why It Matters | Chapter |
+| :--- | :--- | :--- | :---: |
+| **A2A** | Agent-to-Agent protocol | Lets agents owned by different teams or companies discover each other and delegate tasks | 4 |
+| **ADR** | Architectural decision record | Records why a design choice was made, with the rejected alternatives | 7 |
+| **BM25** | Best Match 25, a keyword-ranking formula | Lexical search that finds exact codes and IDs that embeddings miss | 4 |
+| **CCAR-F / CCAR-P** | Claude Certified Architect - Foundations / Professional | The two architect exams; this course prepares you for CCAR-P | 1 |
+| **HITL** | Human in the loop | A person approves or reviews AI actions before they take effect | 6 |
+| **MCP** | Model Context Protocol | Open standard for connecting agents to tools, resources, and prompts | 4 |
+| **MQC** | Minimally Qualified Candidate | The profile of a candidate who should just pass the exam | 1 |
+| **RAG** | Retrieval-augmented generation | Retrieves relevant documents and gives them to Claude with the question | 4 |
+| **RRF** | Reciprocal Rank Fusion | Merges the ranked results of vector and BM25 search into one list | 4 |
+| **top-K** | The K highest-ranked results | How many retrieved chunks reach Claude; more is not always better | 4 |
+
+---
+
+# Acronyms: Metrics and Operations
+
+| Term | Meaning | Why It Matters | Chapter |
+| :--- | :--- | :--- | :---: |
+| **AP** | Accounts payable | The finance team that pays vendor invoices | 7 |
+| **CI/CD** | Continuous integration and continuous delivery | Automated build, test, and release pipelines, where eval gates and `claude -p` run | 8 |
+| **ERP** | Enterprise resource planning system | The core finance and operations system that payments run through | 7 |
+| **KPI** | Key performance indicator | A business metric, such as resolution rate, used to judge a rollout | 5 |
+| **MTok** | One million tokens | The unit for Claude pricing, such as $2 per MTok of input | 2 |
+| **p50 / p95 / p99** | 50th, 95th, and 99th percentile | A p95 latency of 2 seconds means 95% of requests finish within 2 seconds | 2 |
+| **SKU** | Stock keeping unit | A product code; exact codes like this need keyword search | 4 |
+| **SLA** | Service level agreement | A target committed to the business, such as latency or availability | 2 |
+| **SLO** | Service level objective | An internal quality target, such as 95% of answers correct each week, with an error budget | 7 |
+| **TTFT** | Time to first token | How long until the first word of a response appears; what users feel as speed | 3 |
+
+---
+
+# Acronyms: Security and Compliance
+
+| Term | Meaning | Why It Matters | Chapter |
+| :--- | :--- | :--- | :---: |
+| **ABAC** | Attribute-based access control | Access decided by attributes such as department, region, or data label | 4 |
+| **ACL** | Access control list | Who may see each document; filter retrieval by it | 4 |
+| **BAA** | Business Associate Agreement | HIPAA contract required before a provider processes PHI | 6 |
+| **FedRAMP** | Federal Risk and Authorization Management Program | U.S. authorization required for cloud services used by federal agencies | 6 |
+| **FIPS** | Federal Information Processing Standards | U.S. standards for validated cryptography, required in FedRAMP environments | 6 |
+| **GDPR** | General Data Protection Regulation | EU privacy law: data minimization, residency, and the right to erasure | 6 |
+| **HIPAA** | Health Insurance Portability and Accountability Act | U.S. law that protects health information | 6 |
+| **IAM** | Identity and access management | Systems that control who can access which resources | 6 |
+| **IP** | Intellectual property | A data class, as in “confidential IP” | 7 |
+| **JWT** | JSON Web Token | A signed token that carries a user’s identity claims to backend tools | 4 |
+| **OAuth** | Open Authorization | Standard for delegated access; remote MCP servers use OAuth 2.1 | 4 |
+| **PCI** | Payment Card Industry | Card-payment data, governed by the PCI DSS standard | 7 |
+| **PHI** | Protected health information | Health data covered by HIPAA | 6 |
+| **PII** | Personally identifiable information | Data that identifies a person, such as a name, email address, or ID number | 6 |
+| **RBAC** | Role-based access control | Access decided by the user’s role | 4 |
+| **SOC 2** | System and Organization Controls 2 | An audit report on a vendor’s security controls | 2 |
+| **ZDR** | Zero Data Retention | The provider does not keep prompts or responses after the request; eligibility varies by feature and model | 6 |
+
+---
+
 # What You Learned
 
 - Reviewed the CCAR-P exam format, scoring, and domain weights
